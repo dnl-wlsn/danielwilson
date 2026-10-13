@@ -3,7 +3,7 @@
    sheet edge (added by sheets.js) feeds up over it. */
 .sheet {
   position: relative;
-  padding: calc(var(--feed) + 5rem) var(--gutter) calc(var(--feed) + 5rem);
+  padding: calc(var(--feed) + 3.5rem) var(--gutter) calc(var(--feed) + 3.5rem);
   margin-top: calc(-1 * var(--feed));
   background: linear-gradient(to bottom, transparent var(--feed), var(--bg) var(--feed));
   color: var(--fg);

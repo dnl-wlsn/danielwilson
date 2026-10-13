@@ -6,6 +6,8 @@ import { BUGS } from './bug-defs.js';
 import { initBeetle } from './beetle.js';
 import { initOpening } from './opening.js';
 import { initOverprint } from './overprint.js';
+import { initSheets } from './sheets.js';
+import { initScenes } from './scenes.js';
 
 const root = document.documentElement;
 const fallBack = (err) => {
@@ -28,6 +30,8 @@ try {
   initBeetle(ctx);
   const playOpening = initOpening(ctx);
   initOverprint(ctx);
+  initSheets(ctx);
+  initScenes(ctx);
   const runningDone = initRunning(ctx)
     .then(() => {
       const target = location.hash.length > 1 && document.getElementById(location.hash.slice(1));

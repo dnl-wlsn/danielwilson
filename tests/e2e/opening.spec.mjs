@@ -28,7 +28,7 @@ test('headings get a second ink that settles almost in register', async ({ page 
   const mis = () => h.evaluate((el) => Number(getComputedStyle(el).getPropertyValue('--mis')));
   // Below the fold it is well out of register; with its top 30% down the screen it has settled.
   await h.evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - window.innerHeight * 1.02));
-  await expect.poll(mis).toBeGreaterThan(5);
+  await expect.poll(mis).toBeGreaterThan(4);
   await h.evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.3));
   await expect.poll(mis).toBeLessThan(1.2);
 });

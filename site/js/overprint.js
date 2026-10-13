@@ -5,7 +5,7 @@ export function initOverprint({ motion }) {
   for (const h of document.querySelectorAll('.ink')) {
     h.dataset.text = h.textContent.trim();
     if (!motion) continue;
-    gsap.fromTo(h, { '--mis': 7 }, {
+    gsap.fromTo(h, { '--mis': 5 }, {
       '--mis': 1, ease: 'none',
       scrollTrigger: { trigger: h, start: 'top 95%', end: 'top 45%', scrub: true },
     });

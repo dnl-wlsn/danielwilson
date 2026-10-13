@@ -2,34 +2,64 @@
 
 const r = (n) => Math.round(n * 10) / 10;
 
-// The route runs straight-ish down a rail (with a gentle wiggle), and only swaps
-// sides in the last `cross` px above the next point, where sections have empty
-// top padding. Control points keep y between segment ends, so y is monotonic.
-// Returns segments ({ c: 'M'|'L'|'Q'|'C', p: [numbers] }) so the same geometry
-// can be drawn (segmentsToD) and measured in JS (sampleSegments).
+// The route runs down a rail with a gentle wiggle, and only swaps sides in the
+// last `cross` px above the next point, where sections have empty top padding.
+// It's drawn as ONE smooth curve: a monotone cubic spline of x as a function
+// of y (Fritsch-Carlson) through the waypoints, so there are no corners at the
+// joins, x never overshoots between waypoints, and y only ever increases.
+// Returns segments ({ c: 'M'|'C', p: [numbers] }) so the same geometry can be
+// drawn (segmentsToD) and measured in JS (sampleSegments).
 export function routeSegments(points, { cross = 140, wiggle = 10, step = 120, minX = 0, maxX = Infinity } = {}) {
   if (!points.length) return [];
   const clampX = (x) => Math.min(maxX, Math.max(minX, x));
-  const segs = [{ c: 'M', p: [r(points[0].x), r(points[0].y)] }];
+
+  // 1. Waypoints: every checkpoint, wiggle crests along each rail, and the
+  //    point where the line leaves its rail to cross to the next one.
+  const way = [{ x: points[0].x, y: points[0].y }];
   for (let i = 1; i < points.length; i++) {
     const a = points[i - 1];
-    const b = points[i];
-    const dy = b.y - a.y;
-    if (dy <= 0) { segs.push({ c: 'L', p: [r(b.x), r(b.y)] }); continue; }
+    const b = { x: points[i].x, y: Math.max(points[i].y, way.at(-1).y + 1) };
     const sameRail = Math.abs(a.x - b.x) < 0.5;
-    const c = sameRail ? 0 : Math.min(cross, dy);
+    const c = sameRail ? 0 : Math.min(cross, b.y - a.y);
     const runEnd = b.y - c;
     let y = a.y;
     let k = 0;
-    while (runEnd - y > step * 0.5) {
+    // Wiggle only on runs that stay on one rail. Before a crossing the last
+    // wiggle would swing the wrong way and put a hook right before the swoop.
+    while (sameRail && runEnd - y > step * 0.5) {
       const ny = Math.min(y + step, runEnd);
-      const side = k % 2 ? 1 : -1;
-      segs.push({ c: 'Q', p: [r(clampX(a.x + side * wiggle * 2)), r((y + ny) / 2), r(a.x), r(ny)] });
+      way.push({ x: clampX(a.x + (k % 2 ? 1 : -1) * wiggle), y: (y + ny) / 2 });
       y = ny;
       k++;
     }
-    if (y < runEnd) { segs.push({ c: 'L', p: [r(a.x), r(runEnd)] }); y = runEnd; }
-    if (!sameRail) segs.push({ c: 'C', p: [r(a.x), r(runEnd + c / 2), r(b.x), r(b.y - c / 2), r(b.x), r(b.y)] });
+    if (!sameRail && runEnd - way.at(-1).y > 20) way.push({ x: a.x, y: runEnd, leave: true });
+    way.push(sameRail ? b : { ...b, arrive: true });
+  }
+
+  // 2. Fritsch-Carlson slopes (dx/dy). Zero at the ends and at every turning
+  //    point, so the line leaves and meets each rail running straight down.
+  const n = way.length;
+  const h = [], d = [];
+  for (let i = 0; i < n - 1; i++) {
+    h.push(way[i + 1].y - way[i].y);
+    d.push((way[i + 1].x - way[i].x) / h[i]);
+  }
+  const m = new Array(n).fill(0);
+  for (let i = 1; i < n - 1; i++) {
+    if (d[i - 1] * d[i] <= 0) continue;
+    const w1 = 2 * h[i] + h[i - 1], w2 = h[i] + 2 * h[i - 1];
+    m[i] = (w1 + w2) / (w1 / d[i - 1] + w2 / d[i]);
+  }
+
+  // 3. Each span as a cubic Bezier: the control points sit a third of the way
+  //    along the span in y, so y is monotonic and tangents match at joins.
+  //    A crossing (rail to rail, vertical at both ends) uses half-height
+  //    handles, which rounds the swoop into an even S instead of two elbows.
+  const segs = [{ c: 'M', p: [r(way[0].x), r(way[0].y)] }];
+  for (let i = 0; i < n - 1; i++) {
+    const p0 = way[i], p1 = way[i + 1];
+    const t = p0.leave && p1.arrive ? h[i] / 2 : h[i] / 3;
+    segs.push({ c: 'C', p: [r(p0.x + m[i] * t), r(p0.y + t), r(p1.x - m[i + 1] * t), r(p1.y - t), r(p1.x), r(p1.y)] });
   }
   return segs;
 }

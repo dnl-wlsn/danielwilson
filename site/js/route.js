@@ -33,7 +33,7 @@ export function initRoute({ motion }) {
     // Phones keep a short crossing too: the route starts under the fallen "o",
     // not on the rail, and has to reach the rail inside the empty top padding.
     const wide = w >= DESKTOP;
-    const segs = routeSegments(pts, { cross: wide ? 140 : 80, wiggle: wide ? 10 : 6, minX: 8, maxX: w - 8 });
+    const segs = routeSegments(pts, { cross: wide ? 230 : 140, wiggle: wide ? 10 : 6, minX: 8, maxX: w - 8 });
     path.setAttribute('d', segmentsToD(segs));
     // Measured in JS, not with getPointAtLength (which froze the intro for
     // seconds). pathLength makes the browser's dash maths use our length.

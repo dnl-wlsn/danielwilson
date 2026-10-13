@@ -132,8 +132,9 @@ test('a deep link to #finish shows the contacts', async ({ page }) => {
 test('with webfonts blocked the line still meets every dot', async ({ page }) => {
   await page.route('**/*.woff2', (r) => r.abort());
   await page.goto('/');
+  // The intro places the landing dot when it starts, then the route rebuilds.
+  await page.waitForFunction(() => ['playing', 'done'].includes(document.documentElement.dataset.start));
   await ready(page);
-  await page.waitForTimeout(300);
   expect(await worstDotMiss(page)).toBeLessThan(3);
 });
 

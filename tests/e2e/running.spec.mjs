@@ -34,7 +34,7 @@ test('calories count up with the run and finish at the real total', async ({ pag
 test('the dot runs the profile with scroll', async ({ page }) => {
   await page.goto('/');
   await page.waitForFunction(() => document.documentElement.dataset.running === 'ready');
-  expect(await stat(page, 'km')).toBe('0.0');
+  await expect.poll(() => stat(page, 'km')).toBe('0.0');
   const st = await page.evaluate(() => { const t = ScrollTrigger.getAll().find((x) => x.pin?.classList.contains('run-stage')); return { start: t.start, end: t.end }; });
   await page.evaluate((y) => window.scrollTo(0, y), Math.round((st.start + st.end) / 2));
   await expect.poll(async () => Number(await stat(page, 'km'))).toBeGreaterThan(race.distance_km * 0.3);

@@ -10,7 +10,7 @@
     [col-start] min(var(--col), 100% - var(--rail) - var(--gutter))
     [col-end] minmax(var(--gutter), 1fr) [full-end];
   row-gap: 1.25rem;
-  padding-block: 10rem 2rem;
+  padding-block: 15rem 2rem;
 }
 .cp-section > * { grid-column: col; }
 .cp-dot {

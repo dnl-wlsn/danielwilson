@@ -13,10 +13,13 @@ test('starts at the first point and passes through every point', () => {
   for (const p of pts) assert.ok(ends.includes(`${p.x},${p.y}`), `missing ${p.x},${p.y}`);
 });
 
-test('all x coordinates stay inside the bounds', () => {
-  for (const { n } of parse(buildRoutePath(pts, { minX: 8, maxX: 1272, wiggle: 40 }))) {
-    for (let i = 0; i < n.length; i += 2) assert.ok(n[i] >= 8 && n[i] <= 1272, `x ${n[i]} out of bounds`);
+test('the drawn line stays inside the bounds', () => {
+  for (const w of [10, 40]) {
+    const t = sampleSegments(routeSegments(pts, { minX: 8, maxX: 1272, wiggle: w }));
+    for (const x of t.xs) assert.ok(x >= 8 && x <= 1272, `x ${x} out of bounds`);
   }
+  const phone = sampleSegments(routeSegments([{ x: 300, y: 0 }, { x: 24, y: 700 }, { x: 24, y: 1500 }], { cross: 80, wiggle: 6, minX: 8, maxX: 367 }));
+  for (const x of phone.xs) assert.ok(x >= 8 && x <= 367, `phone x ${x} out of bounds`);
 });
 
 test('y never goes backwards, so lookups by y are valid', () => {
@@ -26,17 +29,31 @@ test('y never goes backwards, so lookups by y are valid', () => {
   }
 });
 
-test('side changes only happen in the last `cross` px before a point', () => {
-  const cmds = parse(buildRoutePath([{ x: 100, y: 0 }, { x: 900, y: 1000 }], { cross: 140, wiggle: 0 }));
-  const c = cmds.find((k) => k.c === 'C');
-  assert.equal(c.n[1], 930);
-  assert.equal(cmds[cmds.indexOf(c) - 1].n.at(-1), 860);
+test('the line stays on its rail until `cross` px above the next point', () => {
+  const t = sampleSegments(routeSegments([{ x: 100, y: 0 }, { x: 900, y: 1000 }], { cross: 140, wiggle: 0 }));
+  for (let i = 0; i < t.ys.length; i++) if (t.ys[i] <= 860) assert.ok(Math.abs(t.xs[i] - 100) < 0.5, `left the rail at y ${t.ys[i]}`);
 });
 
 test('phones: every point on one rail gives a gently wiggling vertical line', () => {
-  const d = buildRoutePath([{ x: 24, y: 0 }, { x: 24, y: 900 }], { cross: 0, wiggle: 6, minX: 8, maxX: 367 });
-  assert.ok(!d.includes('C'));
-  for (const { n } of parse(d)) for (let i = 0; i < n.length; i += 2) assert.ok(n[i] >= 12 && n[i] <= 36);
+  const t = sampleSegments(routeSegments([{ x: 24, y: 0 }, { x: 24, y: 900 }], { cross: 0, wiggle: 6, minX: 8, maxX: 367 }));
+  for (const x of t.xs) assert.ok(x >= 17.9 && x <= 30.1, `x ${x}`);
+  assert.ok(Math.max(...t.xs) - Math.min(...t.xs) > 10, 'it should actually wiggle');
+});
+
+// Dan: "can the orange line be smoother? like, no angles?" Every join between
+// curve pieces must carry the same direction in and out.
+test('no angles: the direction is continuous at every join', () => {
+  for (const opts of [{ minX: 8, maxX: 1272 }, { cross: 80, wiggle: 6, minX: 8, maxX: 367 }]) {
+    const segs = routeSegments(pts, opts);
+    for (let i = 2; i < segs.length; i++) {
+      const prev = segs[i - 1].p, cur = segs[i].p;
+      assert.equal(segs[i].c, 'C');
+      const inX = prev.at(-2) - prev.at(-4), inY = prev.at(-1) - prev.at(-3);
+      const outX = cur[0] - prev.at(-2), outY = cur[1] - prev.at(-1);
+      const angle = Math.abs(Math.atan2(inX, inY) - Math.atan2(outX, outY)) * 180 / Math.PI;
+      assert.ok(angle < 2, `kink of ${angle.toFixed(1)} deg at join ${i}`);
+    }
+  }
 });
 
 test('no zero-length duplicate segments', () => {
@@ -76,8 +93,9 @@ test('segments render to the same path string as buildRoutePath', () => {
 
 test('a straight segment samples to its exact length', () => {
   const t = sampleSegments(routeSegments([{ x: 10, y: 0 }, { x: 10, y: 50 }], { wiggle: 0, step: 1000 }));
-  assert.equal(t.ls.at(-1), 50);
-  assert.deepEqual(pointAtLength(t, 20), { x: 10, y: 20 });
+  assert.ok(Math.abs(t.ls.at(-1) - 50) < 1e-9);
+  const at = pointAtLength(t, 20);
+  assert.ok(Math.abs(at.x - 10) < 1e-9 && Math.abs(at.y - 20) < 1e-9);
 });
 
 test('curve lengths match a fine numeric reference to within 0.3%', () => {

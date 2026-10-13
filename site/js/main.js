@@ -3,6 +3,7 @@
 import { initRunning } from './running.js';
 import { initBugs } from './bugs.js';
 import { BUGS } from './bug-defs.js';
+import { initBeetle } from './beetle.js';
 
 const root = document.documentElement;
 const fallBack = (err) => {
@@ -22,6 +23,7 @@ try {
   }
   const ctx = { motion, lenis };
   initBugs(ctx, BUGS);
+  initBeetle(ctx);
   root.dataset.opening = 'done'; // Task 5 replaces this with the opening animation
   document.querySelector('.bugbar').classList.add('is-in');
   document.dispatchEvent(new Event('opening:done'));

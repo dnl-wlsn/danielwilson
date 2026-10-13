@@ -21,6 +21,24 @@ function reel(digit) {
   return r;
 }
 
+const SVG = 'http://www.w3.org/2000/svg';
+function beetleSvg() {
+  const svg = document.createElementNS(SVG, 'svg');
+  svg.setAttribute('viewBox', '0 0 40 40');
+  svg.setAttribute('focusable', 'false');
+  const add = (tag, attrs) => {
+    const el = document.createElementNS(SVG, tag);
+    for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+    svg.append(el);
+  };
+  for (const d of ['M14 15 L6 10', 'M13 20 L4 20', 'M14 25 L6 31', 'M26 15 L34 10', 'M27 20 L36 20', 'M26 25 L34 31'])
+    add('path', { d, stroke: 'currentColor', 'stroke-width': '2', 'stroke-linecap': 'round', fill: 'none' });
+  add('ellipse', { cx: '20', cy: '23', rx: '8', ry: '10', fill: 'currentColor' });
+  add('circle', { cx: '20', cy: '11', r: '4.5', fill: 'currentColor' });
+  add('path', { d: 'M20 14 L20 32', stroke: '#F4EFE4', 'stroke-width': '1.2' });
+  return svg;
+}
+
 export const BUGS = [
   {
     id: 'letters',
@@ -99,6 +117,55 @@ export const BUGS = [
       await gsap.to(slot, { scaleX: 0, duration: 0.18, ease: 'power2.in', transformOrigin: '0 50%' });
       slot.textContent = 'km';
       await gsap.to(slot, { scaleX: 1, duration: 0.6, ease: 'elastic.out(1, 0.4)', clearProps: 'transform' });
+    },
+  },
+  {
+    id: 'beetle',
+    label: 'a beetle loose in the list',
+    buttonClass: 'bug--beetle',
+    note: 'Caught. Most bugs are found by someone who went looking.',
+    break(slot) { slot.append(beetleSvg()); },
+    renderFixed(slot) { if (!slot.firstChild) slot.append(beetleSvg()); },
+    async fix(slot, { motion }) {
+      if (motion) await gsap.fromTo(slot, { scale: 1.6 }, { scale: 1, duration: 0.5, ease: 'back.out(3)', clearProps: 'transform' });
+    },
+  },
+  {
+    id: 'dodge',
+    self: true,
+    label: 'this button runs away from the pointer',
+    note: 'Caught by testing with a mouse, a finger and a keyboard.',
+    break(slot, { motion }) {
+      if (!motion) { slot.classList.add('is-askew'); return; }
+      slot.addEventListener('pointerdown', (e) => { slot.dataset.pointer = e.pointerType; });
+      slot.addEventListener('keydown', () => { slot.dataset.pointer = 'key'; });
+      const zone = slot.closest('section');
+      const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+      let dodges = 0, busy = false, x = 0, y = 0;
+      zone.addEventListener('pointermove', (e) => {
+        if (e.pointerType !== 'mouse' || busy || dodges >= 3 || slot.dataset.fixed || slot.dataset.fixing) return;
+        const r = slot.getBoundingClientRect();
+        const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+        if (Math.hypot(e.clientX - cx, e.clientY - cy) > Math.max(r.width, r.height) * 0.9) return;
+        dodges++;
+        busy = true;
+        const a = Math.atan2(cy - e.clientY, cx - e.clientX);
+        const lim = Math.min(170, zone.clientWidth / 4);
+        x = clamp(x + Math.cos(a) * 150, -lim, lim);
+        y = clamp(y + Math.sin(a) * 60, -50, 50);
+        gsap.to(slot, { x, y, rotation: x / 30, duration: 0.35, ease: 'power3.out', onComplete: () => { busy = false; } });
+      });
+    },
+    activate(e, slot, { motion }) {
+      // Touch has no hover, so the first tap makes it hop and the second fixes it.
+      if (!motion || slot.dataset.pointer !== 'touch' || slot.dataset.hopped) return true;
+      slot.dataset.hopped = '1';
+      gsap.to(slot, { x: 70, rotation: 6, duration: 0.3, ease: 'back.out(2)' });
+      return false;
+    },
+    async fix(slot, { motion }) {
+      slot.classList.remove('is-askew');
+      if (motion) await gsap.to(slot, { x: 0, y: 0, rotation: 0, duration: 0.7, ease: 'elastic.out(1, 0.45)', clearProps: 'transform' });
     },
   },
 ];

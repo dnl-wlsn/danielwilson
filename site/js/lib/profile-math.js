@@ -51,3 +51,9 @@ export function formatTime(s) {
   const sec = Math.floor(s % 60);
   return `${h}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
 }
+
+// One decimal place, halves rounded up. (52.15).toFixed(1) gives "52.1" because
+// 52.15 is stored as 52.1499..., which would undersell the distance.
+export function formatKm(km) {
+  return (Math.round((km + Number.EPSILON) * 10) / 10).toFixed(1);
+}

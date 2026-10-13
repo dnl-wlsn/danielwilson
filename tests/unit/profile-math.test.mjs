@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { makeScale, profileD, sampleAt, gradientAt, formatTime } from '../../site/js/lib/profile-math.js';
+import { makeScale, profileD, sampleAt, gradientAt, formatTime, formatKm } from '../../site/js/lib/profile-math.js';
 
 const pts = [[0, 100, 0, 0], [1, 200, 600, 100], [2, 150, 1200, 100], [4, 350, 2400, 300]];
 
@@ -46,4 +46,10 @@ test('formatTime', () => {
   assert.equal(formatTime(0), '0:00:00');
   assert.equal(formatTime(27125), '7:32:05');
   assert.equal(formatTime(null), '');
+});
+
+test('formatKm rounds halves up, unlike toFixed on binary floats', () => {
+  assert.equal(formatKm(52.15), '52.2');
+  assert.equal(formatKm(0), '0.0');
+  assert.equal(formatKm(10.04), '10.0');
 });

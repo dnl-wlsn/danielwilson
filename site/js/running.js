@@ -1,4 +1,4 @@
-import { makeScale, profileD, sampleAt, gradientAt, formatTime } from './lib/profile-math.js';
+import { makeScale, profileD, sampleAt, gradientAt, formatTime, formatKm } from './lib/profile-math.js';
 
 const W = 1000, H = 320, PAD = 12;
 
@@ -17,7 +17,9 @@ export async function initRunning({ motion }) {
     km: stage.querySelector('[data-stat="km"]'),
     climb: stage.querySelector('[data-stat="climb"]'),
     time: stage.querySelector('[data-stat="time"]'),
+    calories: stage.querySelector('[data-stat="calories"]'),
   };
+  const num = (n) => n.toLocaleString('en-GB');
   if (race.elapsed_s == null) stage.querySelector('.run__time').hidden = true;
 
   // Plot size in CSS px, so viewBox units can be turned into a transform.
@@ -32,9 +34,12 @@ export async function initRunning({ motion }) {
     const x = scale.x(s.km);
     clip.setAttribute('width', String(Math.round(x)));
     dot.style.transform = `translate(${((x / W) * plotW).toFixed(1)}px, ${((scale.y(s.ele) / H) * plotH).toFixed(1)}px)`;
-    out.km.textContent = progress >= 1 ? race.distance_km.toFixed(1) : s.km.toFixed(1);
-    out.climb.textContent = String(progress >= 1 ? race.climb_m : s.climb);
-    out.time.textContent = formatTime(progress >= 1 ? race.elapsed_s : s.t);
+    const done = progress >= 1;
+    out.km.textContent = formatKm(done ? race.distance_km : s.km);
+    out.climb.textContent = num(done ? race.climb_m : s.climb);
+    out.time.textContent = formatTime(done ? race.elapsed_s : s.t);
+    // Calories accrue with distance; the file only has the total.
+    if (out.calories && race.calories != null) out.calories.textContent = num(done ? race.calories : Math.round(race.calories * (s.km / race.distance_km)));
     const steep = Math.min(1, Math.max(0, gradientAt(pts, s.km) / 0.15));
     stage.style.setProperty('--steep', steep.toFixed(2));
   }

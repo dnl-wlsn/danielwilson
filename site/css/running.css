@@ -22,3 +22,4 @@
   will-change: transform;
 }
 .run__time[hidden] { display: none; }
+@media (max-width: 40rem) { .run__stats { display: grid; grid-template-columns: 1fr 1fr; } }

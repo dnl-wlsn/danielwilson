@@ -91,15 +91,33 @@ def _interp(xs, ys, x):
     return ys[lo] + f * (ys[hi] - ys[lo])
 
 
-def build_profile(trkpts, samples=400, smooth_window=5):
+def moving_times(times, pause_s):
+    """Drop stopped time: any gap longer than pause_s (an auto-paused watch at an
+    aid station) counts as one normal step, so the clock only runs while moving."""
+    steps = sorted(b - a for a, b in zip(times, times[1:]))
+    normal = steps[len(steps) // 2] if steps else 0
+    out, dropped = [times[0]], 0.0
+    for a, b in zip(times, times[1:]):
+        if b - a > pause_s:
+            dropped += (b - a) - normal
+        out.append(b - dropped)
+    return out
+
+
+def build_profile(trkpts, samples=400, smooth_window=5, pause_s=None, climb_m=None):
     kms = [0.0]
     for a, b in zip(trkpts, trkpts[1:]):
         kms.append(kms[-1] + haversine_km(a, b))
     eles = smooth([p[2] for p in trkpts], smooth_window)
     times = [p[3] for p in trkpts]
+    if pause_s is not None and times[0] is not None:
+        times = moving_times(times, pause_s)
     climbs = [0.0]
     for a, b in zip(eles, eles[1:]):
         climbs.append(climbs[-1] + max(0.0, b - a))
+    if climb_m is not None and climbs[-1] > 0:
+        # Match an official figure (e.g. Strava's) while keeping the profile's shape.
+        climbs = [c * climb_m / climbs[-1] for c in climbs]
     total = kms[-1]
     n = max(2, samples)
     points = []
@@ -128,9 +146,16 @@ def main(argv=None):
     ap.add_argument("--date", required=True)
     ap.add_argument("--samples", type=int, default=400)
     ap.add_argument("--placeholder", action="store_true")
+    ap.add_argument("--moving", action="store_true", help="show moving time (drop pauses over 30 s)")
+    ap.add_argument("--climb", type=int, help="official total climb in metres, e.g. from Strava")
+    ap.add_argument("--calories", type=int, help="calories burned, shown as a stat")
     args = ap.parse_args(argv)
-    prof = build_profile(parse_gpx(pathlib.Path(args.gpx).read_text()), samples=args.samples)
-    data = {"name": args.name, "date": args.date, "placeholder": args.placeholder, **prof}
+    prof = build_profile(parse_gpx(pathlib.Path(args.gpx).read_text()), samples=args.samples,
+                         pause_s=30 if args.moving else None, climb_m=args.climb)
+    data = {"name": args.name, "date": args.date, "placeholder": args.placeholder,
+            "time_kind": "moving" if args.moving else "elapsed", **prof}
+    if args.calories is not None:
+        data["calories"] = args.calories
     pathlib.Path(args.out).write_text(json.dumps(data, separators=(",", ":")))
     print(f"wrote {args.out}: {prof['distance_km']} km, {prof['climb_m']} m climb, {len(prof['points'])} points")
 

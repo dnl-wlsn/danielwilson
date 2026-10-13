@@ -91,5 +91,45 @@ class GpxTest(unittest.TestCase):
             self.assertIn("points", data)
 
 
+PAUSED = [
+    (0.00, 0, 100, "2026-05-01T08:00:00Z"),
+    (0.01, 0, 150, "2026-05-01T08:10:00Z"),
+    (0.02, 0, 120, "2026-05-01T08:50:00Z"),  # watch stopped for 30 min at an aid station
+    (0.03, 0, 200, "2026-05-01T09:00:00Z"),
+]
+
+
+class MovingTimeAndOverridesTest(unittest.TestCase):
+    def test_moving_time_drops_pauses(self):
+        p = g.build_profile(g.parse_gpx(gpx(PAUSED)), samples=4, smooth_window=1, pause_s=1200)
+        # 60 min elapsed, minus the 40 min gap, keeping one normal 10 min step
+        self.assertEqual(p["elapsed_s"], 1800)
+        self.assertEqual(p["points"][2][2], 1200)
+
+    def test_without_pause_threshold_time_is_elapsed(self):
+        p = g.build_profile(g.parse_gpx(gpx(PAUSED)), samples=4, smooth_window=1)
+        self.assertEqual(p["elapsed_s"], 3600)
+
+    def test_climb_override_scales_the_running_total(self):
+        p = g.build_profile(g.parse_gpx(gpx(FOUR)), samples=4, smooth_window=1, climb_m=1058)
+        self.assertEqual(p["climb_m"], 1058)
+        self.assertEqual(p["points"][-1][3], 1058)
+        self.assertEqual(p["points"][1][3], round(50 * 1058 / 130))
+
+    def test_cli_moving_climb_and_calories(self):
+        with tempfile.TemporaryDirectory() as d:
+            src = pathlib.Path(d) / "in.gpx"
+            out = pathlib.Path(d) / "race.json"
+            src.write_text(gpx(PAUSED))
+            subprocess.run([sys.executable, str(ROOT / "tools/gpx_to_profile.py"), str(src), "-o", str(out),
+                            "--name", "Test", "--date", "2026-05-01", "--moving", "--climb", "1058",
+                            "--calories", "5944"], check=True)
+            data = json.loads(out.read_text())
+            self.assertEqual(data["time_kind"], "moving")
+            self.assertEqual(data["climb_m"], 1058)
+            self.assertEqual(data["calories"], 5944)
+            self.assertFalse(data["placeholder"])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -68,3 +68,12 @@ test('the runner dot sits on the profile line', async ({ page }) => {
   });
   expect(miss).toBeLessThan(3);
 });
+
+test('screen readers hear the real race totals, not the animated counters', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForFunction(() => document.documentElement.dataset.running === 'ready');
+  await expect(page.locator('.run__stats')).toHaveAttribute('aria-hidden', 'true');
+  const summary = await page.locator('.run__summary').textContent();
+  expect(summary).toContain(`${race.distance_km.toFixed(1)} km`);
+  expect(summary).toContain(`${race.climb_m} m`);
+});

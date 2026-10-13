@@ -4,6 +4,7 @@
   --ink-soft: #4A4F47;
   --contour: #CDBB9E;
   --route: #FF9300;
+  --focus: #A65A00; /* darker route orange: 4.4:1 on paper, for the focus ring */
   --forest: #2F4A36;
   --rule: rgba(28, 31, 27, 0.14);
   --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
@@ -20,6 +21,7 @@
     --ink-soft: #B8B2A3;
     --contour: #3B3A30;
     --route: #FF9D1A;
+    --focus: #FF9D1A;
     --forest: #7FA88A;
     --rule: rgba(236, 230, 216, 0.16);
   }

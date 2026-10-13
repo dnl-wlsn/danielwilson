@@ -121,8 +121,11 @@ test('rotating or resizing mid-scroll rebuilds the route and keeps reveals', asy
 test('a deep link to #finish shows the contacts', async ({ page }) => {
   await page.goto('/#finish');
   await ready(page);
+  await page.waitForFunction(() => document.documentElement.dataset.running === 'ready');
   await expect(page.locator('#finish')).toHaveClass(/is-reached/);
   await expect(page.locator('.finish-links')).toHaveCSS('opacity', '1');
+  // ...and the visitor is actually looking at it, after the pins have been added above.
+  await expect.poll(() => page.$eval('#finish h2', (h) => { const r = h.getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight; })).toBe(true);
 });
 
 // Review Focus 3

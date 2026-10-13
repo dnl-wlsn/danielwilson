@@ -27,7 +27,7 @@ npm run test:perf   # 55 fps floor on a 4x-throttled phone
 |---|---|
 | Any copy | `site/index.html` |
 | CV | edit `cv/cv.html`, then `npm run cv` (tests fail if a phone number appears) |
-| Race | `python3 tools/gpx_to_profile.py race.gpx -o site/data/race.json --name "..." --date YYYY-MM-DD`, then copy the printed totals into `.run__stats` in `index.html` and remove `data-placeholder="race"` |
+| Race | `python3 tools/gpx_to_profile.py race.gpx -o site/data/race.json --name "..." --date YYYY-MM-DD`, then copy the printed totals into `.run__stats` and the `.run__summary` sentence in `index.html` and remove `data-placeholder="race"` |
 | Images | add a new versioned file (`-v2`); never overwrite, `/img/*` is cached for a year |
 
 Content still waiting on Dan is marked `data-placeholder="..."`; `npm run test:e2e` prints the list.

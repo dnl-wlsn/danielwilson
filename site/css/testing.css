@@ -7,7 +7,6 @@
 }
 html.motion .role__org { font-stretch: 70%; transition: font-stretch 0.45s cubic-bezier(0.3, 1.4, 0.5, 1); }
 html.motion .role__org.is-wide { font-stretch: 125%; }
-.role__title { opacity: 0.85; }
 .role details summary { cursor: pointer; font: 500 0.8125rem var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; color: var(--accent); }
 .role details ul { margin: 0.75rem 0 0; padding-left: 1.1rem; }
 .marker { color: var(--accent); }

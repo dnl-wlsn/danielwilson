@@ -4,6 +4,8 @@ import { initRunning } from './running.js';
 import { initBugs } from './bugs.js';
 import { BUGS } from './bug-defs.js';
 import { initBeetle } from './beetle.js';
+import { initOpening } from './opening.js';
+import { initOverprint } from './overprint.js';
 
 const root = document.documentElement;
 const fallBack = (err) => {
@@ -24,12 +26,10 @@ try {
   const ctx = { motion, lenis };
   initBugs(ctx, BUGS);
   initBeetle(ctx);
-  root.dataset.opening = 'done'; // Task 5 replaces this with the opening animation
-  document.querySelector('.bugbar').classList.add('is-in');
-  document.dispatchEvent(new Event('opening:done'));
-  initRunning(ctx)
+  const playOpening = initOpening(ctx);
+  initOverprint(ctx);
+  const runningDone = initRunning(ctx)
     .then(() => {
-      // The browser jumped to any #hash before the pin existed; go to it again.
       const target = location.hash.length > 1 && document.getElementById(location.hash.slice(1));
       if (motion && target) {
         lenis.resize();
@@ -38,6 +38,15 @@ try {
     })
     .catch(console.error);
   root.dataset.boot = 'ok';
+  // Start the opening once the page has settled (fonts loaded, running scene
+  // pinned) so setup work can't steal its frames. Capped at 2.5 s.
+  const settled = Promise.all([
+    document.fonts.load('900 1em Archivo').catch(() => {}),
+    document.fonts.load('400 1em Anton').catch(() => {}),
+    runningDone.catch(() => {}),
+  ]);
+  Promise.race([settled, new Promise((ok) => setTimeout(ok, 2500))])
+    .then(() => requestAnimationFrame(() => playOpening()));
 } catch (err) {
   fallBack(err);
 }

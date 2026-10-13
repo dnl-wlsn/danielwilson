@@ -7,7 +7,8 @@ test('scrolling holds at least 55 fps on a throttled phone', async ({ page }) =>
   test.setTimeout(90_000);
   await page.goto('/');
   await page.waitForFunction(() => document.documentElement.dataset.boot === 'ok'
-    && document.documentElement.dataset.running === 'ready', null, { timeout: 15000 });
+    && document.documentElement.dataset.running === 'ready'
+    && document.documentElement.dataset.opening === 'done', null, { timeout: 15000 });
   const cdp = await page.context().newCDPSession(page);
   await cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 });
   await page.evaluate(() => {

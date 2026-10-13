@@ -1,5 +1,5 @@
 .roles { list-style: none; margin: 3rem 0 0; padding: 0; display: grid; gap: 2.75rem; }
-.role { display: grid; gap: 0.4rem; max-width: 46rem; }
+.role { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.4rem; max-width: 46rem; }
 .role__year { color: var(--accent); font-size: 1rem; }
 .role__org {
   font: 800 clamp(2rem, 6vw, 4.25rem)/0.95 var(--font-sans); font-stretch: 100%;

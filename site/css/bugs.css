@@ -41,4 +41,4 @@ html.motion .bugbar:not(.is-in) { opacity: 0; translate: 0 -1.25rem; }
 .bugbar__btn[hidden] { display: none; }
 .bugbar__btn:focus-visible { outline: 3px solid var(--acid); outline-offset: 2px; }
 .bugbar__note { flex-basis: 100%; font-size: 0.8125rem; line-height: 1.35; color: var(--paper); }
-.bugbar__note:empty { display: none; }
+.bugbar__note:empty, .bugbar__note[hidden] { display: none; }

@@ -118,3 +118,20 @@ test.describe('reduced motion', () => {
     await expect(page.locator('[data-bug-count]')).toHaveText('1');
   });
 });
+
+test('the note under the counter tucks away after a few seconds', async ({ page }) => {
+  await page.goto('/');
+  await ready(page);
+  await expect(page.locator('[data-bug-note]')).toBeVisible();
+  await expect(page.locator('[data-bug-note]')).toBeHidden({ timeout: 12_000 });
+  await activate(page, 'date', 'keyboard');
+  await expect(page.locator('[data-bug-note]')).toBeVisible();
+  await expect(page.locator('[data-bug-note]')).toHaveText(/^Caught with a boundary check/);
+});
+
+test('a returning visitor with all 7 is told where the prize is', async ({ page }) => {
+  await seed(page, ['letters', 'date', 'overflow', 'upside-down', 'unit', 'beetle', 'dodge']);
+  await page.goto('/');
+  await ready(page);
+  await expect(page.locator('[data-bug-note]')).toHaveText('All 7 found. Your prize is at the bottom of the page.');
+});

@@ -7,4 +7,5 @@ cp node_modules/gsap/dist/gsap.min.js site/js/vendor/gsap.min.js
 cp node_modules/gsap/dist/ScrollTrigger.min.js site/js/vendor/ScrollTrigger.min.js
 cp node_modules/lenis/dist/lenis.min.js site/js/vendor/lenis.min.js
 cp node_modules/lenis/dist/lenis.css site/css/lenis.css
+cp node_modules/matter-js/build/matter.min.js site/js/vendor/matter.min.js
 echo "vendored gsap $(node -p "require('./node_modules/gsap/package.json').version"), lenis $(node -p "require('./node_modules/lenis/package.json').version")"

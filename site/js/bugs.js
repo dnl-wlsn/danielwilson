@@ -48,10 +48,23 @@ export function initBugs(ctx, defs) {
     });
   }
 
+  // The note under the counter says something, then tucks away so the bar
+  // never sits over the page for long (it covers content on phones).
+  let noteTimer = 0;
+  const flashNote = (text, ms = 7000) => {
+    note.textContent = text;
+    note.hidden = false;
+    clearTimeout(noteTimer);
+    noteTimer = setTimeout(() => { note.hidden = true; }, ms);
+  };
+
   bar.querySelector('[data-bug-total]').textContent = String(bugs.size);
   bar.hidden = false;
   render();
   if (found.size === bugs.size) root.dataset.bugs = 'complete';
+  const intro = found.size === bugs.size ? `All ${bugs.size} found. Your prize is at the bottom of the page.` : note.textContent;
+  if (root.dataset.opening === 'done') flashNote(intro, 9000);
+  else document.addEventListener('opening:done', () => flashNote(intro, 9000), { once: true });
 
   hint.addEventListener('click', () => {
     const ordered = [...bugs.values()]
@@ -59,7 +72,10 @@ export function initBugs(ctx, defs) {
       .map((b) => b.def.id);
     const id = nextUnfound(ordered, found);
     const target = id ? bugs.get(id).trigger : document.querySelector('.reward');
-    if (ctx.lenis) ctx.lenis.scrollTo(target, { offset: -window.innerHeight / 3 });
+    if (ctx.lenis) {
+      ctx.lenis.resize(); // the reward may have just been unhidden; Lenis caches the page height
+      ctx.lenis.scrollTo(target, { offset: -window.innerHeight / 3 });
+    }
     else target.scrollIntoView({ block: 'center' });
     if (!id) return;
     target.focus({ preventScroll: true });
@@ -134,7 +150,7 @@ export function initBugs(ctx, defs) {
     hint.textContent = found.size === bugs.size ? 'See prize' : 'Hint';
     if (!fixNote) return;
     live.textContent = announceText(found.size, bugs.size, fixNote);
-    note.textContent = fixNote;
+    flashNote(fixNote);
     if (ctx.motion) gsap.fromTo(count, { yPercent: -70, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.35, ease: 'back.out(2)' });
   }
 }

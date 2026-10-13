@@ -1,6 +1,8 @@
 // Entry point. Vendor scripts (gsap, ScrollTrigger, Lenis) are classic deferred
 // scripts that run before this module, so they are available as globals.
 import { initRunning } from './running.js';
+import { initBugs } from './bugs.js';
+import { BUGS } from './bug-defs.js';
 
 const root = document.documentElement;
 const fallBack = (err) => {
@@ -19,6 +21,10 @@ try {
     gsap.ticker.lagSmoothing(0);
   }
   const ctx = { motion, lenis };
+  initBugs(ctx, BUGS);
+  root.dataset.opening = 'done'; // Task 5 replaces this with the opening animation
+  document.querySelector('.bugbar').classList.add('is-in');
+  document.dispatchEvent(new Event('opening:done'));
   initRunning(ctx)
     .then(() => {
       // The browser jumped to any #hash before the pin existed; go to it again.

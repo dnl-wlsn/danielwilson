@@ -1,1 +1,44 @@
-/* filled in a later task */
+/* A bug is a real button that looks like the content it wraps. */
+.bug {
+  all: unset; position: relative; display: inline-block; cursor: pointer;
+  border-radius: 0.15em; -webkit-tap-highlight-color: transparent;
+}
+.bug:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+.bug[aria-disabled="true"] { cursor: default; }
+.bug.is-wiggle { animation: bug-wiggle 0.45s ease-in-out 3; }
+@keyframes bug-wiggle { 0%, 100% { rotate: 0deg; } 25% { rotate: -5deg; } 75% { rotate: 5deg; } }
+.bug.is-hinted { animation: bug-hint 1.2s ease-out 1; }
+@keyframes bug-hint { from { box-shadow: 0 0 0 0 var(--accent); } to { box-shadow: 0 0 0 1.25rem transparent; } }
+@media (prefers-reduced-motion: reduce) {
+  .bug.is-wiggle, .bug.is-hinted { animation: none; }
+  .bug.is-hinted { outline: 3px dashed var(--accent); outline-offset: 6px; }
+}
+.shot-wrap, .bug:has(.shot) { display: block; }
+.stamp {
+  position: absolute; top: -0.55rem; right: -0.9rem; z-index: 3;
+  font: 600 0.75rem/1 var(--font-mono); font-stretch: normal; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--accent); background: var(--bg); border: 2px solid currentColor; padding: 0.25rem 0.4rem;
+  rotate: -8deg; pointer-events: none; white-space: nowrap;
+}
+.contact__cta { position: relative; display: inline-block; }
+
+.bugbar {
+  position: fixed; z-index: 30; top: 0.75rem; right: 0.75rem;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;
+  max-width: min(22rem, calc(100vw - 1.5rem));
+  padding: 0.5rem 0.6rem 0.55rem 0.9rem; border-radius: 1.25rem;
+  background: var(--black); color: var(--paper); box-shadow: 0 0 0 2px var(--cream);
+  transition: opacity 0.3s, translate 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.bugbar[hidden] { display: none; }
+html.motion .bugbar:not(.is-in) { opacity: 0; translate: 0 -1.25rem; }
+.bugbar__count { margin-right: auto; color: var(--paper); }
+.bugbar__n { display: inline-block; color: var(--acid); font-weight: 500; }
+.bugbar__btn {
+  all: unset; cursor: pointer; padding: 0.4rem 0.7rem; border-radius: 999px;
+  background: var(--acid); color: var(--black); font: 500 0.75rem/1 var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase;
+}
+.bugbar__btn[hidden] { display: none; }
+.bugbar__btn:focus-visible { outline: 3px solid var(--acid); outline-offset: 2px; }
+.bugbar__note { flex-basis: 100%; font-size: 0.8125rem; line-height: 1.35; color: var(--paper); }
+.bugbar__note:empty { display: none; }

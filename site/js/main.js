@@ -23,9 +23,9 @@ try {
   }
 
   const ctx = { motion, lenis };
-  initStart(ctx);
+  const playIntro = initStart(ctx);
   initBook(ctx);
-  initRunning(ctx)
+  const runningDone = initRunning(ctx)
     .then(() => {
       // The browser jumped to any #hash before the pins existed; the pins have
       // since pushed the target down, so go to it again.
@@ -36,8 +36,31 @@ try {
       }
     })
     .catch(console.error);
-  initRoute(ctx);
+  const route = initRoute(ctx);
   root.dataset.boot = 'ok';
+  // Start the intro once the page has settled: display font loaded (so letters
+  // don't change shape mid-animation), running scene pinned, and the route
+  // rebuilt and quiet. Setup work then can't steal frames from the animation.
+  // Capped, so a slow network never holds the name back for long.
+  const quiet = () => new Promise((ok) => {
+    let since = 0;
+    const check = (t) => {
+      if (root.dataset.route !== 'ready') since = 0;
+      else if (!since) since = t;
+      if (since && t - since >= 150) ok();
+      else requestAnimationFrame(check);
+    };
+    requestAnimationFrame(check);
+  });
+  const settled = Promise.all([
+    document.fonts.load('800 1em Archivo').catch(() => {}),
+    runningDone.catch(() => {}),
+  ]).then(quiet);
+  Promise.race([settled, new Promise((ok) => setTimeout(ok, 2500))])
+    .then(() => requestAnimationFrame(() => {
+      playIntro();
+      route.rebuild(); // the intro has just placed the landing dot under the "o"
+    }));
 } catch (err) {
   fallBack(err);
 }

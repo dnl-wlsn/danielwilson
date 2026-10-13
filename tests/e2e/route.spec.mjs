@@ -140,7 +140,9 @@ test('with webfonts blocked the line still meets every dot', async ({ page }) =>
 test('after fonts load the line still meets every dot', async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => document.fonts.ready);
-  await page.waitForTimeout(300);
+  // The intro places the landing dot once fonts are in, then the route rebuilds.
+  await page.waitForFunction(() => ['playing', 'done'].includes(document.documentElement.dataset.start));
+  await ready(page);
   expect(await worstDotMiss(page)).toBeLessThan(3);
 });
 

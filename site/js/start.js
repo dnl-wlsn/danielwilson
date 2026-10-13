@@ -3,6 +3,7 @@
 // (transform only), then the word widens once along Archivo's wdth axis.
 const TILT = [-12, 9, -7, 14, -10];
 
+// Returns a function that starts the intro.
 export function initStart({ motion }) {
   const name = document.querySelector('.start__name');
   const glyphs = name.querySelector('.start__glyphs');
@@ -30,12 +31,11 @@ export function initStart({ motion }) {
 
   if (!motion) {
     finish();
-    return;
+    return () => {};
   }
 
   // A failed start must never leave the name hidden.
   window.addEventListener('error', () => { glyphs.style.visibility = 'visible'; type.style.visibility = 'visible'; }, { once: true });
-  placeLanding();
   const text = type.textContent;
   type.textContent = '';
   const chars = [...text].map((ch) => {
@@ -46,11 +46,13 @@ export function initStart({ motion }) {
     return s;
   });
 
+  // Built paused: the caller plays it on the first frame after all setup work,
+  // so the clock doesn't start inside a long task and jump ahead.
+  gsap.set(chars, { autoAlpha: 0 });
+  const tl = gsap.timeline({ paused: true, onComplete: finish });
+  tl.from(all, { autoAlpha: 0, y: 24, duration: 0.5, stagger: 0.03, ease: 'power3.out' });
   glyphs.style.visibility = 'visible';
   type.style.visibility = 'visible';
-  const tl = gsap.timeline({ onComplete: finish });
-  tl.from(all, { autoAlpha: 0, y: 24, duration: 0.5, stagger: 0.03, ease: 'power3.out' });
-  tl.set(chars, { autoAlpha: 0 }, 0);
   tl.add(() => {
     const first = consonants.map((c) => c.getBoundingClientRect().left);
     const box = glyphs.getBoundingClientRect();
@@ -74,4 +76,9 @@ export function initStart({ motion }) {
   tl.to(glyphs, { '--wdth': 125, duration: 0.5, ease: 'power2.out' }, '>-0.1');
   tl.add(() => landing.classList.add('is-lit'));
   tl.to(chars, { autoAlpha: 1, duration: 0.01, stagger: 0.022 }, '<');
+  return () => {
+    placeLanding(); // measured now, with the real font in place
+    document.documentElement.dataset.start = 'playing';
+    tl.play(0);
+  };
 }

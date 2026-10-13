@@ -1,4 +1,4 @@
-import { buildRoutePath, sampleTable, lengthAtY, pointAtLength } from './lib/route-math.js';
+import { routeSegments, segmentsToD, sampleSegments, lengthAtY, pointAtLength } from './lib/route-math.js';
 
 const TIP = 0.6;          // the line's tip sits 60% of the way down the viewport
 const DESKTOP = 832;      // matches the 52rem layout breakpoint
@@ -33,9 +33,13 @@ export function initRoute({ motion }) {
     // Phones keep a short crossing too: the route starts under the fallen "o",
     // not on the rail, and has to reach the rail inside the empty top padding.
     const wide = w >= DESKTOP;
-    path.setAttribute('d', buildRoutePath(pts, { cross: wide ? 140 : 80, wiggle: wide ? 10 : 6, minX: 8, maxX: w - 8 }));
-    total = path.getTotalLength();
-    table = sampleTable((l) => path.getPointAtLength(l), total, 6);
+    const segs = routeSegments(pts, { cross: wide ? 140 : 80, wiggle: wide ? 10 : 6, minX: 8, maxX: w - 8 });
+    path.setAttribute('d', segmentsToD(segs));
+    // Measured in JS, not with getPointAtLength (which froze the intro for
+    // seconds). pathLength makes the browser's dash maths use our length.
+    table = sampleSegments(segs);
+    total = table.ls.at(-1);
+    path.setAttribute('pathLength', total.toFixed(3));
     cps = dots.map((d, i) => ({ owner: d.closest('[data-reach]'), len: lengthAtY(table, pts[i].y) }));
     path.style.strokeDasharray = `${total}`;
     update();
@@ -89,4 +93,5 @@ export function initRoute({ motion }) {
   document.addEventListener('focusin', (e) => reach(e.target.closest('[data-reach]')));
   window.__route = { rebuild };
   schedule();
+  return { rebuild: schedule };
 }

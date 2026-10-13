@@ -67,3 +67,21 @@ for (const [w, h] of [[1280, 800], [1440, 900], [900, 700], [375, 812], [320, 64
     expect(right).toBeLessThanOrEqual(w - 16);
   });
 }
+
+test('a slow font delays the intro rather than swapping letters mid-animation', async ({ page }) => {
+  await page.route('**/fonts/archivo-var-v1.woff2', async (r) => { await new Promise((ok) => setTimeout(ok, 1000)); await r.continue(); });
+  await page.addInitScript(() => {
+    window.__m = {};
+    const tick = (t) => {
+      if (document.documentElement.dataset.start === 'playing' && !window.__m.play) window.__m.play = t;
+      if (!window.__m.font && [...document.fonts].some((f) => f.family.includes('Archivo') && f.status === 'loaded')) window.__m.font = t;
+      if (!window.__m.play) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+  await page.goto('/');
+  await page.waitForFunction(() => window.__m.play > 0, null, { timeout: 10_000 });
+  const m = await page.evaluate(() => window.__m);
+  expect(m.font, 'font had loaded before the intro played').toBeGreaterThan(0);
+  expect(m.play).toBeGreaterThanOrEqual(m.font);
+});

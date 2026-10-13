@@ -17,7 +17,7 @@
 .start__glyphs .v.is-loose { position: absolute; }
 html:not(.motion) .start__glyphs { --wdth: 125; }
 /* Hidden until start.js takes over, so there's no flash of the unanimated name. */
-html.motion .start__glyphs, html.motion .start__type { visibility: hidden; }
+html.motion .start__glyphs { visibility: hidden; }
 html:not(.motion) .start__glyphs .v,
 .start__name.is-done .v { display: none; }
 .start__landing::after {
@@ -27,4 +27,3 @@ html:not(.motion) .start__glyphs .v,
   transition: transform 0.3s cubic-bezier(0.3, 1.6, 0.5, 1);
 }
 html.motion .start__landing:not(.is-lit)::after { transform: scale(0); }
-.start__type .ch { display: inline; }

@@ -77,3 +77,9 @@ test('placeholders are marked (informational list)', async ({ page }) => {
   const marks = await page.$$eval('[data-placeholder]', (e) => [...new Set(e.map((x) => x.dataset.placeholder))].sort());
   console.log('placeholders still in the page:', marks.join(', ') || 'none');
 });
+
+test('no subline under the name: the vowel drop says it', async ({ page }) => {
+  await page.goto('/');
+  expect(await page.locator('.start__sub, .start__type').count()).toBe(0);
+  expect(html).not.toContain('without the vowels');
+});

@@ -85,3 +85,31 @@ test('a slow font delays the intro rather than swapping letters mid-animation', 
   expect(m.font, 'font had loaded before the intro played').toBeGreaterThan(0);
   expect(m.play).toBeGreaterThanOrEqual(m.font);
 });
+
+test('the vowels drop out before the consonants squash together', async ({ page }) => {
+  // Each frame: once the vowels are loose, note the first frame any consonant
+  // moves sideways, and whether every vowel had already fallen below the word.
+  await page.addInitScript(() => {
+    const T = (window.__order = { slideAt: 0, vowelsGoneAtSlide: null, last: null });
+    const tick = (t) => {
+      const glyphs = document.querySelector('.start__glyphs');
+      if (glyphs && glyphs.querySelector('.v.is-loose')) {
+        const cons = [...glyphs.querySelectorAll('.g:not(.v)')].map((c) => c.getBoundingClientRect().left);
+        if (T.last && !T.slideAt && cons.some((x, i) => Math.abs(x - T.last[i]) > 1)) {
+          T.slideAt = t;
+          const bottom = Math.max(...[...glyphs.querySelectorAll('.g:not(.v)')].map((c) => c.getBoundingClientRect().bottom));
+          T.vowelsGoneAtSlide = [...glyphs.querySelectorAll('.v')].every((v) =>
+            v.getBoundingClientRect().top > bottom || Number(getComputedStyle(v).opacity) < 0.05);
+        }
+        T.last = cons;
+      }
+      if (document.documentElement.dataset.start !== 'done') requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+  await page.goto('/');
+  await page.waitForFunction(() => document.documentElement.dataset.start === 'done', null, { timeout: 10_000 });
+  const o = await page.evaluate(() => window.__order);
+  expect(o.slideAt, 'consonants never slid').toBeGreaterThan(0);
+  expect(o.vowelsGoneAtSlide).toBe(true);
+});

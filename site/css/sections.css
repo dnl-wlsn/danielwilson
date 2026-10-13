@@ -31,7 +31,6 @@
 
 /* Start */
 .start { min-height: 100svh; align-content: center; padding-block: 4rem 6rem; }
-.start__sub { margin-top: 1.25rem; color: var(--ink-soft); }
 .start__landing {
   position: absolute; bottom: 3rem; left: var(--landing-x, 30%);
   width: 0; height: 0;

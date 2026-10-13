@@ -15,7 +15,7 @@
     d.classList.remove('motion');
     var name = document.querySelector('.start__name');
     if (name) name.classList.add('is-done');
-    var styled = document.querySelectorAll('.start__glyphs, .start__glyphs .g, .start__type, .start__type .ch');
+    var styled = document.querySelectorAll('.start__glyphs, .start__glyphs .g');
     for (var i = 0; i < styled.length; i++) styled[i].removeAttribute('style');
     d.dataset.start = 'done';
   };

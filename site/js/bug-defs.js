@@ -150,8 +150,14 @@ export const BUGS = [
         dodges++;
         busy = true;
         const a = Math.atan2(cy - e.clientY, cx - e.clientX);
-        const lim = Math.min(170, zone.clientWidth / 4);
-        x = clamp(x + Math.cos(a) * 150, -lim, lim);
+        // Clamp the button's real position, not just its offset, so it can
+        // never run off the page: r is the moved box, so r.left - x is home.
+        const z = zone.getBoundingClientRect();
+        const pad = 16;
+        const homeL = r.left - x;
+        let nx = x + Math.cos(a) * 150;
+        if (homeL + nx < z.left + pad || homeL + nx + r.width > z.right - pad) nx = x - Math.cos(a) * 150; // bounce the other way
+        x = clamp(nx, z.left + pad - homeL, z.right - pad - r.width - homeL);
         y = clamp(y + Math.sin(a) * 60, -50, 50);
         gsap.to(slot, { x, y, rotation: x / 30, duration: 0.35, ease: 'power3.out', onComplete: () => { busy = false; } });
       });

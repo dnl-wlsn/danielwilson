@@ -14,10 +14,11 @@
     if (!d.classList.contains('motion')) return;
     d.classList.remove('motion');
     if (window.ScrollTrigger) window.ScrollTrigger.killAll();
+    if (window.__dwLenis) window.__dwLenis.destroy();
     var styled = document.querySelectorAll('main [style]');
     for (var i = 0; i < styled.length; i++) styled[i].removeAttribute('style');
     var bar = document.querySelector('.bugbar');
-    if (bar) bar.classList.add('is-in');
+    if (bar) { bar.classList.add('is-in'); bar.inert = false; }
     d.dataset.opening = 'done';
   };
   setTimeout(function () { if (d.dataset.boot !== 'ok') window.__dwStatic(); }, 6000);

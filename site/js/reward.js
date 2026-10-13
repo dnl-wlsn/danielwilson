@@ -43,11 +43,14 @@ function playground(box, stage) {
   const letters = [...stage.querySelectorAll('.rl')];
   const mouse = Mouse.create(stage);
   stage.removeEventListener('wheel', mouse.mousewheel); // let the page scroll over it
-  let engine, mc, pairs = [], W = 0, H = 0, running = false, visible = true, vowelTimer = 0;
+  // gen tags each animation loop; a rebuild bumps it so an old loop stops.
+  let engine, mc, pairs = [], W = 0, H = 0, running = false, visible = true, vowelTimer = 0, gen = 0;
 
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) start(); }).observe(stage);
 
   function build() {
+    gen++;
+    running = false;
     clearTimeout(vowelTimer);
     stage.classList.remove('is-laid');
     for (const el of letters) { el.classList.remove('is-gone'); el.style.transform = ''; }
@@ -86,7 +89,8 @@ function playground(box, stage) {
     start();
   }
 
-  function step() {
+  function step(mine) {
+    if (mine !== gen) return;
     Engine.update(engine, 1000 / 60);
     let awake = mc.body !== null;
     for (const p of pairs) {
@@ -102,7 +106,7 @@ function playground(box, stage) {
       if (!p.b.isSleeping) awake = true;
     }
     if (awake && visible) {
-      requestAnimationFrame(step);
+      requestAnimationFrame(() => step(mine));
     } else {
       running = false;
       root.dataset.reward = 'settled';
@@ -113,7 +117,8 @@ function playground(box, stage) {
     if (running || !engine) return;
     running = true;
     root.dataset.reward = 'running';
-    requestAnimationFrame(step);
+    const mine = gen;
+    requestAnimationFrame(() => step(mine));
   }
 
   stage.addEventListener('pointerdown', start);
@@ -125,11 +130,19 @@ function playground(box, stage) {
     }
     start();
   });
-  box.querySelector('[data-reward="reset"]').addEventListener('click', () => {
-    running = false;
+  const rebuild = () => {
     Composite.clear(engine.world, false);
     Engine.clear(engine);
     build();
-  });
+  };
+  box.querySelector('[data-reward="reset"]').addEventListener('click', rebuild);
+  // The walls are sized to the stage, so a resize or a phone rotation rebuilds it.
+  let lastW = stage.clientWidth, resizeTimer = 0;
+  new ResizeObserver(() => {
+    if (stage.clientWidth === lastW) return;
+    lastW = stage.clientWidth;
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(rebuild, 200);
+  }).observe(stage);
   build();
 }

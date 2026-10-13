@@ -39,8 +39,9 @@ export function initBugs(ctx, defs) {
     else trigger.setAttribute('aria-label', `Fix bug: ${def.label}`);
     trigger.addEventListener('click', (e) => {
       if (found.has(def.id)) {
-        if (!def.self) e.preventDefault();
-        return; // a fixed link works normally again
+        // A fixed link works normally again, but not while its fix still plays.
+        if (!def.self || trigger.dataset.fixing) e.preventDefault();
+        return;
       }
       e.preventDefault();
       if (def.activate && !def.activate(e, slot, ctx)) return;

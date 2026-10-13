@@ -22,6 +22,7 @@ try {
   if (motion) {
     gsap.registerPlugin(ScrollTrigger);
     lenis = new Lenis({ autoRaf: false, anchors: true });
+    window.__dwLenis = lenis; // so the static fallback can switch smooth scrolling off
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add((time) => lenis.raf(time * 1000));
     gsap.ticker.lagSmoothing(0);

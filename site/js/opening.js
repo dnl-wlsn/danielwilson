@@ -8,6 +8,7 @@ export function initOpening({ motion }) {
   const bar = document.querySelector('.bugbar');
   const done = () => {
     root.dataset.opening = 'done';
+    bar.inert = false;
     bar.classList.add('is-in');
     document.dispatchEvent(new Event('opening:done'));
   };

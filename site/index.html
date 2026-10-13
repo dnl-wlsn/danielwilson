@@ -33,9 +33,9 @@
 <script type="module" src="/js/main.js"></script>
 </head>
 <body>
-<a class="skip" href="#testing">Skip to content</a>
+<a class="skip" href="#start">Skip to content</a>
 
-<aside class="bugbar" aria-label="Bug hunt" hidden>
+<aside class="bugbar" aria-label="Bug hunt" hidden inert>
   <p class="bugbar__count mono"><span class="bugbar__n" data-bug-count>0</span> / <span data-bug-total>7</span> bugs found</p>
   <button class="bugbar__btn mono" type="button" data-bug-hint>Hint</button>
   <button class="bugbar__btn mono" type="button" data-bug-reset hidden>Reset bugs</button>
@@ -119,7 +119,7 @@
     <li class="marker mono">2015 · ISTQB Intermediate (ICST) · 2016 · BCS Business Analysis (FCBA)</li>
     <li class="role">
       <p class="role__year mono">2017</p>
-      <h3 class="role__org"><span class="visually-hidden">Cabot Credit Management</span><span class="spill" data-bug="overflow" aria-hidden="true">Cabot Credit Management</span></h3>
+      <h3 class="role__org" aria-labelledby="cabot-name"><span class="visually-hidden" id="cabot-name">Cabot Credit Management</span><span class="spill" data-bug="overflow" aria-hidden="true">Cabot Credit Management</span></h3>
       <p class="role__title mono">Contract QA Lead · Brackley</p>
       <p>A re-platforming that brought several businesses onto one system. I trained 15 business users to run UAT.</p>
       <details><summary>More</summary><ul>

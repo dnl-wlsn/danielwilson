@@ -5,12 +5,16 @@ export function initBeetle({ motion }) {
   const btn = document.querySelector('.bug--beetle');
   if (!btn) return;
   const zone = btn.parentElement;
-  const place = (t) => {
-    const p = beetleAt(t, zone.clientWidth - btn.offsetWidth, zone.clientHeight - btn.offsetHeight);
+  // Sizes are read on resize, not every frame, so the crawl never forces layout.
+  let w = 0, h = 0, t = 14;
+  const measure = () => { w = zone.clientWidth - btn.offsetWidth; h = zone.clientHeight - btn.offsetHeight; };
+  const place = (time) => {
+    const p = beetleAt(time, w, h);
     btn.style.transform = `translate(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px) rotate(${p.angle.toFixed(1)}deg)`;
   };
-  let t = 14;
+  measure();
   place(t);
+  new ResizeObserver(() => { measure(); place(t); }).observe(zone);
   if (!motion || btn.dataset.fixed) return;
   let paused = false, visible = false;
   btn.addEventListener('focus', () => { paused = true; });

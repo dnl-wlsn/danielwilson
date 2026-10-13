@@ -10,6 +10,7 @@
   --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
   --gutter: clamp(1rem, 5vw, 4rem);
   --col: 72rem;
+  --focus: var(--blue); /* outside any section (the skip link) */
   --feed: 9rem; /* how far each sheet overlaps the one before (the printer feed) */
   color-scheme: light;
 }

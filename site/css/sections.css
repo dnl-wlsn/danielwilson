@@ -1,0 +1,85 @@
+/* Layout: every section is a 3-column grid. Column 1 and 3 are the rails the
+   route runs down; column 2 is the reading column. Roles use subgrid so their
+   dots sit in the same rail as the section's. */
+.trail { position: relative; }
+.cp-section {
+  position: relative;
+  display: grid;
+  grid-template-columns:
+    [full-start] minmax(var(--rail), 1fr)
+    [col-start] min(var(--col), 100% - var(--rail) - var(--gutter))
+    [col-end] minmax(var(--gutter), 1fr) [full-end];
+  row-gap: 1.25rem;
+  padding-block: 10rem 2rem;
+}
+.cp-section > * { grid-column: col; }
+.cp-dot {
+  grid-column: 1; grid-row: 1; align-self: center; justify-self: end;
+  margin-inline-end: clamp(1rem, 5vw, 4rem);
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--paper); border: 3px solid var(--route);
+  position: relative; z-index: 1;
+}
+.cp-section[data-side="right"] > .cp-dot { grid-column: 3; justify-self: start; margin-inline: clamp(1rem, 5vw, 4rem) 0; }
+.cp-label { color: var(--ink-soft); }
+.lede { font-size: 1.25rem; max-width: 34em; }
+
+@media (max-width: 52rem) {
+  .cp-section { padding-block: 6rem 1.5rem; }
+  .cp-dot, .cp-section[data-side="right"] > .cp-dot { grid-column: 1; justify-self: center; margin: 0; }
+}
+
+/* Start */
+.start { min-height: 100svh; align-content: center; padding-block: 4rem 6rem; }
+.start__sub { margin-top: 1.25rem; color: var(--ink-soft); }
+.start__landing {
+  position: absolute; bottom: 3rem; left: var(--landing-x, 30%);
+  width: 0; height: 0;
+}
+
+/* Career */
+.roles {
+  list-style: none; margin: 2rem 0 0; padding: 0;
+  grid-column: full; display: grid; grid-template-columns: subgrid; row-gap: 2.5rem;
+}
+.role, .marker { grid-column: full; display: grid; grid-template-columns: subgrid; row-gap: 0.25rem; }
+.role > *, .marker > * { grid-column: col; }
+.role > .cp-dot, .marker > .cp-dot { grid-column: 1; grid-row: 1; }
+.cp-dot--small { width: 12px; height: 12px; border-width: 2px; }
+.cp-dot--marker { width: 10px; height: 10px; border-radius: 2px; border-width: 2px; background: var(--route); }
+.role__year, .role__title, .marker p { color: var(--ink-soft); }
+.role details { margin-top: 0.5rem; }
+.role summary { cursor: pointer; font: 500 0.8125rem/1.4 var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; width: max-content; }
+.role details ul { margin: 0.75rem 0 0; padding-left: 1.1rem; }
+.role details li + li { margin-top: 0.35rem; }
+.cv-download { margin-top: 2.5rem; }
+
+/* Book */
+.book-stage { display: grid; gap: 2rem; align-items: center; padding-block: 2rem; }
+.book-pitch { display: grid; gap: 1rem; }
+@media (min-width: 52rem) { .book-stage { grid-template-columns: auto 1fr; gap: 3.5rem; } }
+
+/* Studio */
+.studio-work { display: grid; gap: 1rem; margin-top: 1rem; }
+.studio-work figure { margin: 0; }
+.studio-shots { display: grid; grid-template-columns: 3fr 1fr; gap: 0.75rem; align-items: end; }
+.studio-shots img { border: 1px solid var(--rule); border-radius: 6px; }
+.studio-work figcaption { margin-top: 0.75rem; color: var(--ink-soft); }
+
+/* Running */
+.run-stage { grid-column: full; position: relative; z-index: 2; background: var(--paper); padding: 2rem var(--gutter) 2rem var(--rail); }
+.run__stats { display: flex; flex-wrap: wrap; gap: 1.5rem 2.5rem; margin: 1.5rem 0 0; }
+.run__stats dt { color: var(--ink-soft); }
+.run__stats dd { margin: 0.25rem 0 0; font: 500 1.75rem/1 var(--font-mono); }
+
+/* Aid station */
+.aid-cols { display: grid; gap: 1rem; }
+@media (min-width: 40rem) { .aid-cols { grid-template-columns: 1fr 1fr; } }
+.aid-panel { position: relative; padding: 1.5rem; border-radius: 10px; border: 1px solid var(--rule); }
+.aid-panel ul { margin: 0.75rem 0 0; padding-left: 1.1rem; }
+.aid-panel--dark { background: var(--ink); color: var(--paper); border-color: var(--ink); overflow: hidden; }
+
+/* Finish */
+.finish { padding-bottom: 6rem; }
+.finish-links { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; list-style: none; padding: 0; margin: 0.5rem 0 0; }
+.finish-links a { font: 500 1rem/1.4 var(--font-mono); }

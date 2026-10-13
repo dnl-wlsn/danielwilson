@@ -1,0 +1,26 @@
+:root {
+  --paper: #F2EDE3;
+  --ink: #1C1F1B;
+  --ink-soft: #4A4F47;
+  --contour: #CDBB9E;
+  --route: #FF9300;
+  --forest: #2F4A36;
+  --rule: rgba(28, 31, 27, 0.14);
+  --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+  --rail: 3rem;
+  --gutter: 1rem;
+  --col: 40rem;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #14160F;
+    --ink: #ECE6D8;
+    --ink-soft: #B8B2A3;
+    --contour: #3B3A30;
+    --route: #FF9D1A;
+    --forest: #7FA88A;
+    --rule: rgba(236, 230, 216, 0.16);
+  }
+}

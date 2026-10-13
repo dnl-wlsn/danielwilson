@@ -20,6 +20,3 @@
   font-style: normal;
   font-display: swap;
 }
-/* Task 1 smoke-test probe; Task 2 deletes this rule. */
-.font-probe { font: 800 1rem Archivo; }
-.font-probe code { font: 400 1rem "IBM Plex Mono"; }

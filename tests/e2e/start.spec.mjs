@@ -4,12 +4,15 @@ const visibleName = (page) => page.$$eval('.start__glyphs .g', (gs) => gs
   .filter((g) => getComputedStyle(g).display !== 'none' && Number(getComputedStyle(g).opacity) > 0.01)
   .map((g) => g.textContent).join(''));
 
-const displayedName = (page) => page.$$eval('.start__glyphs .g', (gs) => gs
-  .filter((g) => getComputedStyle(g).display !== 'none').map((g) => g.textContent).join(''));
-
 test('start line drops the vowels and settles as "dnl wlsn"', async ({ page }) => {
+  // Read the name at DOMContentLoaded, before any animation can have run, so a
+  // slow page load under a busy test run can't make this flaky.
+  await page.addInitScript(() => document.addEventListener('DOMContentLoaded', () => {
+    window.__initialName = [...document.querySelectorAll('.start__glyphs .g')]
+      .filter((g) => getComputedStyle(g).display !== 'none').map((g) => g.textContent).join('');
+  }));
   await page.goto('/');
-  expect(await displayedName(page)).toBe('daniel wilson');
+  expect(await page.evaluate(() => window.__initialName)).toBe('daniel wilson');
   await page.waitForFunction(() => document.documentElement.dataset.start === 'done', null, { timeout: 8000 });
   expect(await visibleName(page)).toBe('dnl wlsn');
   const wdth = await page.$eval('.start__glyphs', (el) => getComputedStyle(el).getPropertyValue('--wdth').trim());

@@ -17,7 +17,10 @@ export function initStart({ motion }) {
     const o = vowels[vowels.length - 1];
     const s = section.getBoundingClientRect();
     const r = o.getBoundingClientRect();
-    landing.style.setProperty('--landing-x', `${r.left + r.width / 2 - s.left}px`);
+    // A percentage, not px: the name is sized in vw, so the spot under the "o"
+    // scales with the screen, and a resize can never strand the route's start
+    // point off-screen.
+    landing.style.setProperty('--landing-x', `${(((r.left + r.width / 2 - s.left) / s.width) * 100).toFixed(2)}%`);
   };
   const finish = () => {
     name.classList.add('is-done');

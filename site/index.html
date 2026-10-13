@@ -19,6 +19,8 @@
 <link rel="stylesheet" href="/css/terrain.css">
 <link rel="stylesheet" href="/css/lenis.css">
 <link rel="stylesheet" href="/css/start.css">
+<link rel="stylesheet" href="/css/route.css">
+<link rel="stylesheet" href="/css/print.css">
 <script src="/js/motion-gate.js"></script>
 <script defer src="/js/vendor/gsap.min.js"></script>
 <script defer src="/js/vendor/ScrollTrigger.min.js"></script>
@@ -28,6 +30,7 @@
 <body>
 <a class="skip" href="#about">Skip to content</a>
 <main class="trail">
+<svg class="route" aria-hidden="true" focusable="false"><path class="route__line"/><g class="route__runner"><circle r="6"/></g></svg>
 
 <section id="start" class="cp-section start" data-section data-terrain="1">
   <h1 class="start__name">

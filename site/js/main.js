@@ -1,6 +1,7 @@
 // Entry point. Vendor scripts (gsap, ScrollTrigger, Lenis) are classic deferred
 // scripts that run before this module, so they are available as globals.
 import { initStart } from './start.js';
+import { initRoute } from './route.js';
 
 const motion = document.documentElement.classList.contains('motion');
 let lenis = null;
@@ -15,3 +16,4 @@ if (motion) {
 
 const ctx = { motion, lenis };
 initStart(ctx);
+initRoute(ctx);

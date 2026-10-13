@@ -27,7 +27,7 @@ npm run test:perf   # 55 fps floor on a 4x-throttled phone
 |---|---|
 | Any copy | `site/index.html` |
 | CV | edit `cv/cv.html`, then `npm run cv` (tests fail if a phone number appears) |
-| Race | `python3 tools/gpx_to_profile.py race.gpx -o site/data/race.json --name "..." --date YYYY-MM-DD --moving --climb <Strava climb m> --calories <kcal>`, then copy the printed totals into `.run__stats` and the `.run__summary` sentence in `index.html`. `--moving` drops watch pauses over 30 s; `--climb` matches Strava's figure while keeping the profile shape. The GPX's GPS coordinates are never written out. |
+| Race | `python3 tools/gpx_to_profile.py race.gpx -o site/data/race.json --name "..." --date YYYY-MM-DD --time <Strava moving time h:mm:ss> --climb <Strava climb m> --calories <kcal>`, then copy the printed totals into `.run__stats` and the `.run__summary` sentence in `index.html`. `--time` and `--climb` make the counters finish on Strava's figures while keeping the profile's shape. (Don't rely on `--moving`: GPS dropouts look like pauses in a GPX, which put the 2026 Maverick time out by 33 minutes.) The GPX's GPS coordinates are never written out. |
 | Images | add a new versioned file (`-v2`); never overwrite, `/img/*` is cached for a year |
 
 Content still waiting on Dan is marked `data-placeholder="..."`; `npm run test:e2e` prints the list.

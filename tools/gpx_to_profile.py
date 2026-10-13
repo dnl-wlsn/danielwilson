@@ -104,7 +104,7 @@ def moving_times(times, pause_s):
     return out
 
 
-def build_profile(trkpts, samples=400, smooth_window=5, pause_s=None, climb_m=None):
+def build_profile(trkpts, samples=400, smooth_window=5, pause_s=None, climb_m=None, time_s=None):
     kms = [0.0]
     for a, b in zip(trkpts, trkpts[1:]):
         kms.append(kms[-1] + haversine_km(a, b))
@@ -112,6 +112,10 @@ def build_profile(trkpts, samples=400, smooth_window=5, pause_s=None, climb_m=No
     times = [p[3] for p in trkpts]
     if pause_s is not None and times[0] is not None:
         times = moving_times(times, pause_s)
+    if time_s is not None and times[-1]:
+        # Finish on an official figure (e.g. Strava's moving time). Gaps in a GPX
+        # are often lost GPS signal, not stops, so the file alone can't say.
+        times = [t * time_s / times[-1] for t in times]
     climbs = [0.0]
     for a, b in zip(eles, eles[1:]):
         climbs.append(climbs[-1] + max(0.0, b - a))
@@ -146,14 +150,21 @@ def main(argv=None):
     ap.add_argument("--date", required=True)
     ap.add_argument("--samples", type=int, default=400)
     ap.add_argument("--placeholder", action="store_true")
-    ap.add_argument("--moving", action="store_true", help="show moving time (drop pauses over 30 s)")
+    ap.add_argument("--moving", action="store_true",
+                    help="estimate moving time by dropping gaps over 30 s (unreliable: GPS dropouts look like pauses; prefer --time)")
+    ap.add_argument("--time", help="official moving time as h:mm:ss, e.g. from Strava")
     ap.add_argument("--climb", type=int, help="official total climb in metres, e.g. from Strava")
     ap.add_argument("--calories", type=int, help="calories burned, shown as a stat")
     args = ap.parse_args(argv)
+    time_s = None
+    if args.time:
+        h, m, sec = (int(x) for x in args.time.split(":"))
+        time_s = h * 3600 + m * 60 + sec
     prof = build_profile(parse_gpx(pathlib.Path(args.gpx).read_text()), samples=args.samples,
-                         pause_s=30 if args.moving else None, climb_m=args.climb)
+                         pause_s=30 if args.moving and not args.time else None,
+                         climb_m=args.climb, time_s=time_s)
     data = {"name": args.name, "date": args.date, "placeholder": args.placeholder,
-            "time_kind": "moving" if args.moving else "elapsed", **prof}
+            "time_kind": "moving" if (args.moving or args.time) else "elapsed", **prof}
     if args.calories is not None:
         data["calories"] = args.calories
     pathlib.Path(args.out).write_text(json.dumps(data, separators=(",", ":")))

@@ -116,6 +116,25 @@ class MovingTimeAndOverridesTest(unittest.TestCase):
         self.assertEqual(p["points"][-1][3], 1058)
         self.assertEqual(p["points"][1][3], round(50 * 1058 / 130))
 
+    def test_time_override_finishes_on_the_official_figure(self):
+        # Strava's moving time can differ from anything the GPX shows (GPS gaps
+        # it counts as moving), so an official figure wins.
+        p = g.build_profile(g.parse_gpx(gpx(PAUSED)), samples=4, smooth_window=1, time_s=3000)
+        self.assertEqual(p["elapsed_s"], 3000)
+        self.assertEqual(p["points"][-1][2], 3000)
+        self.assertEqual(p["points"][1][2], round(600 * 3000 / 3600))
+
+    def test_cli_time_override(self):
+        with tempfile.TemporaryDirectory() as d:
+            src = pathlib.Path(d) / "in.gpx"
+            out = pathlib.Path(d) / "race.json"
+            src.write_text(gpx(PAUSED))
+            subprocess.run([sys.executable, str(ROOT / "tools/gpx_to_profile.py"), str(src), "-o", str(out),
+                            "--name", "Test", "--date", "2026-05-01", "--time", "7:16:59"], check=True)
+            data = json.loads(out.read_text())
+            self.assertEqual(data["elapsed_s"], 26219)
+            self.assertEqual(data["time_kind"], "moving")
+
     def test_cli_moving_climb_and_calories(self):
         with tempfile.TemporaryDirectory() as d:
             src = pathlib.Path(d) / "in.gpx"

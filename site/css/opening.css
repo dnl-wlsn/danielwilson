@@ -1,4 +1,9 @@
 .opening { min-height: 100svh; display: grid; align-content: center; gap: 1.5rem; }
+.opening > :not(.sheet-edge) { width: 100%; } /* one left edge for name, tag and intro */
+@media (max-width: 40rem) {
+  .opening { align-content: start; padding-top: 3rem; }
+  .name { font-size: 27vw !important; }
+}
 .name {
   position: relative; font: 900 clamp(4.5rem, 21vw, 16rem)/0.8 var(--font-sans); font-stretch: 62%;
   text-transform: uppercase; color: var(--ink); letter-spacing: -0.01em;
@@ -15,3 +20,5 @@
 .opening__tag { color: var(--ink); font-size: clamp(0.875rem, 1.6vw, 1.125rem); }
 /* Hidden only until the opening starts; motion-gate.js's watchdog clears it. */
 html.motion:not([data-opening]) .name { visibility: hidden; }
+/* While the letters fall, give each its own layer so frames don't repaint the name. */
+html[data-opening="playing"] .name .g, html[data-opening="playing"] .name__pink { will-change: transform; }

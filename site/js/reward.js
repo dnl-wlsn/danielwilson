@@ -29,7 +29,7 @@ export function initReward({ motion }) {
           if (!e.isIntersecting) return;
           io.disconnect();
           playground(box, stage);
-        }, { threshold: 0.3 });
+        }, { threshold: 0.15 });
         io.observe(stage);
       })
       .catch((err) => { console.error(err); still(); });
@@ -39,12 +39,35 @@ export function initReward({ motion }) {
 }
 
 function playground(box, stage) {
-  const { Engine, Bodies, Body, Composite, Mouse, MouseConstraint, Events, Sleeping } = window.Matter;
+  const { Engine, Bodies, Body, Composite, Mouse, MouseConstraint, Events, Sleeping, Query } = window.Matter;
   const letters = [...stage.querySelectorAll('.rl')];
   const mouse = Mouse.create(stage);
   stage.removeEventListener('wheel', mouse.mousewheel); // let the page scroll over it
+  // A letter let go outside the stage must still be let go.
+  window.addEventListener('mouseup', (e) => { if (mouse.button === 0) mouse.mouseup(e); });
+  // Touch: Matter would block page scrolling anywhere on the stage. Only a
+  // touch that starts on a letter grabs; any other swipe scrolls the page.
+  stage.removeEventListener('touchstart', mouse.mousedown);
+  stage.removeEventListener('touchmove', mouse.mousemove);
+  stage.removeEventListener('touchend', mouse.mouseup);
+  let grabbing = false;
+  const onLetter = (e) => {
+    const t = e.changedTouches[0], r = stage.getBoundingClientRect();
+    return Query.point(pairs.filter((p) => !p.gone).map((p) => p.b), { x: t.clientX - r.left, y: t.clientY - r.top }).length > 0;
+  };
+  stage.addEventListener('touchstart', (e) => {
+    if (!engine || !onLetter(e)) return;
+    grabbing = true;
+    mouse.mousedown(e); // calls preventDefault, so this gesture won't scroll
+    start();
+  }, { passive: false });
+  stage.addEventListener('touchmove', (e) => { if (grabbing) mouse.mousemove(e); }, { passive: false });
+  const letGo = (e) => { if (grabbing) { grabbing = false; mouse.mouseup(e); } };
+  stage.addEventListener('touchend', letGo);
+  stage.addEventListener('touchcancel', letGo);
   // gen tags each animation loop; a rebuild bumps it so an old loop stops.
   let engine, mc, pairs = [], W = 0, H = 0, running = false, visible = true, vowelTimer = 0, gen = 0;
+  let lineup = null, tweens = [];
 
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) start(); }).observe(stage);
 
@@ -52,6 +75,10 @@ function playground(box, stage) {
     gen++;
     running = false;
     clearTimeout(vowelTimer);
+    clearTimeout(lineup);
+    lineup = null;
+    tweens.forEach((t) => t.kill());
+    tweens = [];
     stage.classList.remove('is-laid');
     for (const el of letters) { el.classList.remove('is-gone'); el.style.transform = ''; }
     const s = stage.getBoundingClientRect();
@@ -75,7 +102,7 @@ function playground(box, stage) {
     });
     mc = MouseConstraint.create(engine, { mouse, constraint: { stiffness: 0.2, render: { visible: false } } });
     Composite.add(engine.world, [...walls, ...pairs.map((p) => p.b), mc]);
-    Events.on(mc, 'startdrag', start);
+    Events.on(mc, 'startdrag', () => { release(); start(); });
     vowelTimer = setTimeout(dropVowels, 2600);
     start();
   }
@@ -92,7 +119,7 @@ function playground(box, stage) {
   function step(mine) {
     if (mine !== gen) return;
     Engine.update(engine, 1000 / 60);
-    let awake = mc.body !== null;
+    let awake = mc.body !== null || tweens.some((t) => t.progress() < 1);
     for (const p of pairs) {
       if (p.gone) continue;
       const { x, y } = p.b.position;
@@ -100,6 +127,7 @@ function playground(box, stage) {
         p.gone = true;
         Composite.remove(engine.world, p.b);
         p.el.classList.add('is-gone');
+        if (lineup === null && pairs.every((q) => !q.vowel || q.gone)) lineup = setTimeout(lineUp, 700);
         continue;
       }
       p.el.style.transform = `translate(${(x - p.w / 2).toFixed(1)}px, ${(y - p.h / 2).toFixed(1)}px) rotate(${p.b.angle.toFixed(3)}rad)`;
@@ -121,8 +149,37 @@ function playground(box, stage) {
     requestAnimationFrame(() => step(mine));
   }
 
+  // Once the vowels have gone, the rest slide into a readable line so the
+  // joke lands, wherever the physics left them. Grab or shake to scatter again.
+  function lineUp() {
+    const rest = pairs.filter((p) => !p.gone);
+    const gapL = rest[0].h * 0.03, gapW = rest[0].h * 0.35;
+    const total = rest.reduce((s, p) => s + p.w, 0) + gapL * (rest.length - 2) + gapW;
+    let x = (W - total) / 2;
+    rest.forEach((p, i) => {
+      if (i === 3) x += gapW - gapL; // between DNL and WLSN
+      const target = { x: x + p.w / 2, y: H - p.h / 2 };
+      x += p.w + gapL;
+      Body.setStatic(p.b, true);
+      const turn = Math.round(p.b.angle / (2 * Math.PI)) * 2 * Math.PI;
+      const pose = { x: p.b.position.x, y: p.b.position.y, a: p.b.angle };
+      tweens.push(gsap.to(pose, {
+        x: target.x, y: target.y, a: turn, duration: 0.9, delay: i * 0.06, ease: 'power3.inOut',
+        onUpdate: () => { Body.setPosition(p.b, { x: pose.x, y: pose.y }); Body.setAngle(p.b, pose.a); },
+        onComplete: () => { Body.setStatic(p.b, false); Sleeping.set(p.b, true); },
+      }));
+    });
+    start();
+  }
+  function release() {
+    tweens.forEach((t) => t.kill());
+    tweens = [];
+    for (const p of pairs) if (!p.gone && p.b.isStatic) Body.setStatic(p.b, false);
+  }
+
   stage.addEventListener('pointerdown', start);
   box.querySelector('[data-reward="shake"]').addEventListener('click', () => {
+    release();
     for (const p of pairs) {
       if (p.gone) continue;
       Sleeping.set(p.b, false);

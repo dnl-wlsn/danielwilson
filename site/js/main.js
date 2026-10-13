@@ -52,12 +52,27 @@ try {
     // height that counts is the one it leaves behind.
     const main = document.querySelector('main');
     let lastH = 0, timer = 0, refreshing = false;
-    ScrollTrigger.addEventListener('refreshInit', () => { refreshing = true; });
-    ScrollTrigger.addEventListener('refresh', () => { refreshing = false; lastH = main.offsetHeight; });
+    // A refresh un-pins and re-pins the running scene, moving it in the DOM,
+    // which drops keyboard focus inside it; put focus back where it was.
+    let focused = null;
+    ScrollTrigger.addEventListener('refreshInit', () => { refreshing = true; focused = document.activeElement; });
+    ScrollTrigger.addEventListener('refresh', () => {
+      refreshing = false;
+      lastH = main.offsetHeight;
+      if (focused && focused !== document.activeElement && focused.isConnected) focused.focus({ preventScroll: true });
+    });
+    const remeasure = () => {
+      // Never mid-glide, and never during the opening: a refresh is a long task
+      // that would cost the opening its frames.
+      if (lenis.isScrolling || root.dataset.opening === 'playing') { timer = setTimeout(remeasure, 200); return; }
+      lenis.resize();
+      ScrollTrigger.refresh();
+    };
     new ResizeObserver(() => {
-      if (refreshing || main.offsetHeight === lastH) return;
+      // Sub-pixel rounding makes the height wobble by a pixel while pins move; ignore that.
+      if (refreshing || Math.abs(main.offsetHeight - lastH) <= 2) return;
       clearTimeout(timer);
-      timer = setTimeout(() => { lenis.resize(); ScrollTrigger.refresh(); }, 150);
+      timer = setTimeout(remeasure, 150);
     }).observe(main);
   }
   root.dataset.boot = 'ok';

@@ -6,7 +6,7 @@
   text-transform: uppercase; overflow-wrap: anywhere;
 }
 html.motion .role__org { font-stretch: 70%; transition: font-stretch 0.45s cubic-bezier(0.3, 1.4, 0.5, 1); }
-html.motion .role__org.is-wide { font-stretch: 125%; }
+html.motion .role__org.is-wide { font-stretch: var(--wide, 125%); }
 .role details summary { cursor: pointer; font: 500 0.8125rem var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; color: var(--accent); }
 .role details ul { margin: 0.75rem 0 0; padding-left: 1.1rem; }
 .marker { color: var(--accent); }
@@ -23,3 +23,11 @@ html.motion .role__org.is-wide { font-stretch: 125%; }
 .spill { display: inline-block; }
 .spill.is-spilling { white-space: nowrap; translate: 40% 0; }
 .role__org:has(.is-spilling) { outline: 2px dashed var(--accent); outline-offset: 0.35rem; }
+/* Desktop: a big outlined year follows the role in the middle of the screen. */
+#testing > .testing__year { /* id: beats .sheet > * (relative, centred column) */
+  position: fixed; right: 4vw; left: auto; top: 50%; margin: 0; max-width: none; translate: 0 -50%; z-index: 5; pointer-events: none;
+  font: 400 clamp(6rem, 13vw, 13rem)/1 var(--font-poster); color: transparent;
+  -webkit-text-stroke: 2px var(--acid); opacity: 0; transition: opacity 0.4s;
+}
+#testing > .testing__year.is-on { opacity: 1; }
+@media (max-width: 64rem) { #testing > .testing__year { display: none; } }

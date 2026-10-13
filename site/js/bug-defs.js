@@ -159,7 +159,12 @@ export const BUGS = [
         if (homeL + nx < z.left + pad || homeL + nx + r.width > z.right - pad) nx = x - Math.cos(a) * 150; // bounce the other way
         x = clamp(nx, z.left + pad - homeL, z.right - pad - r.width - homeL);
         y = clamp(y + Math.sin(a) * 60, -50, 50);
-        gsap.to(slot, { x, y, rotation: x / 30, duration: 0.35, ease: 'power3.out', onComplete: () => { busy = false; } });
+        const tired = dodges === 3;
+        gsap.timeline({ onComplete: () => { busy = false; } })
+          .to(slot, { x, y, rotation: x / 30, duration: 0.35, ease: 'power3.out' })
+          .fromTo(slot, { scaleX: 1.15, scaleY: 0.85 }, { scaleX: 1, scaleY: 1, duration: 0.3, ease: 'back.out(3)' }, 0.2)
+          // After the third dodge it gives up and sags, so the next click lands.
+          .to(slot, tired ? { rotation: 5, y: y + 8, duration: 0.6, ease: 'bounce.out' } : { duration: 0 });
       });
     },
     activate(e, slot, { motion }) {

@@ -11,7 +11,7 @@
   --gutter: clamp(1rem, 5vw, 4rem);
   --col: 72rem;
   --focus: var(--blue); /* outside any section (the skip link) */
-  --feed: 9rem; /* how far each sheet overlaps the one before (the printer feed) */
+  --feed: 7rem; /* how far each sheet overlaps the one before (the printer feed) */
   color-scheme: light;
 }
 /* Each section declares its paper; everything inside reads these. */

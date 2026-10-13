@@ -3,3 +3,8 @@
 .contact__links { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; font-size: clamp(1.25rem, 3vw, 2rem); }
 /* Bug 6, reduced motion: the button is simply in the wrong place. */
 .btn.is-askew { rotate: -4deg; translate: 1.5rem 0.4rem; }
+.reward-lock {
+  margin-top: 4rem; padding: 1.25rem 1.5rem; display: inline-block;
+  border: 2px dashed var(--acid); border-radius: 0.75rem; color: var(--acid);
+}
+.reward-lock[hidden] { display: none; }

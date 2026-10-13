@@ -14,9 +14,14 @@ test('the beetle crawls, and stops once caught', async ({ page }, info) => {
   await t.focus();
   if (info.project.name === 'mobile') await t.tap(); else await t.click();
   await expect(t).toHaveAttribute('data-fixed', '1');
+  // Once caught it walks to the bottom corner (clear of the list) and stays.
+  await page.waitForTimeout(1400);
   const b = await pos();
   await page.waitForTimeout(600);
   expect(await pos()).toBe(b);
+  const [box, zone] = await Promise.all([t.boundingBox(), page.locator('.likes__cols').boundingBox()]);
+  expect(box.x + box.width).toBeGreaterThan(zone.x + zone.width - 4);
+  expect(box.y + box.height).toBeGreaterThan(zone.y + zone.height - 4);
 });
 
 test('the beetle can be caught from the keyboard', async ({ page }) => {

@@ -3,7 +3,7 @@
    sheet edge (added by sheets.js) feeds up over it. */
 .sheet {
   position: relative;
-  padding: calc(var(--feed) + 3.5rem) var(--gutter) calc(var(--feed) + 3.5rem);
+  padding: calc(var(--feed) + 1.5rem) var(--gutter) calc(var(--feed) + 3.5rem);
   margin-top: calc(-1 * var(--feed));
   background: linear-gradient(to bottom, transparent var(--feed), var(--bg) var(--feed));
   color: var(--fg);
@@ -12,11 +12,12 @@
 .sheet:first-of-type { margin-top: 0; padding-top: 5rem; background: var(--bg); }
 .sheet > :not(.sheet-edge) { position: relative; max-width: var(--col); margin-inline: auto; }
 .sheet-edge {
-  position: absolute; left: 0; right: 0; top: 0; height: var(--feed);
+  position: absolute; left: 0; right: 0; top: 0; height: calc(var(--feed) + 2px); /* +2px: no hairline seam at fractional DPRs */
   background: var(--bg); transform-origin: 0 100%; pointer-events: none;
 }
 .sheet h2 {
   font-size: clamp(2.75rem, 8vw, 6.5rem); text-transform: uppercase; margin-bottom: 2rem; max-width: 18ch;
+  text-wrap: balance;
 }
 [data-paper="cream"] h2 { font: 900 clamp(2.75rem, 8vw, 6.5rem)/0.88 var(--font-sans); font-stretch: 62%; color: var(--ink); }
 [data-paper="black"] h2 { font-family: var(--font-poster); font-weight: 400; letter-spacing: 0.005em; color: var(--ink); }

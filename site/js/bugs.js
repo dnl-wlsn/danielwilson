@@ -18,6 +18,8 @@ export function initBugs(ctx, defs) {
   const note = bar.querySelector('[data-bug-note]');
   const hint = bar.querySelector('[data-bug-hint]');
   const reset = bar.querySelector('[data-bug-reset]');
+  const lock = document.querySelector('.reward-lock');
+  const touch = window.matchMedia('(hover: none)').matches;
   const ids = defs.map((d) => d.id);
   const found = new Set(parseSaved(store.read(), ids));
   const bugs = new Map();
@@ -60,10 +62,18 @@ export function initBugs(ctx, defs) {
   };
 
   bar.querySelector('[data-bug-total]').textContent = String(bugs.size);
+  // One dot per bug, filled as they're found: quicker to read than the numbers.
+  const pips = document.createElement('span');
+  pips.className = 'bugbar__pips';
+  pips.setAttribute('aria-hidden', 'true');
+  for (let i = 0; i < bugs.size; i++) pips.append(document.createElement('span'));
+  bar.querySelector('.bugbar__count').after(pips);
   bar.hidden = false;
   render();
   if (found.size === bugs.size) root.dataset.bugs = 'complete';
-  const intro = found.size === bugs.size ? `All ${bugs.size} found. Your prize is at the bottom of the page.` : note.textContent;
+  const intro = found.size === bugs.size
+    ? `All ${bugs.size} found. Your prize is at the bottom of the page.`
+    : `Seven bugs are hidden on this page, on purpose. ${touch ? 'Tap' : 'Click'} anything that looks wrong.`;
   if (root.dataset.opening === 'done') flashNote(intro, 9000);
   else document.addEventListener('opening:done', () => flashNote(intro, 9000), { once: true });
 
@@ -84,7 +94,13 @@ export function initBugs(ctx, defs) {
     void target.offsetWidth; // restart the pulse
     target.classList.add('is-hinted');
   });
-  reset.addEventListener('click', () => { store.clear(); location.reload(); });
+  reset.addEventListener('click', () => {
+    store.clear();
+    // Start the hunt again from the top, not wherever the reload would restore to.
+    try { history.scrollRestoration = 'manual'; } catch { /* old browsers just restore */ }
+    window.scrollTo(0, 0);
+    location.reload();
+  });
 
   // Unfound bugs give a small wiggle when they come into view, once the
   // opening has finished. Nothing else moves while someone reads.
@@ -124,6 +140,16 @@ export function initBugs(ctx, defs) {
     if (found.size === bugs.size) {
       root.dataset.bugs = 'complete';
       document.dispatchEvent(new Event('bugs:complete'));
+      flashNote(`All ${bugs.size} found. Your prize is below.`, 9000);
+      // Make 7/7 a moment: after the stamp lands, glide down to the prize.
+      setTimeout(() => {
+        const stage = document.querySelector('.reward__stage');
+        if (!stage) return;
+        if (ctx.lenis) {
+          ctx.lenis.resize();
+          ctx.lenis.scrollTo(stage, { offset: -window.innerHeight * 0.2, duration: 1.6 });
+        } else stage.scrollIntoView({ block: 'center', behavior: ctx.motion ? 'smooth' : 'auto' });
+      }, ctx.motion ? 900 : 0);
     }
   }
 
@@ -148,7 +174,13 @@ export function initBugs(ctx, defs) {
     count.textContent = String(found.size);
     root.dataset.bugsFound = String(found.size);
     reset.hidden = found.size === 0;
-    hint.textContent = found.size === bugs.size ? 'See prize' : 'Hint';
+    hint.textContent = found.size === bugs.size ? 'Prize' : 'Hint';
+    pips.querySelectorAll('span').forEach((p, i) => p.classList.toggle('is-on', i < found.size));
+    const left = bugs.size - found.size;
+    if (lock) {
+      lock.hidden = left === 0;
+      lock.textContent = `Prize locked. ${left} ${left === 1 ? 'bug' : 'bugs'} to go.`;
+    }
     if (!fixNote) return;
     live.textContent = announceText(found.size, bugs.size, fixNote);
     flashNote(fixNote);

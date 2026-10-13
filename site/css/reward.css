@@ -4,7 +4,7 @@
   position: relative; height: clamp(16rem, 50svh, 30rem); overflow: hidden;
   display: flex; flex-wrap: wrap; align-content: flex-end; justify-content: center;
   font: 900 clamp(3.5rem, 13vw, 9rem)/0.85 var(--font-sans); font-stretch: 62%;
-  color: var(--acid); text-transform: uppercase; user-select: none; touch-action: none;
+  color: var(--acid); text-transform: uppercase; user-select: none; touch-action: pan-y;
   border-bottom: 3px solid var(--acid); cursor: grab;
 }
 .rl { display: inline-block; padding: 0 0.02em; }

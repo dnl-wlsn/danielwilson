@@ -17,4 +17,7 @@
 .run__stats { display: flex; flex-wrap: wrap; gap: 1rem 2.5rem; margin: 0; }
 .run__stats dd { margin: 0; font: 400 clamp(1.5rem, 3.5vw, 2.25rem)/1.1 var(--font-poster); }
 .run__time[hidden] { display: none; }
-@media (max-width: 40rem) { .run__stats { display: grid; grid-template-columns: 1fr 1fr; } }
+@media (max-width: 40rem) {
+  .run__stats { display: grid; grid-template-columns: 1fr 1fr; }
+  .run__svg { height: 22vh; } /* a tall plot on a narrow screen squashes the profile into spikes */
+}

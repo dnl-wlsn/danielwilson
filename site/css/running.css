@@ -1,0 +1,24 @@
+.run-stage { min-height: 100svh; display: grid; align-content: center; gap: 1rem; }
+.run-stage::before, .run-stage::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background-size: 900px 900px; opacity: 0.5;
+}
+.run-stage::before { background-image: url("/img/contours-2-light-v2.svg"); }
+.run-stage::after { background-image: url("/img/contours-3-light-v2.svg"); opacity: var(--steep, 0); }
+@media (prefers-color-scheme: dark) {
+  .run-stage::before { background-image: url("/img/contours-2-dark-v2.svg"); }
+  .run-stage::after { background-image: url("/img/contours-3-dark-v2.svg"); }
+}
+.run__plot { width: 100%; position: relative; }
+.run__svg { width: 100%; height: clamp(180px, 32vh, 320px); display: block; overflow: visible; }
+.run__ghost { fill: none; stroke: var(--contour); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.run__area { fill: var(--forest); opacity: 0.18; }
+.run__line { fill: none; stroke: var(--forest); stroke-width: 3; vector-effect: non-scaling-stroke; }
+/* The plot SVG stretches (preserveAspectRatio="none"), which would squash a
+   circle, so the runner is an HTML dot moved with transforms in plot pixels. */
+.run__dot {
+  position: absolute; left: 0; top: 0; width: 14px; height: 14px; margin: -7px 0 0 -7px;
+  border-radius: 50%; background: var(--route); box-shadow: 0 0 0 3px var(--paper);
+  will-change: transform;
+}
+.run__time[hidden] { display: none; }

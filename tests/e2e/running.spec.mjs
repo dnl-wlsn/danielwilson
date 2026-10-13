@@ -1,0 +1,70 @@
+import { test, expect } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+
+const race = JSON.parse(readFileSync(new URL('../../site/data/race.json', import.meta.url), 'utf8'));
+const stat = (page, k) => page.locator(`[data-stat="${k}"]`).textContent();
+
+test('static HTML totals match the race data', async () => {
+  const html = readFileSync(new URL('../../site/index.html', import.meta.url), 'utf8');
+  expect(html).toContain(`<span data-stat="km">${race.distance_km.toFixed(1)}</span>`);
+  expect(html).toContain(`<span data-stat="climb">${race.climb_m}</span>`);
+  expect(html).toContain(`>${race.name}</h3>`);
+});
+
+test('the dot runs the profile with scroll', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForFunction(() => document.documentElement.dataset.running === 'ready');
+  expect(await stat(page, 'km')).toBe('0.0');
+  const st = await page.evaluate(() => { const t = ScrollTrigger.getAll().find((x) => x.pin?.classList.contains('run-stage')); return { start: t.start, end: t.end }; });
+  await page.evaluate((y) => window.scrollTo(0, y), Math.round((st.start + st.end) / 2));
+  await expect.poll(async () => Number(await stat(page, 'km'))).toBeGreaterThan(race.distance_km * 0.3);
+  expect(Number(await stat(page, 'km'))).toBeLessThan(race.distance_km * 0.7);
+  await page.evaluate((y) => window.scrollTo(0, y + 5), st.end);
+  await expect.poll(() => stat(page, 'km')).toBe(race.distance_km.toFixed(1));
+  const clip = await page.$eval('.run__clip', (r) => Number(r.getAttribute('width')));
+  expect(clip).toBeGreaterThan(900);
+});
+
+test.describe('reduced motion', () => {
+  test.use({ contextOptions: { reducedMotion: 'reduce' } });
+  test('shows the finished profile and totals with no pin', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForFunction(() => document.documentElement.dataset.running === 'ready');
+    expect(await stat(page, 'km')).toBe(race.distance_km.toFixed(1));
+    expect(await page.locator('.run-stage').evaluate((el) => el.parentElement.classList.contains('pin-spacer'))).toBe(false);
+  });
+});
+
+test('the runner dot stays round however the plot is stretched', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForFunction(() => document.documentElement.dataset.running === 'ready');
+  const st = await page.evaluate(() => ScrollTrigger.getAll().find((x) => x.pin?.classList.contains('run-stage')).start);
+  await page.evaluate((y) => window.scrollTo(0, y + 200), st);
+  await page.waitForTimeout(400);
+  const r = await page.$eval('.run__dot', (d) => { const b = d.getBoundingClientRect(); return b.width / b.height; });
+  expect(r).toBeGreaterThan(0.9);
+  expect(r).toBeLessThan(1.1);
+});
+
+test('the runner dot sits on the profile line', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForFunction(() => document.documentElement.dataset.running === 'ready');
+  const st = await page.evaluate(() => { const t = ScrollTrigger.getAll().find((x) => x.pin?.classList.contains('run-stage')); return [t.start, t.end]; });
+  await page.evaluate((y) => window.scrollTo(0, y), Math.round(st[0] + (st[1] - st[0]) * 0.4));
+  await page.waitForTimeout(500);
+  const miss = await page.evaluate(() => {
+    const d = document.querySelector('.run__dot').getBoundingClientRect();
+    const cx = d.left + d.width / 2, cy = d.top + d.height / 2;
+    const line = document.querySelector('.run__line');
+    const m = line.getScreenCTM();
+    let best = Infinity;
+    const L = line.getTotalLength();
+    for (let l = 0; l <= L; l += 1) {
+      const p = line.getPointAtLength(l);
+      const sx = m.a * p.x + m.c * p.y + m.e, sy = m.b * p.x + m.d * p.y + m.f;
+      best = Math.min(best, Math.hypot(sx - cx, sy - cy));
+    }
+    return best;
+  });
+  expect(miss).toBeLessThan(3);
+});

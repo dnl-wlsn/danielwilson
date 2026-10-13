@@ -21,6 +21,7 @@
 <link rel="stylesheet" href="/css/start.css">
 <link rel="stylesheet" href="/css/route.css">
 <link rel="stylesheet" href="/css/book.css">
+<link rel="stylesheet" href="/css/running.css">
 <link rel="stylesheet" href="/css/print.css">
 <script src="/js/motion-gate.js"></script>
 <script defer src="/js/vendor/gsap.min.js"></script>
@@ -225,10 +226,18 @@
   <h2 data-reveal>Ultra-marathons, mountains, and ultra-marathons over mountains.</h2>
   <div class="run-stage" data-placeholder="race">
     <h3 class="run__name" data-reveal>Placeholder race</h3>
+    <div class="run__plot" aria-hidden="true">
+      <svg class="run__svg" viewBox="0 0 1000 320" preserveAspectRatio="none">
+        <defs><clipPath id="run-clip"><rect class="run__clip" x="0" y="0" width="1000" height="320"/></clipPath></defs>
+        <path class="run__ghost"/>
+        <g clip-path="url(#run-clip)"><path class="run__area"/><path class="run__line"/></g>
+      </svg>
+      <span class="run__dot"></span>
+    </div>
     <dl class="run__stats" data-reveal>
-      <div><dt class="mono">Distance</dt><dd><span data-stat="km">50.0</span> km</dd></div>
-      <div><dt class="mono">Climb</dt><dd><span data-stat="climb">0</span> m</dd></div>
-      <div><dt class="mono">Time</dt><dd><span data-stat="time">0:00:00</span></dd></div>
+      <div><dt class="mono">Distance</dt><dd><span data-stat="km">10.0</span> km</dd></div>
+      <div><dt class="mono">Climb</dt><dd><span data-stat="climb">300</span> m</dd></div>
+      <div class="run__time"><dt class="mono">Time</dt><dd><span data-stat="time">1:00:00</span></dd></div>
     </dl>
   </div>
 </section>

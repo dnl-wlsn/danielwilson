@@ -3,6 +3,7 @@
 import { initStart } from './start.js';
 import { initRoute } from './route.js';
 import { initBook } from './book.js';
+import { initRunning } from './running.js';
 
 const motion = document.documentElement.classList.contains('motion');
 let lenis = null;
@@ -18,4 +19,5 @@ if (motion) {
 const ctx = { motion, lenis };
 initStart(ctx);
 initBook(ctx);
+initRunning(ctx);
 initRoute(ctx);

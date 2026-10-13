@@ -12,7 +12,14 @@ test('home page serves with the right title and fonts load', async ({ page }) =>
 });
 
 test('vendor scripts are present', async ({ request }) => {
-  for (const f of ['gsap.min.js', 'ScrollTrigger.min.js', 'lenis.min.js']) {
+  for (const f of ['gsap.min.js', 'ScrollTrigger.min.js', 'lenis.min.js', 'matter.min.js']) {
     expect((await request.get(`/js/vendor/${f}`)).status()).toBe(200);
   }
+});
+
+test('the deploy script targets the v2 project, never v1', async () => {
+  const { readFileSync } = await import('node:fs');
+  const pkg = JSON.parse(readFileSync(new URL('../../package.json', import.meta.url), 'utf8'));
+  expect(pkg.scripts.deploy).toContain('--project-name danielwilson');
+  expect(pkg.scripts.deploy).not.toContain('--project-name dnlwlsn');
 });

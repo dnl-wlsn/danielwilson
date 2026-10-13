@@ -1,0 +1,25 @@
+@font-face {
+  font-family: "Archivo";
+  src: url("/fonts/archivo-var-v1.woff2") format("woff2");
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/fonts/plex-mono-400-v1.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/fonts/plex-mono-500-v1.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+/* Task 1 smoke-test probe; Task 2 deletes this rule. */
+.font-probe { font: 800 1rem Archivo; }
+.font-probe code { font: 400 1rem "IBM Plex Mono"; }

@@ -1,9 +1,7 @@
 @media print {
-  html.motion [data-reveal], html.motion [data-reach] > .cp-dot { opacity: 1 !important; transform: none !important; transition: none !important; }
-  .route, .start__landing, .skip { display: none !important; }
-  .cp-section { padding-block: 1.5rem; break-inside: avoid-page; }
-  .start { min-height: 0; }
-  [data-terrain]::before { display: none; }
+  .bugbar, .skip, .sheet-edge, .reward, .beetle-slot, .bug--beetle { display: none !important; }
+  .sheet { margin-top: 0 !important; padding-block: 1.5rem !important; background: #fff !important; color: #000 !important; break-inside: avoid-page; }
+  .ink::before, .name__pink { display: none; }
   .pin-spacer { padding: 0 !important; height: auto !important; }
   body { background: #fff; color: #000; }
 }

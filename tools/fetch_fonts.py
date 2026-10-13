@@ -20,6 +20,8 @@ JOBS = [
      {"100 900": "archivo-var-v1.woff2"}),
     ("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap",
      {"400": "plex-mono-400-v1.woff2", "500": "plex-mono-500-v1.woff2"}),
+    ("https://fonts.googleapis.com/css2?family=Anton&display=swap",
+     {"400": "anton-400-v1.woff2"}),
 ]
 BLOCK = re.compile(r"/\* latin \*/\s*@font-face\s*\{(.*?)\}", re.S)
 

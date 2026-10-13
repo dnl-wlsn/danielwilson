@@ -6,9 +6,8 @@ import { test, expect } from '@playwright/test';
 test('scrolling holds at least 55 fps on a throttled phone', async ({ page }) => {
   test.setTimeout(90_000);
   await page.goto('/');
-  await page.waitForFunction(() => document.documentElement.dataset.route === 'ready'
-    && document.documentElement.dataset.running === 'ready'
-    && document.documentElement.dataset.start === 'done', null, { timeout: 15000 });
+  await page.waitForFunction(() => document.documentElement.dataset.boot === 'ok'
+    && document.documentElement.dataset.running === 'ready', null, { timeout: 15000 });
   const cdp = await page.context().newCDPSession(page);
   await cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 });
   await page.evaluate(() => {

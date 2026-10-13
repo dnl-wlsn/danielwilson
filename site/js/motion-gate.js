@@ -13,11 +13,12 @@
   window.__dwStatic = function () {
     if (!d.classList.contains('motion')) return;
     d.classList.remove('motion');
-    var name = document.querySelector('.start__name');
-    if (name) name.classList.add('is-done');
-    var styled = document.querySelectorAll('.start__glyphs, .start__glyphs .g');
+    if (window.ScrollTrigger) window.ScrollTrigger.killAll();
+    var styled = document.querySelectorAll('main [style]');
     for (var i = 0; i < styled.length; i++) styled[i].removeAttribute('style');
-    d.dataset.start = 'done';
+    var bar = document.querySelector('.bugbar');
+    if (bar) bar.classList.add('is-in');
+    d.dataset.opening = 'done';
   };
   setTimeout(function () { if (d.dataset.boot !== 'ok') window.__dwStatic(); }, 6000);
 })();

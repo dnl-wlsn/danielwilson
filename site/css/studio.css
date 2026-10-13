@@ -1,0 +1,6 @@
+.studio-work { margin: 3rem 0 0; display: grid; gap: 1rem; }
+.shot { display: block; border-radius: 0.5rem; overflow: hidden; box-shadow: 0.6rem 0.6rem 0 var(--over); }
+/* Bug 3: the screenshot is upside down. */
+.shot.is-flipped { rotate: 180deg; }
+.studio-work figcaption { max-width: 40rem; }
+.studio__more { margin-top: 2rem; }

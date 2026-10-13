@@ -6,9 +6,9 @@ test('home page serves with the right title and fonts load', async ({ page }) =>
   await expect(page).toHaveTitle('Daniel Wilson');
   const loaded = await page.evaluate(async () => {
     await document.fonts.ready;
-    return ['800 1em Archivo', '400 1em "IBM Plex Mono"'].map((f) => document.fonts.check(f));
+    return ['900 1em Archivo', '400 1em Anton', '400 1em "IBM Plex Mono"'].map((f) => document.fonts.check(f));
   });
-  expect(loaded).toEqual([true, true]);
+  expect(loaded).toEqual([true, true, true]);
 });
 
 test('vendor scripts are present', async ({ request }) => {

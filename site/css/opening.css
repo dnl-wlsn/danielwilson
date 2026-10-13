@@ -1,0 +1,15 @@
+.opening { min-height: 100svh; display: grid; align-content: center; gap: 1.5rem; }
+.name {
+  position: relative; font: 900 clamp(4.5rem, 21vw, 16rem)/0.8 var(--font-sans); font-stretch: 62%;
+  text-transform: uppercase; color: var(--ink); letter-spacing: -0.01em;
+}
+.name__row { display: block; position: relative; z-index: 1; mix-blend-mode: var(--blend); }
+.name .g { display: inline-block; }
+.name__pink { position: absolute; inset: 0; color: var(--over); mix-blend-mode: var(--blend); transform: translate(0.035em, 0.02em); pointer-events: none; }
+.name__pink > span { display: block; }
+.name__pair { display: inline-block; }
+/* Bug 1: the two letters lean out of line. Individual transform properties,
+   so GSAP's transform on the same letters never overrides them. */
+.name__pair.is-bugged .g:first-child { rotate: -9deg; translate: 0 -0.04em; }
+.name__pair.is-bugged .g:last-child { rotate: 7deg; translate: 0 0.03em; }
+.opening__tag { color: var(--ink); font-size: clamp(0.875rem, 1.6vw, 1.125rem); }

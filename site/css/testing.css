@@ -1,0 +1,26 @@
+.roles { list-style: none; margin: 3rem 0 0; padding: 0; display: grid; gap: 2.75rem; }
+.role { display: grid; gap: 0.4rem; max-width: 46rem; }
+.role__year { color: var(--accent); font-size: 1rem; }
+.role__org {
+  font: 800 clamp(2rem, 6vw, 4.25rem)/0.95 var(--font-sans); font-stretch: 100%;
+  text-transform: uppercase; overflow-wrap: anywhere;
+}
+html.motion .role__org { font-stretch: 70%; transition: font-stretch 0.45s cubic-bezier(0.3, 1.4, 0.5, 1); }
+html.motion .role__org.is-wide { font-stretch: 125%; }
+.role__title { opacity: 0.85; }
+.role details summary { cursor: pointer; font: 500 0.8125rem var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; color: var(--accent); }
+.role details ul { margin: 0.75rem 0 0; padding-left: 1.1rem; }
+.marker { color: var(--accent); }
+.role--book { grid-template-columns: 6rem 1fr; column-gap: 1.25rem; align-items: start; }
+.role--book img { grid-row: span 4; width: 6rem; }
+.role--book cite { font-weight: 800; font-size: 1.375rem; line-height: 1.15; }
+.cv-download { margin-top: 3rem; }
+/* Bug 2: the date reel. */
+.reel-host { display: inline-block; }
+.reel { display: inline-block; height: 1.6em; overflow: hidden; vertical-align: bottom; }
+.reel__strip { display: flex; flex-direction: column; }
+.reel__strip > span { height: 1.6em; }
+/* Bug 7: a heading spilling out of its box. */
+.spill { display: inline-block; }
+.spill.is-spilling { white-space: nowrap; translate: 40% 0; }
+.role__org:has(.is-spilling) { outline: 2px dashed var(--accent); outline-offset: 0.35rem; }

@@ -1,28 +1,25 @@
 :root {
-  --paper: #F2EDE3;
-  --ink: #1C1F1B;
-  --ink-soft: #4A4F47;
-  --contour: #CDBB9E;
-  --route: #FF9300;
-  --focus: #A65A00; /* darker route orange: 4.4:1 on paper, for the focus ring */
-  --forest: #2F4A36;
-  --rule: rgba(28, 31, 27, 0.14);
+  --cream: #F4EFE4;
+  --black: #121312;
+  --blue: #1B3BFF;
+  --pink: #FF4F9A;
+  --acid: #D4FF3A;
+  --paper: #F2F2EA;
   --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-poster: "Anton", "Archivo", Impact, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
-  --rail: 3rem;
-  --gutter: 1rem;
-  --col: 40rem;
-  color-scheme: light dark;
+  --gutter: clamp(1rem, 5vw, 4rem);
+  --col: 72rem;
+  --feed: 9rem; /* how far each sheet overlaps the one before (the printer feed) */
+  color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #14160F;
-    --ink: #ECE6D8;
-    --ink-soft: #B8B2A3;
-    --contour: #3B3A30;
-    --route: #FF9D1A;
-    --focus: #FF9D1A;
-    --forest: #7FA88A;
-    --rule: rgba(236, 230, 216, 0.16);
-  }
+/* Each section declares its paper; everything inside reads these. */
+[data-paper="cream"] {
+  --bg: var(--cream); --fg: var(--black); --ink: var(--blue); --over: var(--pink);
+  --blend: multiply; --accent: var(--blue); --on-accent: var(--cream); --focus: var(--blue);
+}
+[data-paper="black"] {
+  --bg: var(--black); --fg: var(--paper); --ink: var(--paper); --over: var(--pink);
+  --blend: screen; --accent: var(--acid); --on-accent: var(--black); --focus: var(--acid);
+  color-scheme: dark;
 }

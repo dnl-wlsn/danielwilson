@@ -1,0 +1,32 @@
+/* Sections are sheets of paper. Each one overlaps the last by --feed; the
+   overlap band is transparent, so the previous paper shows through until the
+   sheet edge (added by sheets.js) feeds up over it. */
+.sheet {
+  position: relative;
+  padding: calc(var(--feed) + 5rem) var(--gutter) calc(var(--feed) + 5rem);
+  margin-top: calc(-1 * var(--feed));
+  background: linear-gradient(to bottom, transparent var(--feed), var(--bg) var(--feed));
+  color: var(--fg);
+  overflow-x: clip;
+}
+.sheet:first-of-type { margin-top: 0; padding-top: 5rem; background: var(--bg); }
+.sheet > :not(.sheet-edge) { position: relative; max-width: var(--col); margin-inline: auto; }
+.sheet-edge {
+  position: absolute; left: 0; right: 0; top: 0; height: var(--feed);
+  background: var(--bg); transform-origin: 0 100%; pointer-events: none;
+}
+.sheet h2 {
+  font-size: clamp(2.75rem, 8vw, 6.5rem); text-transform: uppercase; margin-bottom: 2rem; max-width: 18ch;
+}
+[data-paper="cream"] h2 { font: 900 clamp(2.75rem, 8vw, 6.5rem)/0.88 var(--font-sans); font-stretch: 62%; color: var(--ink); }
+[data-paper="black"] h2 { font-family: var(--font-poster); font-weight: 400; letter-spacing: 0.005em; color: var(--ink); }
+/* Overprint: a second ink copies the heading text (set by overprint.js) and
+   sits a hair out of register. --mis scales the offset; 1 is the resting state. */
+.ink { --mis: 1; }
+.ink::before {
+  content: attr(data-text) / "";
+  position: absolute; inset: 0; color: var(--over); mix-blend-mode: var(--blend);
+  transform: translate(calc(var(--mis) * 0.03em), calc(var(--mis) * 0.018em));
+  pointer-events: none;
+}
+.ink { position: relative; }

@@ -31,3 +31,4 @@ p { margin: 0; }
   text-decoration: none;
 }
 .btn:hover { background: var(--route); color: var(--ink); }
+cite { font-style: normal; } /* Archivo has no italic; avoid the browser faking one */

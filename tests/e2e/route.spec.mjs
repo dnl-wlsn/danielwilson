@@ -9,13 +9,19 @@ const worstDotMiss = (page) => page.evaluate(() => {
   const box = main.getBoundingClientRect();
   const path = document.querySelector('.route__line');
   const total = path.getTotalLength();
-  const samples = [];
-  for (let l = 0; l <= total; l += 2) samples.push(path.getPointAtLength(l));
+  // Coarse pass every 12px, then refine at 0.5px around the best coarse hit.
+  // (Sampling the whole path finely is slow enough to time out under load.)
+  const coarse = [];
+  for (let l = 0; l <= total; l += 12) coarse.push([l, path.getPointAtLength(l)]);
   let worst = 0;
   for (const d of document.querySelectorAll('[data-cp]')) {
     const r = d.getBoundingClientRect();
     const x = r.left + r.width / 2 - box.left, y = r.top + r.height / 2 - box.top;
-    worst = Math.max(worst, Math.min(...samples.map((p) => Math.hypot(p.x - x, p.y - y))));
+    const dist = (p) => Math.hypot(p.x - x, p.y - y);
+    let [bestL] = coarse.reduce((a, b) => (dist(b[1]) < dist(a[1]) ? b : a));
+    let best = Infinity;
+    for (let l = Math.max(0, bestL - 12); l <= Math.min(total, bestL + 12); l += 0.5) best = Math.min(best, dist(path.getPointAtLength(l)));
+    worst = Math.max(worst, best);
   }
   return worst;
 });

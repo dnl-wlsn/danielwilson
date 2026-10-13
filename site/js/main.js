@@ -2,6 +2,7 @@
 // scripts that run before this module, so they are available as globals.
 import { initStart } from './start.js';
 import { initRoute } from './route.js';
+import { initBook } from './book.js';
 
 const motion = document.documentElement.classList.contains('motion');
 let lenis = null;
@@ -16,4 +17,5 @@ if (motion) {
 
 const ctx = { motion, lenis };
 initStart(ctx);
+initBook(ctx);
 initRoute(ctx);

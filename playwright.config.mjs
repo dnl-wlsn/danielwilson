@@ -3,6 +3,9 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: 'tests/e2e',
   timeout: 30_000,
+  // Animation tests depend on frames arriving; on this 2014 4-core MacBook, 4 parallel
+  // Chromiums starve each other's tickers and flake. 2 workers is stable.
+  workers: 2,
   webServer: {
     command: 'python3 -m http.server 4173 --bind 127.0.0.1 --directory site',
     url: 'http://127.0.0.1:4173/',

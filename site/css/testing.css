@@ -5,6 +5,12 @@
   font: 800 clamp(2rem, 6vw, 4.25rem)/0.95 var(--font-sans); font-stretch: 75%;
   text-transform: uppercase; overflow-wrap: anywhere;
 }
+/* 2009 to 2017: smaller and closer together, so readers reach the recent
+   roles sooner. The order stays, because the route runs through it. */
+.role--early .role__org { font-size: clamp(1.5rem, 3.6vw, 2.25rem); }
+.roles > .role--early { margin-bottom: -1.25rem; }
+.now { margin-top: 1rem; color: var(--accent); }
+.now a { color: inherit; text-underline-offset: 0.2em; }
 .role details summary { cursor: pointer; font: 500 0.8125rem var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; color: var(--accent); }
 .role details ul { margin: 0.75rem 0 0; padding-left: 1.1rem; }
 .marker { color: var(--accent); }

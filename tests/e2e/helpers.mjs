@@ -1,6 +1,14 @@
 // Shared helpers for the bug hunt specs.
 export const ready = (page) => page.waitForFunction(() =>
-  document.documentElement.dataset.boot === 'ok' && document.documentElement.dataset.opening === 'done', null, { timeout: 15_000 });
+  document.documentElement.dataset.boot === 'ok' && document.documentElement.dataset.opening === 'done', null, { timeout: 20_000 })
+  .catch(async (err) => {
+    // Rare under a full parallel run: say which stage stalled, not just "timeout".
+    const st = await page.evaluate(() => {
+      const d = document.documentElement;
+      return { boot: d.dataset.boot, opening: d.dataset.opening, motion: d.classList.contains('motion'), visibility: document.visibilityState };
+    }).catch(() => 'page gone');
+    throw new Error(`page never became ready: ${JSON.stringify(st)}\n${err.message}`);
+  });
 
 export const trigger = (page, id) => page.locator(`[data-for="${id}"]`);
 

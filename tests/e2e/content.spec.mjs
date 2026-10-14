@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
+import { ready } from './helpers.mjs';
 
 const html = readFileSync(new URL('../../site/index.html', import.meta.url), 'utf8');
 // Headings that hold a bug slot carry their real text in a visually hidden span.
@@ -23,6 +24,24 @@ test('the testing section runs 2009 to Simply Business in order', async ({ page 
   ]);
   expect(await page.locator('#testing .marker').count()).toBe(3);
   await expect(page.locator('#testing .role--book cite')).toHaveText('The Book On Software Testing: A Guide for Non‑Testers');
+});
+
+test('2009 to 2017 are compact, so the recent roles stand out', async ({ page }) => {
+  await page.goto('/');
+  const early = await page.$$eval('#testing .role--early .role__org', realText);
+  expect(early).toEqual(['SEGA Europe', 'Software Quality Systems', 'Think Finance', 'Oakam', 'Elevate', 'Cabot Credit Management']);
+  const size = (org) => page.locator('#testing .role__org', { hasText: org }).evaluate((h) => parseFloat(getComputedStyle(h).fontSize));
+  expect(await size('Oakam')).toBeLessThan(await size('Simply Business'));
+});
+
+test('"Jump ahead" lands on Simply Business without setting the hash', async ({ page }) => {
+  await page.goto('/');
+  await ready(page);
+  await page.locator('#testing').scrollIntoViewIfNeeded();
+  await page.locator('a.jump').click();
+  await expect(page.locator('#simply-business')).toBeFocused();
+  await expect.poll(() => page.$eval('#simply-business', (li) => Math.abs(li.getBoundingClientRect().top))).toBeLessThan(80);
+  expect(new URL(page.url()).hash).toBe('');
 });
 
 test('external links are exact', async ({ page }) => {

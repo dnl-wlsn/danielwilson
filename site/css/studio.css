@@ -51,3 +51,4 @@
   font: 500 0.6875rem/1.2 var(--font-mono); color: #4A4F47; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .browser img { display: block; width: 100%; height: auto; }
+.browser__url:empty { min-height: 0.825rem; }

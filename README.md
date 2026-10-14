@@ -10,7 +10,7 @@ Hand-coded, animated with GSAP + ScrollTrigger + Lenis, deployed to Cloudflare P
 Design spec: `docs/superpowers/specs/2026-10-14-v3-test-run-design.md` (v2's spec still
 covers the bug engine and the prize).
 v1 ("the route") is tag `v1`, live on Pages project `dnlwlsn`. v2 ("the bug hunt") is branch
-`v2`, live on Pages project `danielwilson`.
+`v2`; its Pages project `danielwilson` now serves v3.
 
 ## Run it
 
@@ -45,9 +45,9 @@ Content still waiting on Dan is marked `data-placeholder="..."`; `npm run test:e
 
 ```sh
 export CLOUDFLARE_ACCOUNT_ID=REDACTED_ACCOUNT_ID   # personal account; wrangler also sees a client's
-npm run deploy      # runs all tests, then: wrangler pages deploy site --project-name danielwilson-v3 --branch main
+npm run deploy      # runs all tests, then: wrangler pages deploy site --project-name danielwilson --branch main
 ```
 
-v3 lives on Pages project `danielwilson-v3`. Never deploy it to `dnlwlsn` (v1) or `danielwilson` (v2).
+v3 is the live site: Pages project `danielwilson` (danielwilson.pages.dev, the URL on the CV). `danielwilson-v3` was its preview. Never deploy to `dnlwlsn` (v1).
 
 Never deploy the repo root.

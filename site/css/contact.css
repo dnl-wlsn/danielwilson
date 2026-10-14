@@ -25,3 +25,6 @@
 .commits__legend { display: flex; align-items: center; justify-content: flex-end; gap: 0.25rem; margin: 0.5rem 0 0; font-size: 0.6875rem; color: var(--paper); opacity: 0.8; }
 .commits__key { display: inline-block; width: 0.7rem; height: 0.7rem; border-radius: 2px; }
 .commits figcaption { margin-top: 0.6rem; font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--paper); opacity: 0.8; }
+/* Phones: the sheet's right padding is narrower than the left rail, so keep the
+   squares in from the right edge by the same amount the text starts from the left. */
+@media (max-width: 40rem) { .sheet > .commits { max-width: calc(100% - var(--rail) + 1rem); } }

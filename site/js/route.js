@@ -66,7 +66,8 @@ export function initRoute() {
       const r = a.getBoundingClientRect();
       return { x: Math.round(x * 10) / 10, y: Math.round((r.top - box.top) * 10) / 10 };
     });
-    base = routeSegments(pts, { cross: phone ? 140 : 230, wiggle: phone ? 6 : 10, minX: 8, maxX: w - 8 });
+    // No wiggle: one smooth line, as v1 had. The wobble read as a stutter on phones.
+    base = routeSegments(pts, { cross: phone ? 140 : 230, wiggle: 0, minX: 8, maxX: w - 8 });
     cps.forEach((c, i) => {
       c.dot.setAttribute('cx', pts[i].x);
       c.dot.setAttribute('cy', pts[i].y);

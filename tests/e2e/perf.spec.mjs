@@ -16,7 +16,7 @@ test('scrolling holds at least 55 fps on a throttled phone', async ({ page }) =>
     const tick = (t) => { window.__frames.push(t); requestAnimationFrame(tick); };
     requestAnimationFrame(tick);
   });
-  for (let i = 0; i < 70; i++) {
+  for (let i = 0; i < 100; i++) { // the page grew (headline wins, recent sites rail), so scroll further
     await page.mouse.wheel(0, 260);
     await page.waitForTimeout(80);
   }

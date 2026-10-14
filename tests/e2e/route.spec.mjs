@@ -166,3 +166,18 @@ test('the route ends at the Finish checkpoint, not past it', async ({ page }) =>
   expect(Math.abs(end - finish)).toBeLessThan(2);
   expect(await page.$$eval('#contact .cp-anchor', (a) => a.length)).toBe(1);
 });
+
+test('the route is one smooth line, with no side-to-side wobble along a rail', async ({ page }, info) => {
+  test.skip(info.project.name !== 'mobile', 'phones keep to one rail, so the line should be dead straight there');
+  await page.goto('/');
+  await ready(page);
+  await routeReady(page);
+  const spread = await page.evaluate(() => {
+    const path = document.querySelector('.route__line');
+    const total = path.getTotalLength();
+    const xs = [];
+    for (let l = total * 0.2; l <= total * 0.8; l += 10) xs.push(path.getPointAtLength(l).x);
+    return Math.max(...xs) - Math.min(...xs);
+  });
+  expect(spread).toBeLessThan(1);
+});

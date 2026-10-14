@@ -1,16 +1,21 @@
 # Daniel Wilson
 
-Daniel Wilson's personal site, v3: "the test run", a mix of v1 and v2. A pink route line
-draws down the page through a checkpoint per section and role (v1), over cream and black
-sheets that feed in like paper (v2). Seven deliberate bugs sit along the route (v2, plus a
-glitch in the route itself); the finish tape stays up until they're all fixed, then the
-Matter.js letter playground falls in as the prize.
-Hand-coded, animated with GSAP + ScrollTrigger + Lenis, deployed to Cloudflare Pages from `site/` only.
+My personal site: [danielwilson.pages.dev](https://danielwilson.pages.dev). Hand-coded HTML, CSS
+and JavaScript, animated with GSAP, ScrollTrigger and Lenis, deployed to Cloudflare Pages from
+`site/` only. No framework, no build step beyond joining the stylesheets.
 
-Design spec: `docs/superpowers/specs/2026-10-14-v3-test-run-design.md` (v2's spec still
-covers the bug engine and the prize).
-v1 ("the route") is tag `v1`, live on Pages project `dnlwlsn`. v2 ("the bug hunt") is branch
-`v2`; its Pages project `danielwilson` now serves v3.
+A pink route line draws down the page through a checkpoint for every section and role. There's an
+optional bug hunt: press Play and seven deliberate bugs appear along the route, each one a real,
+keyboard-accessible button; find them all and the letters of my name fall into a Matter.js playground.
+
+What I care about here, as a tester:
+
+- **Tested end to end.** Around 250 Playwright checks on desktop and a phone, plus unit tests for the
+  route maths and bug state, and a performance test that holds 55 fps on a 4x-throttled phone.
+- **Readable without JavaScript and with reduced motion.** Every bug slot holds the correct content;
+  the motion code only breaks it on purpose, and a watchdog falls back to the static page.
+- **Strict security headers.** A content security policy with no inline scripts or styles.
+- **Accessible.** Lighthouse 100 for accessibility, best practices and SEO; 95 for performance on mobile.
 
 ## Run it
 
@@ -44,7 +49,7 @@ Content still waiting on Dan is marked `data-placeholder="..."`; `npm run test:e
 ## Deploy
 
 ```sh
-export CLOUDFLARE_ACCOUNT_ID=REDACTED_ACCOUNT_ID   # personal account; wrangler also sees a client's
+export CLOUDFLARE_ACCOUNT_ID=...   # the account that owns the Pages project
 npm run deploy      # runs all tests, then: wrangler pages deploy site --project-name danielwilson --branch main
 ```
 

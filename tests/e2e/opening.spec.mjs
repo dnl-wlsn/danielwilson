@@ -24,7 +24,7 @@ test('headings get a second ink that settles almost in register', async ({ page 
   await page.goto('/');
   await ready(page);
   const h = page.locator('#testing h2.ink');
-  await expect(h).toHaveAttribute('data-text', 'Seventeen years of breaking things');
+  await expect(h).toHaveAttribute('data-text', 'Seventeen years of making quality easy');
   const mis = () => h.evaluate((el) => Number(getComputedStyle(el).getPropertyValue('--mis')));
   // Below the fold it is well out of register; with its top 30% down the screen it has settled.
   await h.evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - window.innerHeight * 1.02));
@@ -36,7 +36,7 @@ test('headings get a second ink that settles almost in register', async ({ page 
 test('the second ink is not read out', async ({ page }) => {
   await page.goto('/');
   await ready(page);
-  await expect(page.locator('#testing h2.ink')).toHaveAccessibleName('Seventeen years of breaking things');
+  await expect(page.locator('#testing h2.ink')).toHaveAccessibleName('Seventeen years of making quality easy');
 });
 
 test.describe('reduced motion', () => {

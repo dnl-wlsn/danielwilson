@@ -22,3 +22,9 @@
 html.motion:not([data-opening]) .name { visibility: hidden; }
 /* While the letters fall, give each its own layer so frames don't repaint the name. */
 html[data-opening="playing"] .name .g, html[data-opening="playing"] .name__pink { will-change: transform; }
+
+/* The three headline wins, readable before any scrolling. */
+.wins { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; max-width: 46rem; }
+.wins li { position: relative; padding-left: 1.5rem; font-size: 1.0625rem; line-height: 1.45; }
+.wins li::before { content: ""; position: absolute; left: 0; top: 0.45em; width: 0.65rem; height: 0.65rem; border-radius: 50%; box-shadow: inset 0 0 0 2.5px var(--pink); }
+.wins b { color: var(--ink); }

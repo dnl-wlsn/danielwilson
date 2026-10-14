@@ -47,7 +47,7 @@ test('Email me dodges the mouse three times, then can be caught', async ({ page 
   expect(Math.abs(moved.x - start.x) + Math.abs(moved.y - start.y)).toBeGreaterThan(40);
   await t.click();
   await expect(t).toHaveAttribute('data-fixed', '1');
-  await expect(t).toHaveAttribute('href', 'mailto:dwqa.dan@gmail.com');
+  await expect(t).toHaveAttribute('href', 'mailto:dvnielwilson@gmail.com');
   await expect(page.locator('[data-bug-count]')).toHaveText('1');
 });
 

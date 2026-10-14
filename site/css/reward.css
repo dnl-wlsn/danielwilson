@@ -1,4 +1,4 @@
-.reward { margin-top: 4rem; }
+.reward { margin-top: 2rem; }
 .reward__title { color: var(--accent); margin-bottom: 1rem; }
 .reward__stage {
   position: relative; height: clamp(16rem, 50svh, 30rem); overflow: hidden;

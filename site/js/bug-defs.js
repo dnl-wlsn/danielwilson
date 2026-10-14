@@ -85,17 +85,13 @@ export const BUGS = [
     },
   },
   {
-    id: 'overflow',
-    label: 'a heading spilling out of its box',
-    note: 'Caught by testing with the longest real data, not the shortest.',
-    break(slot) { slot.classList.add('is-spilling'); },
-    async fix(slot, { motion }) {
-      const before = slot.getBoundingClientRect().left;
-      slot.classList.remove('is-spilling');
-      if (!motion) return;
-      const after = slot.getBoundingClientRect().left;
-      await gsap.from(slot, { x: before - after, duration: 0.8, ease: 'elastic.out(1, 0.5)', clearProps: 'transform' });
-    },
+    // Drawn by route.js: between two career checkpoints the line zigzags.
+    id: 'route',
+    label: 'a glitch in the route',
+    buttonClass: 'bug--glitch',
+    note: 'Caught by following the whole journey, not just each step.',
+    break(slot, { route }) { route?.setGlitch(1); },
+    async fix(slot, { motion, route }) { await route?.relaxGlitch(motion); },
   },
   {
     id: 'upside-down',

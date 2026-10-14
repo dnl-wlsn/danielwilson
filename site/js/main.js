@@ -9,6 +9,8 @@ import { initOverprint } from './overprint.js';
 import { initSheets } from './sheets.js';
 import { initScenes } from './scenes.js';
 import { initReward } from './reward.js';
+import { initRoute } from './route.js';
+import { initFinish } from './finish.js';
 
 const root = document.documentElement;
 const fallBack = (err) => {
@@ -28,12 +30,15 @@ try {
     gsap.ticker.lagSmoothing(0);
   }
   const ctx = { motion, lenis };
+  // Before the bugs: bug 3 is drawn by the route.
+  ctx.route = initRoute(ctx);
   initBugs(ctx, BUGS);
   initBeetle(ctx);
   const playOpening = initOpening(ctx);
   initOverprint(ctx);
   initSheets(ctx);
   initScenes(ctx);
+  initFinish(ctx);
   initReward(ctx);
   const runningDone = initRunning(ctx)
     .then(() => {

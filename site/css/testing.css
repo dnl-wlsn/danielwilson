@@ -2,11 +2,9 @@
 .role { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.4rem; max-width: 46rem; }
 .role__year { color: var(--accent); font-size: 1rem; }
 .role__org {
-  font: 800 clamp(2rem, 6vw, 4.25rem)/0.95 var(--font-sans); font-stretch: 100%;
+  font: 800 clamp(2rem, 6vw, 4.25rem)/0.95 var(--font-sans); font-stretch: 75%;
   text-transform: uppercase; overflow-wrap: anywhere;
 }
-html.motion .role__org { font-stretch: 70%; transition: font-stretch 0.45s cubic-bezier(0.3, 1.4, 0.5, 1); }
-html.motion .role__org.is-wide { font-stretch: var(--wide, 125%); }
 .role details summary { cursor: pointer; font: 500 0.8125rem var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; color: var(--accent); }
 .role details ul { margin: 0.75rem 0 0; padding-left: 1.1rem; }
 .marker { color: var(--accent); }
@@ -19,15 +17,9 @@ html.motion .role__org.is-wide { font-stretch: var(--wide, 125%); }
 .reel { display: inline-block; height: 1.6em; overflow: hidden; vertical-align: bottom; }
 .reel__strip { display: flex; flex-direction: column; }
 .reel__strip > span { height: 1.6em; }
-/* Bug 7: a heading spilling out of its box. */
-.spill { display: inline-block; }
-.spill.is-spilling { white-space: nowrap; translate: 40% 0; }
-.role__org:has(.is-spilling) { outline: 2px dashed var(--accent); outline-offset: 0.35rem; }
-/* Desktop: a big outlined year follows the role in the middle of the screen. */
-#testing > .testing__year { /* id: beats .sheet > * (relative, centred column) */
-  position: fixed; right: 4vw; left: auto; top: 50%; margin: 0; max-width: none; translate: 0 -50%; z-index: 5; pointer-events: none;
-  font: 400 clamp(6rem, 13vw, 13rem)/1 var(--font-poster); color: transparent;
-  -webkit-text-stroke: 2px var(--acid); opacity: 0; transition: opacity 0.4s;
-}
-#testing > .testing__year.is-on { opacity: 1; }
-@media (max-width: 64rem) { #testing > .testing__year { display: none; } }
+/* Bug 3: a glitch in the route. The zigzag is drawn by route.js in the route
+   SVG; this transparent button sits over it, and route.js places it there. */
+.glitch-slot { display: block; width: 100%; height: 100%; }
+.bug--glitch { position: absolute !important; left: 0; top: 0; width: 2.75rem; z-index: 3; }
+.bug--glitch:not([data-placed]) { visibility: hidden; }
+.bug--glitch .stamp { top: 40%; right: auto; left: 2.4rem; }

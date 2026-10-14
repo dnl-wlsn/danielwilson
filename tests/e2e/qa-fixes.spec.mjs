@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { ready, trigger, seed, activate } from './helpers.mjs';
 
-const ALL = ['letters', 'date', 'overflow', 'upside-down', 'unit', 'beetle', 'dodge'];
+const ALL = ['letters', 'date', 'route', 'upside-down', 'unit', 'beetle', 'dodge'];
 const reward = (page) => page.evaluate(() => document.documentElement.dataset.reward);
 
 test('fixing the 7th bug brings the prize into view and it plays', async ({ page }) => {
@@ -72,7 +72,7 @@ test('on touch, swiping the empty stage scrolls the page; touching a letter grab
 for (const size of [null, { width: 390, height: 664 }]) test(`Hint on a phone keeps focus on the bug and does not keep re-measuring${size ? ' (iPhone 13 size)' : ''}`, async ({ page }, info) => {
   test.skip(info.project.name !== 'mobile', 'phone');
   if (size) await page.setViewportSize(size);
-  await seed(page, ['letters', 'date', 'overflow', 'upside-down']);
+  await seed(page, ['letters', 'date', 'route', 'upside-down']);
   await page.goto('/');
   await ready(page);
   await page.waitForTimeout(500);
@@ -81,12 +81,6 @@ for (const size of [null, { width: 390, height: 664 }]) test(`Hint on a phone ke
   await page.waitForTimeout(2500);
   expect(await page.evaluate(() => window.__r)).toBeLessThanOrEqual(2); // was ~15 per hint
   expect(await page.evaluate(() => document.activeElement?.dataset.for)).toBe('unit');
-});
-
-test('company names never hold blank space under them', async ({ page }) => {
-  await page.goto('/');
-  await ready(page);
-  expect(await page.$$eval('#testing .role__org', (hs) => hs.filter((h) => h.style.minHeight).length)).toBe(0);
 });
 
 test('the bar shows a dot per bug, filled as they are found', async ({ page }) => {
@@ -103,7 +97,7 @@ test('the prize shows as locked until all 7 are found', async ({ page }) => {
   await seed(page, ['date']);
   await page.goto('/');
   await ready(page);
-  await expect(page.locator('.reward-lock')).toHaveText(/Prize locked\. 6 bugs to go\./);
+  await expect(page.locator('.reward-lock')).toHaveText(/Finish locked\. 6 bugs to go\./);
   await activate(page, 'unit', 'keyboard');
   await expect(page.locator('.reward-lock')).toHaveText(/5 bugs to go/);
 });
@@ -149,16 +143,6 @@ test('the beetle freezes when the pointer gets close', async ({ page }, info) =>
   expect(await t.evaluate((el) => el.style.transform)).toBe(at);
 });
 
-test('desktop: a big year follows the role in the middle of the screen', async ({ page }, info) => {
-  test.skip(info.project.name === 'mobile', 'desktop only');
-  await page.goto('/');
-  await ready(page);
-  const org = page.locator('#testing .role__org').nth(4); // Elevate, 2015
-  await org.evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - window.innerHeight / 2));
-  await expect(page.locator('.testing__year')).toHaveText('2015');
-  await expect(page.locator('.testing__year')).toBeVisible();
-});
-
 test('the bug bar never covers the name', async ({ page }) => {
   await page.goto('/');
   await ready(page);
@@ -168,11 +152,3 @@ test('the bug bar never covers the name', async ({ page }) => {
   expect(hits).toBe(0);
 });
 
-test('desktop: the year is really on screen, beside the list', async ({ page }, info) => {
-  test.skip(info.project.name === 'mobile', 'desktop only');
-  await page.goto('/');
-  await ready(page);
-  const org = page.locator('#testing .role__org').nth(4);
-  await org.evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - window.innerHeight / 2));
-  await expect.poll(() => page.$eval('.testing__year', (y) => { const r = y.getBoundingClientRect(); return getComputedStyle(y).opacity === '1' && r.top >= 0 && r.bottom <= innerHeight && r.left > innerWidth / 2; })).toBe(true);
-});

@@ -7,8 +7,8 @@ const SLOT_BUGS = [
     fixed: async (p) => { await expect(p.locator('.name__pair')).toHaveText('ie'); await expect(p.locator('.name__pink > span').first()).toHaveText('Daniel'); } },
   { id: 'date', broken: (p) => expect(p.locator('[data-bug="date"]')).toHaveText('2090'),
     fixed: (p) => expect(p.locator('[data-bug="date"]')).toHaveText('2009') },
-  { id: 'overflow', broken: (p) => expect(p.locator('[data-bug="overflow"]')).toHaveClass(/is-spilling/),
-    fixed: (p) => expect(p.locator('[data-bug="overflow"]')).not.toHaveClass(/is-spilling/) },
+  { id: 'route', broken: (p) => expect.poll(() => p.locator('.route__line').evaluate((l) => (l.getAttribute('d').match(/L/g) ?? []).length)).toBeGreaterThan(4),
+    fixed: (p) => expect.poll(() => p.locator('.route__line').evaluate((l) => (l.getAttribute('d').match(/L/g) ?? []).length)).toBe(0) },
   { id: 'upside-down', broken: (p) => expect(p.locator('[data-bug="upside-down"]')).toHaveClass(/is-flipped/),
     fixed: (p) => expect(p.locator('[data-bug="upside-down"]')).not.toHaveClass(/is-flipped/) },
   { id: 'unit', broken: (p) => expect(p.locator('[data-bug="unit"]')).toHaveText('miles'),
@@ -130,7 +130,7 @@ test('the note under the counter tucks away after a few seconds', async ({ page 
 });
 
 test('a returning visitor with all 7 is told where the prize is', async ({ page }) => {
-  await seed(page, ['letters', 'date', 'overflow', 'upside-down', 'unit', 'beetle', 'dodge']);
+  await seed(page, ['letters', 'date', 'route', 'upside-down', 'unit', 'beetle', 'dodge']);
   await page.goto('/');
   await ready(page);
   await expect(page.locator('[data-bug-note]')).toHaveText('All 7 found. Your prize is at the bottom of the page.');

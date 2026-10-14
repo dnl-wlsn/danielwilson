@@ -11,6 +11,8 @@
   --gutter: clamp(1rem, 5vw, 4rem);
   --col: 72rem;
   --focus: var(--blue); /* outside any section (the skip link) */
+  --rail: clamp(2.75rem, 9vw, 8rem); /* margin either side of the reading column; the route runs here */
+  --route: var(--pink);
   --feed: 7rem; /* how far each sheet overlaps the one before (the printer feed) */
   color-scheme: light;
 }

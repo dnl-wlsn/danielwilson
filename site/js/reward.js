@@ -28,7 +28,8 @@ export function initReward({ motion }) {
         const io = new IntersectionObserver(([e]) => {
           if (!e.isIntersecting) return;
           io.disconnect();
-          playground(box, stage);
+          // A beat after the finish tape snaps, so the two don't land at once.
+          setTimeout(() => playground(box, stage), 450);
         }, { threshold: 0.15 });
         io.observe(stage);
       })

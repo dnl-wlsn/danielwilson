@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { ready, seed, activate } from './helpers.mjs';
 
-const ALL = ['letters', 'date', 'overflow', 'upside-down', 'unit', 'beetle', 'dodge'];
+const ALL = ['letters', 'date', 'route', 'upside-down', 'unit', 'beetle', 'dodge'];
 const watchMatter = (page) => {
   const seen = { matter: false };
   page.on('request', (r) => { if (r.url().includes('matter')) seen.matter = true; });

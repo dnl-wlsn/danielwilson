@@ -73,7 +73,7 @@ export function initBugs(ctx, defs) {
   if (found.size === bugs.size) root.dataset.bugs = 'complete';
   const intro = found.size === bugs.size
     ? `All ${bugs.size} found. Your prize is at the bottom of the page.`
-    : `Seven bugs are hidden on this page, on purpose. ${touch ? 'Tap' : 'Click'} anything that looks wrong.`;
+    : `Seven bugs are hidden along the route, on purpose. ${touch ? 'Tap' : 'Click'} anything that looks wrong.`;
   if (root.dataset.opening === 'done') flashNote(intro, 9000);
   else document.addEventListener('opening:done', () => flashNote(intro, 9000), { once: true });
 
@@ -141,9 +141,10 @@ export function initBugs(ctx, defs) {
       root.dataset.bugs = 'complete';
       document.dispatchEvent(new Event('bugs:complete'));
       flashNote(`All ${bugs.size} found. Your prize is below.`, 9000);
-      // Make 7/7 a moment: after the stamp lands, glide down to the prize.
+      // Make 7/7 a moment: after the stamp lands, glide down to the finish
+      // line, where the tape snaps and the prize falls in below it.
       setTimeout(() => {
-        const stage = document.querySelector('.reward__stage');
+        const stage = document.querySelector('.finish-line') ?? document.querySelector('.reward__stage');
         if (!stage) return;
         if (ctx.lenis) {
           ctx.lenis.resize();
@@ -179,7 +180,7 @@ export function initBugs(ctx, defs) {
     const left = bugs.size - found.size;
     if (lock) {
       lock.hidden = left === 0;
-      lock.textContent = `Prize locked. ${left} ${left === 1 ? 'bug' : 'bugs'} to go.`;
+      lock.textContent = `Finish locked. ${left} ${left === 1 ? 'bug' : 'bugs'} to go.`;
     }
     if (!fixNote) return;
     live.textContent = announceText(found.size, bugs.size, fixNote);

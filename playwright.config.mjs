@@ -7,7 +7,7 @@ export default defineConfig({
   // Chromiums starve each other's tickers and flake. 2 workers is stable.
   workers: 2,
   webServer: {
-    command: 'python3 -m http.server 4173 --bind 127.0.0.1 --directory site',
+    command: 'python3 tools/serve.py 4173',
     url: 'http://127.0.0.1:4173/',
     reuseExistingServer: true,
   },

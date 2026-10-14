@@ -61,7 +61,7 @@ test('the page says Daniel Wilson, never dnl wlsn, outside the reward', async ({
 test('every bug slot is in the page, once', async ({ page }) => {
   await page.goto('/');
   const ids = await page.$$eval('[data-bug]', (e) => e.map((x) => x.dataset.bug));
-  expect(ids).toEqual(['letters', 'date', 'overflow', 'upside-down', 'unit', 'beetle', 'dodge']);
+  expect(ids).toEqual(['letters', 'date', 'route', 'upside-down', 'unit', 'beetle', 'dodge']);
 });
 
 test('career details expand on tap', async ({ page }) => {

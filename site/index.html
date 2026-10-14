@@ -4,18 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Daniel Wilson</title>
-<meta name="description" content="Daniel Wilson: software tester since 2009, runs the Little Oceans web studio, and runs ultra-marathons. Seven bugs are hidden on this page, on purpose.">
+<meta name="description" content="Daniel Wilson: software tester since 2009, runs the Little Oceans web studio, and runs ultra-marathons. Seven bugs are hidden along the route, on purpose.">
 <meta name="theme-color" content="#F4EFE4">
 <meta property="og:title" content="Daniel Wilson">
-<meta property="og:description" content="Software tester, web designer and ultra runner. Seven bugs, hidden on purpose.">
+<meta property="og:description" content="Software tester, web designer and ultra runner. Seven bugs on the route, hidden on purpose.">
 <meta property="og:type" content="website">
-<link rel="icon" href="/img/favicon-v2.svg" type="image/svg+xml">
+<link rel="icon" href="/img/favicon-v3.svg" type="image/svg+xml">
 <link rel="preload" href="/fonts/archivo-var-v1.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/anton-400-v1.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/fonts.css">
 <link rel="stylesheet" href="/css/tokens.css">
 <link rel="stylesheet" href="/css/base.css">
 <link rel="stylesheet" href="/css/sheets.css">
+<link rel="stylesheet" href="/css/terrain.css">
+<link rel="stylesheet" href="/css/route.css">
 <link rel="stylesheet" href="/css/lenis.css">
 <link rel="stylesheet" href="/css/opening.css">
 <link rel="stylesheet" href="/css/bugs.css">
@@ -43,8 +45,10 @@
   <p class="visually-hidden" aria-live="polite" data-bug-live></p>
 </aside>
 
-<main>
-<section id="start" class="sheet opening" data-paper="cream">
+<main class="trail">
+<svg class="route" aria-hidden="true" focusable="false"><path class="route__line"/><g class="route__cps"></g><g class="route__runner"><circle r="7"/></g></svg>
+
+<section id="start" class="sheet opening" data-paper="cream" data-side="left" data-terrain="1">
   <h1 class="name" aria-labelledby="name-text">
     <span class="visually-hidden" id="name-text">Daniel Wilson</span>
     <span class="name__row"><span aria-hidden="true"><span class="g">D</span><span class="g">a</span><span class="g">n</span></span><span class="name__pair" data-bug="letters" aria-hidden="true"><span class="g">i</span><span class="g">e</span></span><span aria-hidden="true"><span class="g">l</span></span></span>
@@ -53,127 +57,150 @@
   </h1>
   <p class="opening__tag mono">Tester · Studio · Ultras</p>
   <p class="lede">I've been testing software since 2009. I build websites for small businesses as Little Oceans, and at weekends I run ultra-marathons, ideally over mountains. I notice details, and I believe in Oxford commas.</p>
+  <span class="cp-anchor" data-cp="start" aria-hidden="true"></span>
 </section>
 
-<section id="testing" class="sheet" data-paper="black">
-  <p class="kicker mono">Testing, 2009 to now</p>
-  <h2 class="ink">Seventeen years of breaking things</h2>
-  <p class="lede">I started on games at SEGA and have spent most of the years since in finance and insurance, where a bug costs real people real money.</p>
+<section id="testing" class="sheet" data-paper="black" data-side="left" data-terrain="2" data-reach>
+  <span class="cp-anchor" data-cp aria-hidden="true"></span>
+  <p class="kicker mono" data-reveal>CP1 · Testing, 2009 to now</p>
+  <h2 class="ink" data-reveal>Seventeen years of breaking things</h2>
+  <p class="lede" data-reveal>I started on games at SEGA and have spent most of the years since in finance and insurance, where a bug costs real people real money.</p>
   <ol class="roles">
-    <li class="marker mono">2009 · BA (Hons) Digital Music &amp; Computer Games Design, 2:1</li>
-    <li class="role">
-      <p class="role__year mono"><span class="visually-hidden">2009</span><span class="reel-host" data-bug="date" aria-hidden="true">2009</span></p>
-      <h3 class="role__org">SEGA Europe</h3>
-      <p class="role__title mono">Functionality Tester · Chiswick</p>
-      <p>Testing AAA games through pre-alpha, alpha and beta, straight out of university.</p>
-      <details><summary>More</summary><ul>
+    <li class="marker" data-reach>
+      <span class="cp-anchor" data-cp="marker" aria-hidden="true"></span>
+      <p class="mono" data-reveal>2009 · BA (Hons) Digital Music &amp; Computer Games Design, 2:1</p>
+    </li>
+    <li class="role" data-reach>
+      <span class="cp-anchor" data-cp="small" aria-hidden="true"></span>
+      <p class="role__year mono" data-reveal><span class="visually-hidden">2009</span><span class="reel-host" data-bug="date" aria-hidden="true">2009</span></p>
+      <h3 class="role__org" data-reveal>SEGA Europe</h3>
+      <p class="role__title mono" data-reveal>Functionality Tester · Chiswick</p>
+      <p data-reveal>Testing AAA games through pre-alpha, alpha and beta, straight out of university.</p>
+      <details data-reveal><summary>More</summary><ul>
         <li>Daily test and feedback reports for several external development studios.</li>
         <li>Software and hardware environment management.</li>
         <li>Writing and maintaining test scripts.</li>
       </ul></details>
     </li>
-    <li class="role">
-      <p class="role__year mono">2011</p>
-      <h3 class="role__org">Software Quality Systems</h3>
-      <p class="role__title mono">Consultant · Moorgate</p>
-      <p>Three weeks in South Africa learning to test properly, an ISTQB Foundation, then out to clients.</p>
-      <details><summary>More</summary><ul>
+    <li class="role" data-reach>
+      <span class="cp-anchor" data-cp="small" aria-hidden="true"></span>
+      <p class="role__year mono" data-reveal>2011</p>
+      <h3 class="role__org" data-reveal>Software Quality Systems</h3>
+      <p class="role__title mono" data-reveal>Consultant · Moorgate</p>
+      <p data-reveal>Three weeks in South Africa learning to test properly, an ISTQB Foundation, then out to clients.</p>
+      <details data-reveal><summary>More</summary><ul>
         <li>Home Retail Group: the Argos digital browser that replaced the in-store catalogues, worth over £16m a year in savings.</li>
         <li>Gala Coral: a revenue protection system that flagged cash discrepancies to head office.</li>
         <li>Rated "Excellent", with 100% positive client feedback.</li>
       </ul></details>
     </li>
-    <li class="marker mono">2011 · ISTQB Foundation (CTFL)</li>
-    <li class="role">
-      <p class="role__year mono">2012</p>
-      <h3 class="role__org">Think Finance</h3>
-      <p class="role__title mono">Test Analyst · Covent Garden</p>
-      <p>Underwriting and verification on quid.co.uk and sunny.co.uk. They liked the consultancy work enough to hire me.</p>
-      <details><summary>More</summary><ul>
+    <li class="marker" data-reach>
+      <span class="cp-anchor" data-cp="marker" aria-hidden="true"></span>
+      <p class="mono" data-reveal>2011 · ISTQB Foundation (CTFL)</p>
+    </li>
+    <li class="role" data-reach>
+      <span class="cp-anchor" data-cp="small" aria-hidden="true"></span>
+      <p class="role__year mono" data-reveal>2012</p>
+      <h3 class="role__org" data-reveal>Think Finance</h3>
+      <p class="role__title mono" data-reveal>Test Analyst · Covent Garden</p>
+      <p data-reveal>Underwriting and verification on quid.co.uk and sunny.co.uk. They liked the consultancy work enough to hire me.</p>
+      <details data-reveal><summary>More</summary><ul>
         <li>Test scripts for system integration, UAT and offshore regression.</li>
         <li>Agile testing with TDD, BDD and Scrumban.</li>
         <li>Out of hours support, evenings, weekends and bank holidays.</li>
       </ul></details>
     </li>
-    <li class="role">
-      <p class="role__year mono">2014</p>
-      <h3 class="role__org">Oakam</h3>
-      <p class="role__title mono">Contract Lead Test Analyst · Tottenham Court Road</p>
-      <p>Keeping a lender FCA compliant through the rate cap, affordability checks and redress.</p>
-      <details><summary>More</summary><ul>
+    <li class="role" data-reach>
+      <span class="cp-anchor" data-cp="small" data-glitch-from aria-hidden="true"></span>
+      <p class="role__year mono" data-reveal>2014</p>
+      <h3 class="role__org" data-reveal>Oakam</h3>
+      <p class="role__title mono" data-reveal>Contract Lead Test Analyst · Tottenham Court Road</p>
+      <p data-reveal>Keeping a lender FCA compliant through the rate cap, affordability checks and redress.</p>
+      <details data-reveal><summary>More</summary><ul>
         <li>Validated loan calculation outputs for FCA compliance.</li>
         <li>Wrote the white papers that introduced defect, regression and reporting processes.</li>
       </ul></details>
+      <span class="glitch-slot" data-bug="route" aria-hidden="true"></span>
     </li>
-    <li class="role">
-      <p class="role__year mono">2015</p>
-      <h3 class="role__org">Elevate</h3>
-      <p class="role__title mono">Contract Senior QA · Covent Garden</p>
-      <p>sunny.co.uk across three teams: payments, customer experience and risk. Team of the Year 2015.</p>
-      <details><summary>More</summary><ul>
+    <li class="role" data-reach>
+      <span class="cp-anchor" data-cp="small" aria-hidden="true"></span>
+      <p class="role__year mono" data-reveal>2015</p>
+      <h3 class="role__org" data-reveal>Elevate</h3>
+      <p class="role__title mono" data-reveal>Contract Senior QA · Covent Garden</p>
+      <p data-reveal>sunny.co.uk across three teams: payments, customer experience and risk. Team of the Year 2015.</p>
+      <details data-reveal><summary>More</summary><ul>
         <li>Managed six to eight offshore testers across two teams.</li>
         <li>Regression automation with Selenium IDE.</li>
         <li>Interviewed junior and senior QA analysts.</li>
       </ul></details>
     </li>
-    <li class="marker mono">2015 · ISTQB Intermediate (ICST) · 2016 · BCS Business Analysis (FCBA)</li>
-    <li class="role">
-      <p class="role__year mono">2017</p>
-      <h3 class="role__org" aria-labelledby="cabot-name"><span class="visually-hidden" id="cabot-name">Cabot Credit Management</span><span class="spill" data-bug="overflow" aria-hidden="true">Cabot Credit Management</span></h3>
-      <p class="role__title mono">Contract QA Lead · Brackley</p>
-      <p>A re-platforming that brought several businesses onto one system. I trained 15 business users to run UAT.</p>
-      <details><summary>More</summary><ul>
+    <li class="marker" data-reach>
+      <span class="cp-anchor" data-cp="marker" aria-hidden="true"></span>
+      <p class="mono" data-reveal>2015 · ISTQB Intermediate (ICST) · 2016 · BCS Business Analysis (FCBA)</p>
+    </li>
+    <li class="role" data-reach>
+      <span class="cp-anchor" data-cp="small" aria-hidden="true"></span>
+      <p class="role__year mono" data-reveal>2017</p>
+      <h3 class="role__org" data-reveal>Cabot Credit Management</h3>
+      <p class="role__title mono" data-reveal>Contract QA Lead · Brackley</p>
+      <p data-reveal>A re-platforming that brought several businesses onto one system. I trained 15 business users to run UAT.</p>
+      <details data-reveal><summary>More</summary><ul>
         <li>Coordinated system, integration and user acceptance testing.</li>
         <li>Tested Direct Debit, AUDDIS and BACS files so repayments migrated correctly.</li>
         <li>Kept the migration PCI-DSS and FCA compliant.</li>
       </ul></details>
     </li>
-    <li class="role">
-      <p class="role__year mono">2017</p>
-      <h3 class="role__org">Connells Group</h3>
-      <p class="role__title mono">Senior Test Analyst · Dunstable</p>
-      <p>Led four test analysts and helped the move from Waterfall to Agile.</p>
-      <details><summary>More</summary><ul>
+    <li class="role" data-reach>
+      <span class="cp-anchor" data-cp="small" aria-hidden="true"></span>
+      <p class="role__year mono" data-reveal>2017</p>
+      <h3 class="role__org" data-reveal>Connells Group</h3>
+      <p class="role__title mono" data-reveal>Senior Test Analyst · Dunstable</p>
+      <p data-reveal>Led four test analysts and helped the move from Waterfall to Agile.</p>
+      <details data-reveal><summary>More</summary><ul>
         <li>connells.co.uk, sequence.co.uk, hatched.co.uk and a company-wide Windows 10 upgrade.</li>
         <li>Made the case for, and introduced, cross-browser and cross-device testing tools.</li>
       </ul></details>
     </li>
-    <li class="role">
-      <p class="role__year mono">2018</p>
-      <h3 class="role__org">NewDay</h3>
-      <p class="role__title mono">Credit Risk Testing Specialist · King's Cross</p>
-      <p>Decision systems for Aqua, Fluid, Amazon, Argos and more. Shipped defects went from three per release to one a year.</p>
-      <details><summary>More</summary><ul>
+    <li class="role" data-reach>
+      <span class="cp-anchor" data-cp="small" aria-hidden="true"></span>
+      <p class="role__year mono" data-reveal>2018</p>
+      <h3 class="role__org" data-reveal>NewDay</h3>
+      <p class="role__title mono" data-reveal>Credit Risk Testing Specialist · King's Cross</p>
+      <p data-reveal>Decision systems for Aqua, Fluid, Amazon, Argos and more. Shipped defects went from three per release to one a year.</p>
+      <details data-reveal><summary>More</summary><ul>
         <li>Embedded in the credit risk team, implementing new decision strategies.</li>
         <li>Key out of hours contact for Experian and Provenir.</li>
       </ul></details>
     </li>
-    <li class="role" data-placeholder="sb-update">
-      <p class="role__year mono">2019 to now</p>
-      <h3 class="role__org">Simply Business</h3>
-      <p class="role__title mono">Senior Software Test Engineer · Moorgate</p>
-      <p>Self-serve policy management for UK and US customers. Team of the Year 2019.</p>
-      <details><summary>More</summary><ul>
+    <li class="role" data-reach data-placeholder="sb-update">
+      <span class="cp-anchor" data-cp="small" aria-hidden="true"></span>
+      <p class="role__year mono" data-reveal>2019 to now</p>
+      <h3 class="role__org" data-reveal>Simply Business</h3>
+      <p class="role__title mono" data-reveal>Senior Software Test Engineer · Moorgate</p>
+      <p data-reveal>Self-serve policy management for UK and US customers. Team of the Year 2019.</p>
+      <details data-reveal><summary>More</summary><ul>
         <li>Tested One Time Code login, Renewal Fee and the US Customer Account.</li>
         <li>Introduced cross-browser and cross-device testing for engineering.</li>
         <li>Ruby on Rails, React, Cypress, BrowserStack, AWS and New Relic.</li>
       </ul></details>
     </li>
-    <li class="role role--book">
-      <img src="/img/book-cover-v1.jpg" width="603" height="900" loading="lazy" alt="Cover of The Book On Software Testing: a raccoon in a shirt and tie slumped over an old computer">
-      <p class="role__year mono">2025</p>
-      <p><cite>The Book On Software Testing: A Guide for Non&#8209;Testers</cite></p>
-      <p>A jargon-free guide for the Product Owners, Project Managers, Business Analysts and developers who work with testers.</p>
-      <p><a href="https://www.amazon.co.uk/dp/B0G3QK8Q3G">Buy it on Amazon</a></p>
+    <li class="role role--book" data-reach>
+      <span class="cp-anchor" data-cp="small" aria-hidden="true"></span>
+      <img src="/img/book-cover-v1.jpg" width="603" height="900" loading="lazy" alt="Cover of The Book On Software Testing: a raccoon in a shirt and tie slumped over an old computer" data-reveal>
+      <p class="role__year mono" data-reveal>2025</p>
+      <p data-reveal><cite>The Book On Software Testing: A Guide for Non&#8209;Testers</cite></p>
+      <p data-reveal>A jargon-free guide for the Product Owners, Project Managers, Business Analysts and developers who work with testers.</p>
+      <p data-reveal><a href="https://www.amazon.co.uk/dp/B0G3QK8Q3G">Buy it on Amazon</a></p>
     </li>
   </ol>
   <p class="cv-download"><a class="btn" href="/cv/daniel-wilson-cv-2026.pdf" download>Download CV (PDF)</a></p>
 </section>
 
-<section id="studio" class="sheet" data-paper="cream">
-  <p class="kicker mono">Little Oceans</p>
-  <h2 class="ink">I build websites for small businesses</h2>
-  <p class="lede">Little Oceans is my web studio in Bedfordshire. Every site is hand-coded, fast, and looked after once it's live.</p>
+<section id="studio" class="sheet" data-paper="cream" data-side="right" data-terrain="1" data-reach>
+  <span class="cp-anchor" data-cp aria-hidden="true"></span>
+  <p class="kicker mono" data-reveal>CP2 · Little Oceans</p>
+  <h2 class="ink" data-reveal>I build websites for small businesses</h2>
+  <p class="lede" data-reveal>Little Oceans is my web studio in Bedfordshire. Every site is hand-coded, fast, and looked after once it's live.</p>
   <figure class="studio-work">
     <p class="visually-hidden">Screenshot of the Rushton Electrical home page.</p>
     <span class="shot" data-bug="upside-down" aria-hidden="true"><img src="/img/rushton-desktop-v1.jpg" width="1400" height="875" loading="lazy" alt=""></span>
@@ -182,9 +209,10 @@
   <p class="studio__more"><a class="btn" href="https://littleoceans.co.uk/work/">See more at Little Oceans</a></p>
 </section>
 
-<section id="running" class="sheet" data-paper="black">
-  <p class="kicker mono">Running</p>
-  <h2 class="ink">Ultras, ideally over mountains</h2>
+<section id="running" class="sheet" data-paper="black" data-side="left" data-terrain="3" data-reach>
+  <span class="cp-anchor" data-cp aria-hidden="true"></span>
+  <p class="kicker mono" data-reveal>CP3 · Running</p>
+  <h2 class="ink" data-reveal>Ultras, ideally over mountains</h2>
   <div class="run-stage">
     <h3 class="run__name">Maverick Chilterns Trail</h3>
     <p class="run__date mono">11 July 2026</p>
@@ -207,8 +235,10 @@
   </div>
 </section>
 
-<section id="likes" class="sheet likes" data-paper="cream">
-  <h2 class="ink">Things I like, and things I don't</h2>
+<section id="likes" class="sheet likes" data-paper="cream" data-side="right" data-terrain="2" data-reach>
+  <span class="cp-anchor" data-cp aria-hidden="true"></span>
+  <p class="kicker mono" data-reveal>CP4 · Aid station</p>
+  <h2 class="ink" data-reveal>Things I like, and things I don't</h2>
   <div class="likes__cols">
     <span class="beetle-slot" data-bug="beetle" aria-hidden="true"></span>
     <div data-placeholder="likes">
@@ -221,7 +251,15 @@
         <li>Long days in the hills</li>
       </ul>
     </div>
-    <div>
+    <div class="likes__dont">
+      <svg class="spider" viewBox="0 0 40 120" width="40" height="120" aria-hidden="true" focusable="false">
+        <line x1="20" y1="0" x2="20" y2="92" stroke="currentColor" stroke-width="1"/>
+        <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <path d="M14 96 L4 88 M14 100 L2 100 M14 104 L4 112 M15 107 L8 118"/>
+          <path d="M26 96 L36 88 M26 100 L38 100 M26 104 L36 112 M25 107 L32 118"/>
+        </g>
+        <ellipse cx="20" cy="101" rx="6" ry="8" fill="currentColor"/>
+      </svg>
       <h3>Don't like</h3>
       <ul class="stickers stickers--dont">
         <li>Spiders</li>
@@ -234,15 +272,20 @@
   </div>
 </section>
 
-<section id="contact" class="sheet contact" data-paper="black">
-  <h2 class="ink">Say hello</h2>
+<section id="contact" class="sheet contact" data-paper="black" data-side="left" data-terrain="3" data-reach>
+  <span class="cp-anchor" data-cp aria-hidden="true"></span>
+  <p class="kicker mono" data-reveal>Finish</p>
+  <h2 class="ink" data-reveal>Say hello</h2>
   <p class="contact__cta"><a class="btn btn--big" data-bug="dodge" href="mailto:dwqa.dan@gmail.com">Email me</a></p>
   <ul class="contact__links">
     <li data-placeholder="email"><a href="mailto:dwqa.dan@gmail.com">dwqa.dan@gmail.com</a></li>
     <li><a href="https://www.linkedin.com/in/protesting">LinkedIn</a></li>
     <li><a href="https://github.com/dnl-wlsn">GitHub</a></li>
   </ul>
-  <p class="reward-lock mono" hidden></p>
+  <div class="finish-line">
+    <div class="tape" aria-hidden="true"><span class="tape__l"></span><span class="tape__r"></span></div>
+    <p class="reward-lock mono" hidden></p>
+  </div>
   <div class="reward" hidden>
     <p class="reward__title mono">7 / 7. You'd make a good tester.</p>
     <p class="visually-hidden">You found all seven bugs. Your reward is my name, without the vowels: dnl wlsn.</p>

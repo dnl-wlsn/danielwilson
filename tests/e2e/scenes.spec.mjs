@@ -13,15 +13,6 @@ test('every sheet after the first has an edge that feeds in with scroll', async 
   await expect.poll(skew).toBe(0);
 });
 
-test('the company in the middle of the screen stretches, one at a time', async ({ page }) => {
-  await page.goto('/');
-  await ready(page);
-  const org = page.locator('#testing .role__org').nth(3);
-  await org.evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - window.innerHeight / 2));
-  await expect(org).toHaveClass(/is-wide/);
-  expect(await page.locator('#testing .role__org.is-wide').count()).toBe(1);
-});
-
 test('stickers end up visible', async ({ page }) => {
   await page.goto('/');
   await ready(page);
@@ -31,48 +22,28 @@ test('stickers end up visible', async ({ page }) => {
 
 test.describe('reduced motion', () => {
   test.use({ contextOptions: { reducedMotion: 'reduce' } });
-  test('edges are flat and nothing stretches', async ({ page }) => {
+  test('edges are flat', async ({ page }) => {
     await page.goto('/');
     await ready(page);
     const t = await page.$eval('#studio .sheet-edge', (e) => getComputedStyle(e).transform);
     expect(t).toBe('none');
-    expect(await page.locator('.is-wide').count()).toBe(0);
   });
 });
 
-test('stretching a company name never moves the page (no jitter)', async ({ page }) => {
-  await page.goto('/');
-  await ready(page);
-  const org = page.locator('#testing .role__org').nth(5); // Cabot Credit Management, the longest
-  await org.evaluate((el) => el.scrollIntoView({ block: 'center' }));
-  const ys = [];
-  for (let i = 0; i < 10; i++) { ys.push(await page.evaluate(() => Math.round(window.scrollY))); await page.waitForTimeout(120); }
-  expect(new Set(ys.slice(3)).size, `scrollY over time: ${ys.join(', ')}`).toBe(1);
-  const heights = await page.$$eval('#testing .role__org', (hs) => hs.map((h) => {
-    const had = h.classList.contains('is-wide');
-    h.style.transition = 'none';
-    h.classList.remove('is-wide'); const narrow = h.offsetHeight;
-    h.classList.add('is-wide'); const wide = h.offsetHeight;
-    h.classList.toggle('is-wide', had); h.style.transition = '';
-    return narrow === wide;
-  }));
-  expect(heights.every(Boolean)).toBe(true);
-});
-
-test('scroll effects stay in the right place when the page grows (opening a role)', async ({ page }) => {
+test('the route follows the page when it grows (opening a role)', async ({ page }) => {
   await page.goto('/');
   await ready(page);
   const d = page.locator('#testing details').first();
   await d.scrollIntoViewIfNeeded();
   await d.locator('summary').click();
+  // The last checkpoint's dot still sits on its anchor.
   const off = async () => page.evaluate(() => {
-    const org = document.querySelectorAll('#testing .role__org')[5];
-    const st = ScrollTrigger.getAll().find((t) => t.trigger === org);
-    const r = org.getBoundingClientRect();
-    const want = r.top + window.scrollY + r.height / 2 - window.innerHeight * 0.6;
-    return Math.abs(st.start - want);
+    const main = document.querySelector('.trail').getBoundingClientRect();
+    const a = [...document.querySelectorAll('[data-cp]')].at(-1).getBoundingClientRect();
+    const dot = [...document.querySelectorAll('.route__cp')].at(-1);
+    return Math.abs(Number(dot.getAttribute('cy')) - (a.top - main.top));
   });
-  await expect.poll(off).toBeLessThan(3);
+  await expect.poll(off).toBeLessThan(2);
 });
 
 test('the page settles: no endless re-measuring once loaded', async ({ page }) => {

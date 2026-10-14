@@ -11,7 +11,7 @@
     "test:e2e": "playwright test --project=desktop --project=mobile",
     "test:perf": "playwright test --project=perf --workers=1",
     "test": "npm run test:unit && npm run test:py && npm run test:e2e",
-    "deploy": "npm test && npm run test:perf && wrangler pages deploy site --project-name danielwilson --branch main"
+    "deploy": "npm test && npm run test:perf && wrangler pages deploy site --project-name danielwilson-v3 --branch main"
   },
   "devDependencies": {
     "@playwright/test": "1.60.0",

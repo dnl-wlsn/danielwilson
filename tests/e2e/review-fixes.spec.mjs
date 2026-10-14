@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { ready, trigger, seed } from './helpers.mjs';
 
-const ALL = ['letters', 'date', 'overflow', 'upside-down', 'unit', 'beetle', 'dodge'];
+const ALL = ['letters', 'date', 'route', 'upside-down', 'unit', 'beetle', 'dodge'];
 
 test('Reset letters never stacks physics loops', async ({ page }) => {
   await seed(page, ALL);

@@ -2,7 +2,7 @@
 .opening > :not(.sheet-edge) { width: 100%; } /* one left edge for name, tag and intro */
 @media (max-width: 40rem) {
   .opening { align-content: start; padding-top: 3rem; }
-  .name { font-size: 27vw !important; }
+  .name { font-size: 24vw !important; }
 }
 .name {
   position: relative; font: 900 clamp(4.5rem, 21vw, 16rem)/0.8 var(--font-sans); font-stretch: 62%;

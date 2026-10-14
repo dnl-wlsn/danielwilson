@@ -40,18 +40,20 @@ for (const t of seen.values()) {
 const total = weeks.reduce((a, b) => a + b, 0);
 const max = Math.max(1, ...weeks);
 
-const W = 1000, H = 120, GAP = 4, bw = (W - GAP * (WEEKS - 1)) / WEEKS;
-const bars = weeks.map((n, i) => {
-  const h = n ? Math.max(3, Math.round((n / max) * (H - 4))) : 1;
-  return `<rect class="commits__bar${n ? '' : ' is-empty'}" x="${(i * (bw + GAP)).toFixed(1)}" y="${H - h}" width="${bw.toFixed(1)}" height="${h}" rx="1.5"/>`;
-}).join('');
+// GitHub-style squares, one per week, shaded by how busy the week was.
+const S = 14, G = 4;
+const level = (n) => (n === 0 ? 0 : Math.min(4, Math.ceil((n / max) * 4)));
+const W = WEEKS * (S + G) - G, H = S;
+const cells = weeks.map((n, i) => `<rect class="commits__sq lv${level(n)}" x="${i * (S + G)}" y="0" width="${S}" height="${S}" rx="3"/>`).join('');
+const legend = [0, 1, 2, 3, 4].map((l) => `<span class="commits__key lv${l}"></span>`).join('');
 const fmt = (n) => n.toLocaleString('en-GB');
 const from = new Date(start).toLocaleDateString('en-GB', { month: 'long', year: 'numeric', timeZone: 'UTC' });
 const label = `${fmt(total)} commits in the last six months, since ${from}, counted by week.`;
 const html = `<!-- commits:start (built by tools/commit-chart.mjs) -->
   <figure class="commits" data-reveal>
-    <svg class="commits__svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="${label}">${bars}</svg>
-    <figcaption class="mono">${fmt(total)} commits in the last six months, week by week, across my own projects. Most are in private repos.</figcaption>
+    <svg class="commits__svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${label}">${cells}</svg>
+    <p class="commits__legend mono" aria-hidden="true">Less ${legend} More</p>
+    <figcaption class="mono">${fmt(total)} commits in the last six months, one square per week, across my own projects. Most are in private repos.</figcaption>
   </figure>
   <!-- commits:end -->`;
 

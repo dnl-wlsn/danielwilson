@@ -8,7 +8,7 @@ html:not(.motion) .route__runner { display: none; }
 .route__cp { fill: var(--cream); stroke: var(--route); stroke-width: 3; transform-box: fill-box; transform-origin: center; }
 .route__cp.on-black { fill: var(--black); }
 .route__cp--small { stroke-width: 2.5; }
-.route__cp--marker { fill: var(--route); }
+.route__cp--marker, .route__cp--marker.on-black { fill: var(--route); }
 .cp-anchor { position: absolute; top: 0; left: 0; width: 0; height: 0; }
 .sheet > .cp-anchor { top: calc(var(--feed) + 2.4rem); }
 .sheet:first-of-type > .cp-anchor { top: auto; bottom: 4rem; }
@@ -23,3 +23,5 @@ html.motion [data-reveal] {
   transition-delay: calc(var(--i, 0) * 70ms + 120ms);
 }
 html.motion [data-reach]:not(.is-reached) [data-reveal] { opacity: 0; transform: translateY(1rem); }
+/* Reached by keyboard: show it now, not after the stagger. */
+html.motion [data-reach]:focus-within [data-reveal] { transition-delay: 0s; }

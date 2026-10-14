@@ -5,11 +5,13 @@
 import { routeSegments, segmentsToD, sampleSegments, lengthAtY, pointAtLength, glitchSegments } from './lib/route-math.js';
 
 const TIP = 0.6;      // the line's tip sits 60% of the way down the viewport
-const PHONE = 640;    // 40rem: phones keep to the left rail
 const NS = 'http://www.w3.org/2000/svg';
 const root = document.documentElement;
 
-export function initRoute({ motion }) {
+export function initRoute() {
+  // Read live: the watchdog can switch motion off after boot (dw:static).
+  const animated = () => root.classList.contains('motion');
+  const phoneQuery = window.matchMedia('(max-width: 40rem)'); // phones keep to the left rail
   const main = document.querySelector('.trail');
   const svg = main.querySelector('.route');
   const path = svg.querySelector('.route__line');
@@ -29,13 +31,15 @@ export function initRoute({ motion }) {
     dot.setAttribute('r', String(RADIUS[kind] ?? 9));
     dot.setAttribute('class', `route__cp${kind ? ` route__cp--${kind}` : ''}${a.closest('[data-paper]')?.dataset.paper === 'black' ? ' on-black' : ''}`);
     svg.querySelector('.route__cps').append(dot);
-    return { anchor: a, dot, owner: a.closest('[data-reach]'), y: 0, len: 0 };
+    return { anchor: a, dot, owner: a.closest('[data-reach]'), len: 0, reached: false };
   });
   const gi = anchors.findIndex((a) => a.hasAttribute('data-glitch-from'));
 
   let base = [], pts = [], table = null, total = 0, mainTop = 0, phone = false, amp = 0;
 
   const reach = (c) => {
+    if (c.reached) return;
+    c.reached = true;
     c.dot.classList.add('is-reached');
     c.owner?.classList.add('is-reached');
   };
@@ -45,7 +49,7 @@ export function initRoute({ motion }) {
     const box = main.getBoundingClientRect();
     mainTop = box.top + window.scrollY;
     const w = main.clientWidth, h = main.offsetHeight;
-    phone = w <= PHONE;
+    phone = phoneQuery.matches;
     svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
     svg.setAttribute('width', w);
     svg.setAttribute('height', h);
@@ -102,9 +106,8 @@ export function initRoute({ motion }) {
   function update() {
     if (!table) return;
     let len = total;
-    if (motion) {
-      const se = document.scrollingElement;
-      const atBottom = window.innerHeight + window.scrollY >= se.scrollHeight - 2;
+    if (animated()) {
+      const atBottom = window.scrollY >= ScrollTrigger.maxScroll(window) - 2;
       len = atBottom ? total : lengthAtY(table, window.scrollY + window.innerHeight * TIP - mainTop);
     }
     path.style.strokeDashoffset = `${total - len}`;
@@ -122,20 +125,23 @@ export function initRoute({ motion }) {
     frame = requestAnimationFrame(measure);
   };
 
-  if (motion) {
+  const still = () => { cps.forEach(reach); schedule(); };
+  if (animated()) {
     // main.js refreshes ScrollTrigger whenever the page's height changes.
     ScrollTrigger.addEventListener('refresh', schedule);
     ScrollTrigger.create({ start: 0, end: 'max', onUpdate: update });
+    document.addEventListener('dw:static', still, { once: true });
   } else {
     cps.forEach(reach);
-    let lastW = -1, lastH = -1;
-    new ResizeObserver(() => {
-      if (main.clientWidth === lastW && main.offsetHeight === lastH) return;
-      lastW = main.clientWidth;
-      lastH = main.offsetHeight;
-      schedule();
-    }).observe(main);
   }
+  // Without motion nothing refreshes ScrollTrigger, so watch the size here.
+  let lastW = main.clientWidth, lastH = main.offsetHeight;
+  new ResizeObserver(() => {
+    if (animated() || (main.clientWidth === lastW && main.offsetHeight === lastH)) return;
+    lastW = main.clientWidth;
+    lastH = main.offsetHeight;
+    schedule();
+  }).observe(main);
   document.fonts.ready.then(schedule);
   // Keyboard users must never land on content that hasn't been revealed.
   document.addEventListener('focusin', (e) => {

@@ -6,8 +6,11 @@
   content: "";
   position: absolute; left: 0; right: 0; top: var(--feed); bottom: 0; pointer-events: none;
   background-size: 900px 900px;
-  -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(50% - 26rem), transparent calc(50% - 21rem), transparent calc(50% + 21rem), #000 calc(50% + 26rem), #000 100%);
-          mask-image: linear-gradient(90deg, #000 0, #000 calc(50% - 26rem), transparent calc(50% - 21rem), transparent calc(50% + 21rem), #000 calc(50% + 26rem), #000 100%);
+  /* The reading column's edges (see .sheet in sheets.css). */
+  --col-l: max(var(--rail), calc(50% - var(--col) / 2));
+  --col-r: min(calc(100% - var(--rail)), calc(50% + var(--col) / 2));
+  -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(var(--col-l) - 5rem), transparent var(--col-l), transparent var(--col-r), #000 calc(var(--col-r) + 5rem), #000 100%);
+          mask-image: linear-gradient(90deg, #000 0, #000 calc(var(--col-l) - 5rem), transparent var(--col-l), transparent var(--col-r), #000 calc(var(--col-r) + 5rem), #000 100%);
 }
 .sheet:first-of-type[data-terrain]::before { top: 0; }
 [data-paper="cream"][data-terrain="1"]::before { background-image: url("/img/contours-1-cream-v3.svg"); }

@@ -20,6 +20,7 @@
     var bar = document.querySelector('.bugbar');
     if (bar) { bar.classList.add('is-in'); bar.inert = false; }
     d.dataset.opening = 'done';
+    document.dispatchEvent(new Event('dw:static'));
   };
   setTimeout(function () { if (d.dataset.boot !== 'ok') window.__dwStatic(); }, 6000);
 })();

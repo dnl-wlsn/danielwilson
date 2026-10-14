@@ -16,6 +16,6 @@ export function initFinish({ motion }) {
   new IntersectionObserver(([e]) => {
     seen = e.isIntersecting;
     if (seen && complete()) snap();
-  }, { threshold: 1 }).observe(tape);
+  }, { threshold: 0.95 }).observe(tape);
   document.addEventListener('bugs:complete', () => { if (seen) snap(); });
 }

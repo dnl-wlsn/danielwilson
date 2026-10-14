@@ -1,5 +1,6 @@
 /* Jump to a checkpoint. A <details>, so it works without JavaScript. */
-.cpnav { position: fixed; z-index: 31; top: 0.75rem; left: 0.75rem; font-size: 0.75rem; }
+.cpnav { position: fixed; z-index: 31; top: 0.75rem; right: 0.75rem; font-size: 0.75rem; }
+.cpnav details { display: flex; flex-direction: column; align-items: flex-end; }
 .cpnav summary {
   display: inline-block; list-style: none; cursor: pointer; padding: 0.55rem 0.9rem; border-radius: 999px;
   background: var(--black); color: var(--paper); box-shadow: 0 0 0 2px var(--cream);

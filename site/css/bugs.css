@@ -23,7 +23,8 @@
 .contact__cta { position: relative; }
 
 .bugbar {
-  position: fixed; z-index: 30; top: 0.75rem; right: 0.75rem;
+  /* Bottom left while playing: at the top it would sit over the name. */
+  position: fixed; z-index: 30; bottom: 0.75rem; left: 0.75rem;
   display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;
   max-width: min(22rem, calc(100vw - 1.5rem));
   padding: 0.5rem 0.6rem 0.55rem 0.9rem; border-radius: 1.25rem;
@@ -31,7 +32,7 @@
   transition: opacity 0.3s, translate 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
 }
 .bugbar[hidden] { display: none; }
-html.motion .bugbar:not(.is-in) { opacity: 0; translate: 0 -1.25rem; }
+html.motion .bugbar:not(.is-in) { opacity: 0; translate: 0 1.25rem; }
 .bugbar__count { margin-right: auto; color: var(--paper); }
 .bugbar__n { display: inline-block; color: var(--acid); font-weight: 500; }
 .bugbar__btn {
@@ -67,7 +68,7 @@ html.motion .bugbar:not(.is-in) { opacity: 0; translate: 0 -1.25rem; }
 
 /* The opt-in button for the hunt, where the bug bar sits once it's on. */
 .huntbtn {
-  all: unset; position: fixed; z-index: 30; top: 0.75rem; right: 0.75rem; cursor: pointer;
+  all: unset; position: fixed; z-index: 30; top: 0.75rem; left: 0.75rem; cursor: pointer;
   padding: 0.55rem 0.9rem; border-radius: 999px;
   background: var(--black); color: var(--acid); box-shadow: 0 0 0 2px var(--cream);
   font: 500 0.75rem/1 var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase;

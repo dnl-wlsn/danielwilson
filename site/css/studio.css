@@ -4,3 +4,9 @@
 .shot.is-flipped { rotate: 180deg; }
 .studio-work figcaption { max-width: 40rem; }
 .studio__more { margin-top: 2rem; }
+
+/* The tech used across Little Oceans sites: small mono tags. */
+.studio__tech { margin-top: 2rem; }
+.studio__tech h3 { font: 500 0.75rem/1.3 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); margin: 0 0 0.75rem; }
+.tech { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.tech li { font: 500 0.8125rem/1 var(--font-mono); padding: 0.45rem 0.65rem; border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--ink); color: var(--ink); }

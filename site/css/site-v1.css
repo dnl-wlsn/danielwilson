@@ -497,6 +497,13 @@ html.motion .likes:not(.is-reached) .spider { transform: translateY(-130%); }
 }
 .reward-lock[hidden] { display: none; }
 
+/* Commits per week for the last year, built from local git history. */
+.commits { margin: 3rem 0 0; max-width: 40rem; }
+.commits__svg { display: block; width: 100%; height: 4.5rem; }
+.commits__bar { fill: var(--acid); }
+.commits__bar.is-empty { fill: var(--paper); opacity: 0.25; }
+.commits figcaption { margin-top: 0.6rem; font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--paper); opacity: 0.8; }
+
 /* reward.css */
 .reward { margin-top: 2rem; }
 .reward__title { color: var(--accent); margin-bottom: 1rem; font: 400 clamp(1.5rem, 4vw, 2.75rem)/1 var(--font-poster); letter-spacing: 0.01em; }

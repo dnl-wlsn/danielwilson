@@ -12,7 +12,8 @@
     "test:perf": "npm run css && playwright test --project=perf --workers=1",
     "test": "npm run test:unit && npm run test:py && npm run test:e2e",
     "deploy": "npm test && npm run test:perf && wrangler pages deploy site --project-name danielwilson --branch main",
-    "css": "node tools/bundle-css.mjs"
+    "css": "node tools/bundle-css.mjs",
+    "commits": "node tools/commit-chart.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.60.0",

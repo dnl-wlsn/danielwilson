@@ -24,3 +24,12 @@
 .bug--glitch:not([data-placed]) { visibility: hidden; }
 /* Set vertically, centred in the rail, so it never covers the role's copy. */
 .bug--glitch .stamp { top: 50%; left: 50%; right: auto; translate: -50% -50%; writing-mode: vertical-rl; rotate: 180deg; padding: 0.4rem 0.2rem; }
+
+/* "Quality is everyone's responsibility": the one line to remember. */
+.pull { margin: 0.5rem 0 1.5rem; padding-left: 1.25rem; border-left: 4px solid var(--pink); }
+.pull p { font: 400 clamp(1.75rem, 4.5vw, 3rem)/1.05 var(--font-poster); text-transform: uppercase; color: var(--acid); max-width: 20ch; }
+/* A reader's review under the book. */
+.review { margin: 1rem 0; padding: 0.9rem 1rem; border-radius: 0.75rem; box-shadow: inset 0 0 0 1.5px currentColor; max-width: 34rem; }
+.review__stars { color: var(--acid); letter-spacing: 0.15em; margin: 0 0 0.35rem; }
+.review blockquote { margin: 0; font-size: 1.125rem; }
+.review figcaption { margin-top: 0.5rem; font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.8; }

@@ -152,3 +152,15 @@ class MovingTimeAndOverridesTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PlannedRouteTest(unittest.TestCase):
+    """A course file from the organiser has no timestamps: spread the time, scale the distance."""
+
+    def test_route_without_times_gets_even_times_and_official_distance(self):
+        pts = [(51.5, -0.1 + i * 0.01, 100.0 + (i % 3), None) for i in range(50)]
+        prof = g.build_profile(pts, samples=11, time_s=3600, distance_km=40.0)
+        self.assertEqual(prof["distance_km"], 40.0)
+        self.assertEqual(prof["elapsed_s"], 3600)
+        self.assertEqual(prof["points"][5][2], 1800)
+        self.assertAlmostEqual(prof["points"][5][0], 20.0, places=2)

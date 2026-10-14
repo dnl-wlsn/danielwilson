@@ -104,15 +104,21 @@ def moving_times(times, pause_s):
     return out
 
 
-def build_profile(trkpts, samples=400, smooth_window=5, pause_s=None, climb_m=None, time_s=None):
+def build_profile(trkpts, samples=400, smooth_window=5, pause_s=None, climb_m=None, time_s=None, distance_km=None):
     kms = [0.0]
     for a, b in zip(trkpts, trkpts[1:]):
         kms.append(kms[-1] + haversine_km(a, b))
+    if distance_km is not None and kms[-1] > 0:
+        # Match an official distance (e.g. Strava's) while keeping the route's shape.
+        kms = [k * distance_km / kms[-1] for k in kms]
     eles = smooth([p[2] for p in trkpts], smooth_window)
     times = [p[3] for p in trkpts]
     if pause_s is not None and times[0] is not None:
         times = moving_times(times, pause_s)
-    if time_s is not None and times[-1]:
+    if time_s is not None and times[-1] is None:
+        # A planned route (no timestamps): spread the official time evenly by distance.
+        times = [time_s * k / kms[-1] for k in kms]
+    elif time_s is not None and times[-1]:
         # Finish on an official figure (e.g. Strava's moving time). Gaps in a GPX
         # are often lost GPS signal, not stops, so the file alone can't say.
         times = [t * time_s / times[-1] for t in times]
@@ -154,6 +160,7 @@ def main(argv=None):
                     help="estimate moving time by dropping gaps over 30 s (unreliable: GPS dropouts look like pauses; prefer --time)")
     ap.add_argument("--time", help="official moving time as h:mm:ss, e.g. from Strava")
     ap.add_argument("--climb", type=int, help="official total climb in metres, e.g. from Strava")
+    ap.add_argument("--distance", type=float, help="official distance in km, e.g. from Strava; scales the route to it")
     ap.add_argument("--calories", type=int, help="calories burned, shown as a stat")
     args = ap.parse_args(argv)
     time_s = None
@@ -162,7 +169,7 @@ def main(argv=None):
         time_s = h * 3600 + m * 60 + sec
     prof = build_profile(parse_gpx(pathlib.Path(args.gpx).read_text()), samples=args.samples,
                          pause_s=30 if args.moving and not args.time else None,
-                         climb_m=args.climb, time_s=time_s)
+                         climb_m=args.climb, time_s=time_s, distance_km=args.distance)
     data = {"name": args.name, "date": args.date, "placeholder": args.placeholder,
             "time_kind": "moving" if (args.moving or args.time) else "elapsed", **prof}
     if args.calories is not None:

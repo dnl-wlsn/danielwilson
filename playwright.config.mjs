@@ -11,7 +11,12 @@ export default defineConfig({
     url: 'http://127.0.0.1:4173/',
     reuseExistingServer: true,
   },
-  use: { baseURL: 'http://127.0.0.1:4173' },
+  // The hunt is opt-in on the live site; most specs test the hunt, so they start with it on.
+  // hunt.spec.mjs clears this to test the default.
+  use: {
+    baseURL: 'http://127.0.0.1:4173',
+    storageState: { cookies: [], origins: [{ origin: 'http://127.0.0.1:4173', localStorage: [{ name: 'dw-hunt-v1', value: 'on' }] }] },
+  },
   projects: [
     { name: 'desktop', use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 800 } }, testIgnore: /perf\.spec/ },
     { name: 'mobile', use: { ...devices['Pixel 7'] }, testIgnore: /perf\.spec/ },

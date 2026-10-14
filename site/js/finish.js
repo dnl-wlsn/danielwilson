@@ -6,7 +6,8 @@ export function initFinish({ motion }) {
   const tape = document.querySelector('.tape');
   if (!tape) return;
   const snap = () => tape.classList.add('is-broken');
-  const complete = () => root.dataset.bugs === 'complete';
+  // Not playing the hunt: the tape just snaps when you reach it.
+  const complete = () => root.dataset.hunt !== 'on' || root.dataset.bugs === 'complete';
   if (!motion) {
     if (complete()) snap();
     document.addEventListener('bugs:complete', snap);

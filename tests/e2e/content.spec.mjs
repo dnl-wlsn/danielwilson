@@ -19,7 +19,7 @@ test('the testing section runs 2009 to Simply Business in order', async ({ page 
   const orgs = await page.$$eval('#testing .role__org', realText);
   expect(orgs).toEqual([
     'SEGA Europe', 'Software Quality Systems', 'Think Finance', 'Oakam', 'Elevate',
-    'Cabot Credit Management', 'Connells Group', 'NewDay', 'Simply Business',
+    'Cabot Credit Management', 'Connells Group', 'NewDay', 'Simply Business', 'Writing and community',
   ]);
   expect(await page.locator('#testing .marker').count()).toBe(3);
   await expect(page.locator('#testing .role--book cite')).toHaveText('The Book On Software Testing: A Guide for Non‑Testers');

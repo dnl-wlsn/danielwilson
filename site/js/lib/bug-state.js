@@ -1,5 +1,7 @@
 // Bug hunt progress, as plain data. No DOM here, so it can be unit tested.
 export const STORAGE_KEY = 'dw-bugs-v1';
+// The hunt is opt-in: 'on' only after the visitor presses Play.
+export const HUNT_KEY = 'dw-hunt-v1';
 
 // Whatever is in storage, keep only known ids, once each, in saved order.
 export function parseSaved(raw, ids) {

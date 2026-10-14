@@ -11,6 +11,7 @@ import { initScenes } from './scenes.js';
 import { initReward } from './reward.js';
 import { initRoute } from './route.js';
 import { initFinish } from './finish.js';
+import { initHunt, huntOn } from './hunt.js';
 
 const root = document.documentElement;
 const fallBack = (err) => {
@@ -32,7 +33,9 @@ try {
   const ctx = { motion, lenis };
   // Before the bugs: bug 3 is drawn by the route.
   ctx.route = initRoute(ctx);
-  initBugs(ctx, BUGS);
+  // The hunt is opt-in: until the visitor presses Play, every slot keeps its correct content.
+  initHunt(ctx);
+  if (huntOn()) initBugs(ctx, BUGS);
   initBeetle(ctx);
   const playOpening = initOpening(ctx);
   initOverprint(ctx);

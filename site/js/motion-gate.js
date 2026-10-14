@@ -5,6 +5,8 @@
   var d = document.documentElement;
   d.classList.remove('no-js');
   d.classList.add('js');
+  // The bug hunt is opt-in. Decided before paint so the page never flashes broken.
+  try { d.dataset.hunt = localStorage.getItem('dw-hunt-v1') === 'on' ? 'on' : 'off'; } catch (e) { d.dataset.hunt = 'off'; }
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   d.classList.add('motion');
 

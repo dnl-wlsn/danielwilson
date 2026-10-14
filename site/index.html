@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Daniel Wilson</title>
-<meta name="description" content="Daniel Wilson: software tester since 2009, runs the Little Oceans web studio, and runs ultra-marathons. Seven bugs are hidden along the route, on purpose.">
+<meta name="description" content="Daniel Wilson: software tester since 2009, runs the Little Oceans web studio, and runs ultra-marathons. Seven bugs are hidden along the route, if you want to play.">
 <meta name="theme-color" content="#F4EFE4">
 <meta property="og:title" content="Daniel Wilson">
 <meta property="og:description" content="Software tester, web designer and ultra runner. Seven bugs on the route, hidden on purpose.">
@@ -37,10 +37,13 @@
 <body>
 <a class="skip" href="#start">Skip to content</a>
 
+<button class="huntbtn mono" type="button" data-hunt-on hidden>Play: find the 7 bugs</button>
+
 <aside class="bugbar" aria-label="Bug hunt" hidden inert>
   <p class="bugbar__count mono"><span class="bugbar__n" data-bug-count>0</span> / <span data-bug-total>7</span> bugs found</p>
   <button class="bugbar__btn mono" type="button" data-bug-hint>Hint</button>
   <button class="bugbar__btn mono" type="button" data-bug-reset hidden>Reset</button>
+  <button class="bugbar__btn bugbar__btn--quiet mono" type="button" data-hunt-off>Stop playing</button>
   <p class="bugbar__note" data-bug-note></p>
   <p class="visually-hidden" aria-live="polite" data-bug-live></p>
 </aside>
@@ -55,8 +58,8 @@
     <span class="name__row" aria-hidden="true"><span class="g">W</span><span class="g">i</span><span class="g">l</span><span class="g">s</span><span class="g">o</span><span class="g">n</span></span>
     <span class="name__pink" aria-hidden="true"><span>Daniel</span><span>Wilson</span></span>
   </h1>
-  <p class="opening__tag mono">Tester · Studio · Ultras</p>
-  <p class="lede">I've been testing software since 2009. I build websites for small businesses as Little Oceans, and at weekends I run ultra-marathons, ideally over mountains. I notice details, and I believe in Oxford commas.</p>
+  <p class="opening__tag mono">Tester · Developer · Ultras</p>
+  <p class="lede">I've been testing software since 2009 and writing code for over ten years. At Simply Business I coach my squad on quality and maintain the test tooling around 90 engineers use every day. I build websites for small businesses as Little Oceans, and at weekends I run ultra-marathons, ideally over mountains. I notice details, and I believe in Oxford commas.</p>
   <span class="cp-anchor" data-cp="start" aria-hidden="true"></span>
 </section>
 
@@ -172,16 +175,19 @@
         <li>Key out of hours contact for Experian and Provenir.</li>
       </ul></details>
     </li>
-    <li class="role" data-reach data-placeholder="sb-update">
+    <li class="role" data-reach>
       <span class="cp-anchor" data-cp="small" aria-hidden="true"></span>
       <p class="role__year mono" data-reveal>2019 to now</p>
       <h3 class="role__org" data-reveal>Simply Business</h3>
-      <p class="role__title mono" data-reveal>Senior Software Test Engineer · Moorgate</p>
-      <p data-reveal>Self-serve policy management for UK and US customers. Team of the Year 2019.</p>
+      <p class="role__title mono" data-reveal>Senior Software Test Engineer (test coach) · Moorgate</p>
+      <p data-reveal>I own code quality for a squad building self-serve policy management for UK and US customers, and maintain the internal test tooling around 90 engineers across 15 teams use every day. A policy takes 20 seconds through it, instead of about 5 minutes through the frontend.</p>
       <details data-reveal><summary>More</summary><ul>
-        <li>Tested One Time Code login, Renewal Fee and the US Customer Account.</li>
-        <li>Introduced cross-browser and cross-device testing for engineering.</li>
-        <li>Ruby on Rails, React, Cypress, BrowserStack, AWS and New Relic.</li>
+        <li>Top contributor to the company-wide testing tools repo: policies, backdated policies and customer accounts without touching the frontend.</li>
+        <li>An AI-first way of working with Claude and Copilot for test plans, cases, pull requests and reviews.</li>
+        <li>Mentored mid-level test engineers for around five years, and run the fortnightly test council.</li>
+        <li>Own the BrowserStack relationship; introduced cross-browser and cross-device testing.</li>
+        <li>Scribe on several major incidents. Team of the Year 2019.</li>
+        <li>Ruby on Rails, React, AWS, Docker, Jenkins, New Relic, Cypress and BrowserStack.</li>
       </ul></details>
     </li>
     <li class="role role--book" data-reach>
@@ -191,6 +197,12 @@
       <p data-reveal><cite>The Book On Software Testing: A Guide for Non&#8209;Testers</cite></p>
       <p data-reveal>A jargon-free guide for the Product Owners, Project Managers, Business Analysts and developers who work with testers.</p>
       <p data-reveal><a href="https://www.amazon.co.uk/dp/B0G3QK8Q3G">Buy it on Amazon</a></p>
+    </li>
+    <li class="role" data-reach>
+      <span class="cp-anchor" data-cp="small" aria-hidden="true"></span>
+      <p class="role__year mono" data-reveal>Now</p>
+      <h3 class="role__org" data-reveal>Writing and community</h3>
+      <p data-reveal>Drafting <cite>Signal &amp; Noise: Software Testing in the Age of AI</cite>, around 70,000 words in: how testing changes when code is written with AI. Elected moderator on the Software Quality Assurance &amp; Testing Stack Exchange.</p>
     </li>
   </ol>
   <p class="cv-download"><a class="btn" href="/cv/daniel-wilson-cv-2026.pdf" download>Download CV (PDF)</a></p>
@@ -206,6 +218,7 @@
     <span class="shot" data-bug="upside-down" aria-hidden="true"><img src="/img/rushton-desktop-v1.jpg" width="1400" height="875" loading="lazy" alt=""></span>
     <figcaption><a href="https://rushtonelectrical.co.uk">Rushton Electrical</a>, NICEIC approved electricians in Bedfordshire. Hand-coded, live since August 2026.</figcaption>
   </figure>
+  <p data-reveal>I also built and run <a href="https://getinsound.com">Insound</a>, a direct-to-fan music platform: Next.js, Supabase, Cloudflare Workers and Stripe Connect, from first commit to production incidents.</p>
   <p class="studio__more" data-reveal><a class="btn" href="https://littleoceans.co.uk/work/">See more at Little Oceans</a></p>
 </section>
 

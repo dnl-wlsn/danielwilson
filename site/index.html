@@ -243,20 +243,44 @@
   <p class="kicker mono" data-reveal>CP2 · Little Oceans</p>
   <h2 class="ink" data-reveal>I build websites for small businesses</h2>
   <p class="lede" data-reveal>Little Oceans is my web studio in Bedfordshire. Every site is hand-coded, fast, and looked after once it's live.</p>
-  <figure class="studio-work">
-    <p class="visually-hidden">Screenshot of the Rushton Electrical home page.</p>
-    <span class="shot" data-bug="upside-down" aria-hidden="true"><img src="/img/rushton-desktop-v1.jpg" width="1400" height="875" loading="lazy" alt=""></span>
-    <figcaption><a href="https://rushtonelectrical.co.uk">Rushton Electrical</a>, NICEIC approved electricians in Bedfordshire. Hand-coded, live since August 2026.</figcaption>
-  </figure>
-  <div class="studio-more-work">
-    <figure class="studio-work studio-work--small" data-reveal>
-      <span class="shot"><img src="/img/omos-desktop-v1.jpg" width="1400" height="875" loading="lazy" alt="The One Man One Stump home page: a stump grinder at work behind the headline One man. One mission. No stump left standing."></span>
-      <figcaption><a href="https://littleoceans.co.uk/work/one-man-one-stump/">One Man One Stump</a>, stump grinding across five counties. A rebuild of a 26-page Wix site: first paint went from 7.2 seconds to 0.4. Launching soon.</figcaption>
-    </figure>
-    <figure class="studio-work studio-work--small" data-reveal>
-      <span class="shot"><img src="/img/leona-desktop-v1.jpg" width="1400" height="875" loading="lazy" alt="The Leona Cookie Co. home page: Iced by hand, made for the day, beside a grid of hand-iced cookies."></span>
-      <figcaption>Leona Cookie Co., bespoke iced cookies. Designed and built from scratch, with enquiry, pre-order and mailing list forms. Launching soon.</figcaption>
-    </figure>
+  <div class="work" data-reveal>
+    <div class="work__head">
+      <h3 class="mono">Recent sites</h3>
+      <p class="work__btns" hidden><button class="work__btn" type="button" data-work="prev" aria-label="Previous site">←</button><button class="work__btn" type="button" data-work="next" aria-label="Next site">→</button></p>
+    </div>
+    <ul class="work__rail" role="region" aria-label="Recent client sites, scroll sideways" tabindex="0" data-lenis-prevent>
+      <li class="card">
+        <figure class="studio-work">
+          <p class="visually-hidden">Screenshot of the Rushton Electrical home page.</p>
+          <span class="shot" data-bug="upside-down" aria-hidden="true"><img src="/img/rushton-desktop-v1.jpg" width="1400" height="875" loading="lazy" alt=""></span>
+          <figcaption>
+            <h4><a href="https://rushtonelectrical.co.uk">Rushton Electrical</a></h4>
+            <p>NICEIC approved electricians in Bedfordshire. Hand-coded, live since August 2026.</p>
+            <ul class="tech tech--small"><li>HTML, CSS, JS</li><li>Cloudflare Workers</li><li>D1</li><li>lo-edit</li><li>Formspree</li><li>Schema.org</li><li>WebP</li></ul>
+          </figcaption>
+        </figure>
+      </li>
+      <li class="card">
+        <figure class="studio-work">
+          <span class="shot"><img src="/img/omos-desktop-v1.jpg" width="1400" height="875" loading="lazy" alt="The One Man One Stump home page: a stump grinder at work behind the headline One man. One mission. No stump left standing."></span>
+          <figcaption>
+            <h4><a href="https://littleoceans.co.uk/work/one-man-one-stump/">One Man One Stump</a></h4>
+            <p>Stump grinding across five counties. A rebuild of a 26-page Wix site: first paint went from 7.2 seconds to 0.4. Launching soon.</p>
+            <ul class="tech tech--small"><li>HTML, CSS, JS</li><li>Cloudflare Pages</li><li>Schema.org</li><li>WebP</li></ul>
+          </figcaption>
+        </figure>
+      </li>
+      <li class="card">
+        <figure class="studio-work">
+          <span class="shot"><img src="/img/leona-desktop-v1.jpg" width="1400" height="875" loading="lazy" alt="The Leona Cookie Co. home page: Iced by hand, made for the day, beside a grid of hand-iced cookies."></span>
+          <figcaption>
+            <h4>Leona Cookie Co.</h4>
+            <p>Bespoke iced cookies. Designed and built from scratch, with enquiry, pre-order and mailing list forms. Launching soon.</p>
+            <ul class="tech tech--small"><li>HTML, CSS, JS</li><li>Python build</li><li>Pages Functions</li><li>D1</li><li>Resend</li><li>lo-edit</li><li>WebP</li></ul>
+          </figcaption>
+        </figure>
+      </li>
+    </ul>
   </div>
   <p data-reveal>I also built and run <a href="https://getinsound.com">Insound</a>, a direct-to-fan music platform: Next.js, Supabase, Cloudflare Workers and Stripe Connect, from first commit to production incidents.</p>
   <p data-reveal>For a few clients I built lo-edit, a small in-page editor that lets them change their own wording without a CMS or a call to me. A Cloudflare Worker and D1 database, behind Cloudflare Access, with unit tests and Playwright checks.</p>

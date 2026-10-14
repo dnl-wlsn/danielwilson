@@ -68,8 +68,11 @@ test('the line never crosses the reading column', async ({ page }) => {
     const total = path.getTotalLength();
     const pts = [];
     for (let l = 0; l <= total; l += 8) pts.push(path.getPointAtLength(l));
-    const blocks = [...document.querySelectorAll('main h2, main h3, main p, main li > p')].map((b) => b.getBoundingClientRect())
-      .filter((r) => r.width > 0).map((r) => ({ l: r.left - main.left, r: r.right - main.left, t: r.top - main.top, b: r.bottom - main.top }));
+    // Cards scrolled out of the recent-sites rail are clipped by it, so they can't be under the line.
+    const rail = document.querySelector('.work__rail')?.getBoundingClientRect();
+    const shown = (el, r) => !rail || !el.closest('.work__rail') || (r.left >= rail.left - 1 && r.right <= rail.right + 1);
+    const blocks = [...document.querySelectorAll('main h2, main h3, main p, main li > p')].map((b) => [b, b.getBoundingClientRect()])
+      .filter(([el, r]) => r.width > 0 && shown(el, r)).map(([, r]) => r).map((r) => ({ l: r.left - main.left, r: r.right - main.left, t: r.top - main.top, b: r.bottom - main.top }));
     return pts.filter((p) => blocks.some((b) => p.x > b.l + 2 && p.x < b.r - 2 && p.y > b.t + 2 && p.y < b.b - 2)).length;
   });
   expect(hits).toBe(0);

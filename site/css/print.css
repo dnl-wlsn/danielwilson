@@ -1,5 +1,5 @@
 @media print {
-  .bugbar, .huntbtn, .skip, .sheet-edge, .route, .tape, .spider, .bug--glitch, .reward, .beetle-slot, .bug--beetle { display: none !important; }
+  .bugbar, .huntbtn, .skip, .sheet-edge, .route, .spider, .bug--glitch, .reward, .beetle-slot, .bug--beetle { display: none !important; }
   .sheet { margin-top: 0 !important; padding-block: 1.5rem !important; background: #fff !important; color: #000 !important; break-inside: avoid-page; }
   .ink::before, .name__pink { display: none; }
   .pin-spacer { padding: 0 !important; height: auto !important; }

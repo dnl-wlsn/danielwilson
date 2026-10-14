@@ -5,19 +5,8 @@
 .contact__links { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; font-size: clamp(1.25rem, 3vw, 2rem); }
 /* Bug 6, reduced motion: the button is simply in the wrong place. */
 .btn.is-askew { rotate: -4deg; translate: 1.5rem 0.4rem; }
-/* The finish tape stays up, with the lock under it, until every bug is fixed. */
-.finish-line { margin-top: 4.5rem; display: grid; justify-items: start; gap: 1rem; }
-.tape { display: flex; width: 100%; height: 10px; pointer-events: none; }
-.tape span {
-  flex: 1; height: 10px;
-  background: repeating-linear-gradient(90deg, var(--route) 0 22px, var(--paper) 22px 36px);
-}
-.tape__l { transform-origin: left center; }
-.tape__r { transform-origin: right center; }
-.tape.is-broken span { visibility: hidden; }
-html.motion .tape span { transition: transform 0.9s cubic-bezier(0.5, 0, 0.75, 0), opacity 0.6s ease 0.4s, visibility 0s 1s; }
-html.motion .tape.is-broken .tape__l { transform: translate(-6%, 140px) rotate(-24deg); opacity: 0; }
-html.motion .tape.is-broken .tape__r { transform: translate(6%, 140px) rotate(24deg); opacity: 0; }
+/* Bug hunt only: how many bugs are left before the prize. */
+.reward-lock { margin-top: 3rem; }
 .reward-lock {
   padding: 1rem 1.25rem; display: inline-block;
   border: 2px dashed var(--acid); border-radius: 0.75rem; color: var(--acid);

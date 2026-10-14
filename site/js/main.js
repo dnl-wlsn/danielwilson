@@ -10,7 +10,6 @@ import { initSheets } from './sheets.js';
 import { initScenes } from './scenes.js';
 import { initReward } from './reward.js';
 import { initRoute } from './route.js';
-import { initFinish } from './finish.js';
 import { initHunt, huntOn } from './hunt.js';
 import { initNav } from './nav.js';
 import { initWork } from './work.js';
@@ -45,7 +44,6 @@ try {
   initOverprint(ctx);
   initSheets(ctx);
   initScenes(ctx);
-  initFinish(ctx);
   initReward(ctx);
   const runningDone = initRunning(ctx)
     .then(() => {

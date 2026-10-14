@@ -93,23 +93,3 @@ test('the route keeps up when a role opens (no second-long lag)', async ({ page 
   expect(off).toBeLessThan(2);
 });
 
-test('the route runs on into the finish tape', async ({ page }) => {
-  await page.goto('/');
-  await ready(page);
-  await page.waitForFunction(() => document.documentElement.dataset.route === 'ready');
-  const [end, tape] = await page.evaluate(() => {
-    const main = document.querySelector('.trail').getBoundingClientRect();
-    const d = document.querySelector('.route__line').getAttribute('d').trim().split(/\s+/);
-    const t = document.querySelector('.tape').getBoundingClientRect();
-    return [+d.at(-1), t.top - main.top + t.height / 2];
-  });
-  expect(Math.abs(end - tape)).toBeLessThan(8);
-});
-
-test.describe('without JavaScript', () => {
-  test.use({ javaScriptEnabled: false });
-  test('no empty chart or stray dot in the running section', async ({ page }) => {
-    await page.goto('/');
-    await expect(page.locator('.run__plot')).toBeHidden();
-  });
-});

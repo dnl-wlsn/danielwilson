@@ -31,15 +31,6 @@ test('Play turns the hunt on, Stop turns it off', async ({ page }) => {
   await expect(page.locator('[data-for]')).toHaveCount(0);
 });
 
-test('without the hunt the finish tape snaps when reached', async ({ page }) => {
-  await page.goto('/');
-  await ready(page);
-  const tape = page.locator('.tape');
-  await tape.scrollIntoViewIfNeeded();
-  await expect(tape).toHaveClass(/is-broken/);
-  await expect(page.locator('.reward-lock')).toBeHidden();
-});
-
 test('Play and Stop reload at the top, wherever you were', async ({ page }) => {
   await page.goto('/');
   await ready(page);

@@ -175,7 +175,6 @@ html:not(.motion) .route__runner { display: none; }
 /* Above the next sheet's feed, so the route visibly starts on the cream paper. */
 .sheet:first-of-type > .cp-anchor { top: auto; bottom: calc(var(--feed) + 1.5rem); }
 .role > .cp-anchor, .marker > .cp-anchor { top: 0.7rem; }
-.finish-line > .cp-anchor { top: 5px; } /* the route ends in the tape */
 .role, .marker { position: relative; }
 
 /* Pre-reveal states exist only when animating. The final state is the default. */
@@ -345,7 +344,14 @@ html.motion:not([data-opening="done"]) .huntbtn { opacity: 0; pointer-events: no
 .role details ul { margin: 0.75rem 0 0; padding-left: 1.1rem; }
 .marker { color: var(--accent); }
 .role--book { grid-template-columns: 6rem 1fr; column-gap: 1.25rem; align-items: start; }
-.role--book img { grid-row: span 4; width: 6rem; }
+.role--book img { grid-row: 1 / span 4; grid-column: 1; width: 6rem; }
+.role--book > :not(img, .cp-anchor) { grid-column: 2; }
+/* Phones: the cover sits above the text, so there's no empty column beside it. */
+@media (max-width: 40rem) {
+  .role--book { grid-template-columns: 1fr; }
+  .role--book img { grid-row: auto; width: 7rem; margin-bottom: 0.5rem; }
+  .role--book > :not(img, .cp-anchor) { grid-column: 1; }
+}
 .role--book cite { font-weight: 800; font-size: 1.375rem; line-height: 1.15; }
 .cv-download { margin-top: 3rem; }
 /* Bug 2: the date reel. */
@@ -483,19 +489,8 @@ html.motion .likes:not(.is-reached) .spider { transform: translateY(-130%); }
 .contact__links { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; font-size: clamp(1.25rem, 3vw, 2rem); }
 /* Bug 6, reduced motion: the button is simply in the wrong place. */
 .btn.is-askew { rotate: -4deg; translate: 1.5rem 0.4rem; }
-/* The finish tape stays up, with the lock under it, until every bug is fixed. */
-.finish-line { margin-top: 4.5rem; display: grid; justify-items: start; gap: 1rem; }
-.tape { display: flex; width: 100%; height: 10px; pointer-events: none; }
-.tape span {
-  flex: 1; height: 10px;
-  background: repeating-linear-gradient(90deg, var(--route) 0 22px, var(--paper) 22px 36px);
-}
-.tape__l { transform-origin: left center; }
-.tape__r { transform-origin: right center; }
-.tape.is-broken span { visibility: hidden; }
-html.motion .tape span { transition: transform 0.9s cubic-bezier(0.5, 0, 0.75, 0), opacity 0.6s ease 0.4s, visibility 0s 1s; }
-html.motion .tape.is-broken .tape__l { transform: translate(-6%, 140px) rotate(-24deg); opacity: 0; }
-html.motion .tape.is-broken .tape__r { transform: translate(6%, 140px) rotate(24deg); opacity: 0; }
+/* Bug hunt only: how many bugs are left before the prize. */
+.reward-lock { margin-top: 3rem; }
 .reward-lock {
   padding: 1rem 1.25rem; display: inline-block;
   border: 2px dashed var(--acid); border-radius: 0.75rem; color: var(--acid);
@@ -553,7 +548,7 @@ html.motion:not([data-opening="done"]) .cpnav { opacity: 0; pointer-events: none
 
 /* print.css */
 @media print {
-  .bugbar, .huntbtn, .skip, .sheet-edge, .route, .tape, .spider, .bug--glitch, .reward, .beetle-slot, .bug--beetle { display: none !important; }
+  .bugbar, .huntbtn, .skip, .sheet-edge, .route, .spider, .bug--glitch, .reward, .beetle-slot, .bug--beetle { display: none !important; }
   .sheet { margin-top: 0 !important; padding-block: 1.5rem !important; background: #fff !important; color: #000 !important; break-inside: avoid-page; }
   .ink::before, .name__pink { display: none; }
   .pin-spacer { padding: 0 !important; height: auto !important; }

@@ -97,7 +97,7 @@ test('the prize shows as locked until all 7 are found', async ({ page }) => {
   await seed(page, ['date']);
   await page.goto('/');
   await ready(page);
-  await expect(page.locator('.reward-lock')).toHaveText(/Finish locked\. 6 bugs to go\./);
+  await expect(page.locator('.reward-lock')).toHaveText(/6 bugs to go for the prize\./);
   await activate(page, 'unit', 'keyboard');
   await expect(page.locator('.reward-lock')).toHaveText(/5 bugs to go/);
 });

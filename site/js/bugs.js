@@ -141,10 +141,10 @@ export function initBugs(ctx, defs) {
       root.dataset.bugs = 'complete';
       document.dispatchEvent(new Event('bugs:complete'));
       flashNote(`All ${bugs.size} found. Your prize is below.`, 9000);
-      // Make 7/7 a moment: after the stamp lands, glide down to the finish
-      // line, where the tape snaps and the prize falls in below it.
+      // Make 7/7 a moment: after the stamp lands, glide down to the prize
+      // stage, where the letters fall in.
       setTimeout(() => {
-        const stage = document.querySelector('.finish-line') ?? document.querySelector('.reward__stage');
+        const stage = document.querySelector('.reward__stage');
         if (!stage) return;
         if (ctx.lenis) {
           ctx.lenis.resize();
@@ -180,7 +180,7 @@ export function initBugs(ctx, defs) {
     const left = bugs.size - found.size;
     if (lock) {
       lock.hidden = left === 0;
-      lock.textContent = `Finish locked. ${left} ${left === 1 ? 'bug' : 'bugs'} to go.`;
+      lock.textContent = `${left} ${left === 1 ? 'bug' : 'bugs'} to go for the prize.`;
     }
     if (!fixNote) return;
     live.textContent = announceText(found.size, bugs.size, fixNote);

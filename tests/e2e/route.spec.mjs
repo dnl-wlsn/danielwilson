@@ -144,27 +144,6 @@ test('the zigzag relaxes into the curve over time, not in one jump', async ({ pa
   expect(await spread()).toBe(0);
 });
 
-test('finish tape: locked with bugs left, snaps when all are fixed', async ({ page }) => {
-  await seed(page, ['letters', 'date', 'route', 'upside-down', 'unit', 'beetle']);
-  await page.goto('/');
-  await ready(page);
-  await expect(page.locator('.reward-lock')).toHaveText('Finish locked. 1 bug to go.');
-  await page.locator('.tape').scrollIntoViewIfNeeded();
-  await expect(page.locator('.tape')).not.toHaveClass(/is-broken/);
-  await activate(page, 'dodge', 'keyboard');
-  await expect(page.locator('.tape')).toHaveClass(/is-broken/);
-  await expect(page.locator('.reward-lock')).toBeHidden();
-});
-
-test('finish tape: already snapped for a returning finisher, once seen', async ({ page }) => {
-  await seed(page, ['letters', 'date', 'route', 'upside-down', 'unit', 'beetle', 'dodge']);
-  await page.goto('/');
-  await ready(page);
-  await expect(page.locator('.tape')).not.toHaveClass(/is-broken/);
-  await page.locator('.tape').scrollIntoViewIfNeeded();
-  await expect(page.locator('.tape')).toHaveClass(/is-broken/);
-});
-
 test('the spider drops when the aid station is reached', async ({ page }) => {
   await page.goto('/');
   await ready(page);
@@ -172,4 +151,18 @@ test('the spider drops when the aid station is reached', async ({ page }) => {
   expect(await ty()).toBeLessThan(-50);
   await page.evaluate(() => window.scrollTo(0, document.querySelector('#likes').offsetTop));
   await expect.poll(ty, { timeout: 5000 }).toBe(0);
+});
+
+test('the route ends at the Finish checkpoint, not past it', async ({ page }) => {
+  await page.goto('/');
+  await ready(page);
+  await routeReady(page);
+  const [end, finish] = await page.evaluate(() => {
+    const path = document.querySelector('.route__line');
+    const p = path.getPointAtLength(path.getTotalLength());
+    const dot = [...document.querySelectorAll('.route__cp')].at(-1);
+    return [p.y, Number(dot.getAttribute('cy'))];
+  });
+  expect(Math.abs(end - finish)).toBeLessThan(2);
+  expect(await page.$$eval('#contact .cp-anchor', (a) => a.length)).toBe(1);
 });

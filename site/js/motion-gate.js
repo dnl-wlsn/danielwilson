@@ -7,6 +7,17 @@
   d.classList.add('js');
   // The bug hunt is opt-in. Decided before paint so the page never flashes broken.
   try { d.dataset.hunt = localStorage.getItem('dw-hunt-v1') === 'on' ? 'on' : 'off'; } catch (e) { d.dataset.hunt = 'off'; }
+  // Turning the hunt on or off reloads the page: start that reload at the top,
+  // not wherever the browser would restore to (Safari ignores the setting made
+  // before the reload, so it's made again here, before anything paints).
+  try {
+    if (sessionStorage.getItem('dw-top') === '1') {
+      sessionStorage.removeItem('dw-top');
+      d.dataset.toTop = '1';
+      history.scrollRestoration = 'manual';
+      window.scrollTo(0, 0);
+    }
+  } catch (e) { /* no storage: the browser restores as usual */ }
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   d.classList.add('motion');
 

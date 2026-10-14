@@ -15,20 +15,33 @@ const save = (on) => {
   } catch { return false; }
 };
 
-export function initHunt() {
+function reloadAtTop() {
+  try { sessionStorage.setItem('dw-top', '1'); history.scrollRestoration = 'manual'; } catch { /* restores as usual */ }
+  window.scrollTo(0, 0);
+  location.reload();
+}
+
+export function initHunt(ctx = {}) {
   const start = document.querySelector('[data-hunt-on]');
   const stop = document.querySelector('[data-hunt-off]');
   if (start && !huntOn() && save(false)) {
     start.hidden = false;
     start.addEventListener('click', () => {
       if (!save(true)) return;
-      try { history.scrollRestoration = 'manual'; } catch { /* old browsers just restore */ }
-      window.scrollTo(0, 0);
-      location.reload();
+      reloadAtTop();
     });
   }
   stop?.addEventListener('click', () => {
     save(false);
-    location.reload();
+    reloadAtTop();
   });
+  // Arrived from one of those reloads: make sure we're at the top once the
+  // smooth scroller and the pinned scenes have set up.
+  if (root.dataset.toTop) {
+    const top = () => { ctx.lenis?.scrollTo(0, { immediate: true, force: true }); window.scrollTo(0, 0); };
+    top();
+    requestAnimationFrame(top);
+    window.addEventListener('load', () => requestAnimationFrame(top), { once: true });
+    delete root.dataset.toTop;
+  }
 }

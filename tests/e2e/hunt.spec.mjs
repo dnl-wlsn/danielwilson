@@ -58,3 +58,19 @@ test('Play and Stop reload at the top, wherever you were', async ({ page }) => {
   await page.waitForTimeout(500);
   expect(await page.evaluate(() => window.scrollY)).toBeLessThan(5);
 });
+
+test('the menu jumps without leaving #section in the address, so a reload starts at the top', async ({ page }) => {
+  await page.goto('/');
+  await ready(page);
+  await page.locator('.cpnav summary').click();
+  await page.locator('.cpnav a[href="#likes"]').click();
+  await page.waitForTimeout(1500);
+  expect(await page.evaluate(() => location.hash)).toBe('');
+  expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(500);
+  await page.evaluate(() => { window.__dwLenis ? window.__dwLenis.scrollTo(0, { immediate: true }) : window.scrollTo(0, 0); });
+  await page.waitForTimeout(300);
+  await page.reload();
+  await ready(page);
+  await page.waitForTimeout(500);
+  expect(await page.evaluate(() => window.scrollY)).toBeLessThan(5);
+});

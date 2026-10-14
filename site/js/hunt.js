@@ -18,7 +18,9 @@ const save = (on) => {
 function reloadAtTop() {
   try { sessionStorage.setItem('dw-top', '1'); history.scrollRestoration = 'manual'; } catch { /* restores as usual */ }
   window.scrollTo(0, 0);
-  location.reload();
+  // Drop any #section from the address, or the reload would jump straight back to it.
+  if (location.hash) location.replace(location.pathname + location.search);
+  else location.reload();
 }
 
 export function initHunt(ctx = {}) {

@@ -37,7 +37,7 @@ try {
   ctx.route = initRoute(ctx);
   // The hunt is opt-in: until the visitor presses Play, every slot keeps its correct content.
   initHunt(ctx);
-  initNav();
+  initNav(ctx);
   initWork();
   if (huntOn()) initBugs(ctx, BUGS);
   initBeetle(ctx);

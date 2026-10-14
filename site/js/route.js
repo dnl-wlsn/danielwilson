@@ -24,7 +24,7 @@ export function initRoute() {
       .filter((el) => el.parentElement.closest('[data-reach]') === o)
       .forEach((el, i) => el.style.setProperty('--i', i));
   }
-  const RADIUS = { start: 0, '': 9, small: 6.5, marker: 4.5 };
+  const RADIUS = { start: 9, '': 9, small: 6.5, marker: 4.5 };
   const cps = anchors.map((a) => {
     const kind = a.dataset.cp;
     const dot = document.createElementNS(NS, 'circle');

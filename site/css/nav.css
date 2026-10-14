@@ -1,0 +1,24 @@
+/* Jump to a checkpoint. A <details>, so it works without JavaScript. */
+.cpnav { position: fixed; z-index: 31; top: 0.75rem; left: 0.75rem; font-size: 0.75rem; }
+.cpnav summary {
+  display: inline-block; list-style: none; cursor: pointer; padding: 0.55rem 0.9rem; border-radius: 999px;
+  background: var(--black); color: var(--paper); box-shadow: 0 0 0 2px var(--cream);
+  font: 500 0.75rem/1 var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase;
+}
+.cpnav summary::-webkit-details-marker { display: none; }
+.cpnav summary::before { content: ""; display: inline-block; width: 0.55rem; height: 0.55rem; margin-right: 0.5rem; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--pink); vertical-align: -0.05rem; }
+.cpnav details[open] summary { background: var(--pink); color: var(--black); }
+.cpnav summary:focus-visible, .cpnav a:focus-visible { outline: 3px solid var(--acid); outline-offset: 2px; }
+.cpnav ol {
+  list-style: none; margin: 0.5rem 0 0; padding: 0.4rem; border-radius: 1rem;
+  background: var(--black); box-shadow: 0 0 0 2px var(--cream);
+}
+.cpnav a {
+  display: block; padding: 0.55rem 0.7rem; border-radius: 0.6rem; color: var(--paper); text-decoration: none;
+  font: 500 0.75rem/1.2 var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap;
+}
+.cpnav a:hover { background: var(--pink); color: var(--black); }
+html.motion:not([data-opening="done"]) .cpnav { opacity: 0; pointer-events: none; }
+.cpnav { transition: opacity 0.3s; }
+@media print { .cpnav { display: none; } }
+.cpnav details[open] summary::before { box-shadow: inset 0 0 0 2px var(--black); }

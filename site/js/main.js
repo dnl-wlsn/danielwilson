@@ -12,6 +12,7 @@ import { initReward } from './reward.js';
 import { initRoute } from './route.js';
 import { initFinish } from './finish.js';
 import { initHunt, huntOn } from './hunt.js';
+import { initNav } from './nav.js';
 
 const root = document.documentElement;
 const fallBack = (err) => {
@@ -35,6 +36,7 @@ try {
   ctx.route = initRoute(ctx);
   // The hunt is opt-in: until the visitor presses Play, every slot keeps its correct content.
   initHunt(ctx);
+  initNav();
   if (huntOn()) initBugs(ctx, BUGS);
   initBeetle(ctx);
   const playOpening = initOpening(ctx);

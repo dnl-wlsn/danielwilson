@@ -8,10 +8,11 @@ html:not(.motion) .route__runner { display: none; }
 .route__cp { fill: var(--cream); stroke: var(--route); stroke-width: 3; transform-box: fill-box; transform-origin: center; }
 .route__cp.on-black { fill: var(--black); }
 .route__cp--small { stroke-width: 2.5; }
-.route__cp--marker, .route__cp--marker.on-black { fill: var(--route); }
+.route__cp--marker, .route__cp--marker.on-black, .route__cp--start { fill: var(--route); }
 .cp-anchor { position: absolute; top: 0; left: 0; width: 0; height: 0; }
 .sheet > .cp-anchor { top: calc(var(--feed) + 2.4rem); }
-.sheet:first-of-type > .cp-anchor { top: auto; bottom: 4rem; }
+/* Above the next sheet's feed, so the route visibly starts on the cream paper. */
+.sheet:first-of-type > .cp-anchor { top: auto; bottom: calc(var(--feed) + 1.5rem); }
 .role > .cp-anchor, .marker > .cp-anchor { top: 0.7rem; }
 .finish-line > .cp-anchor { top: 5px; } /* the route ends in the tape */
 .role, .marker { position: relative; }

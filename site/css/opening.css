@@ -28,3 +28,4 @@ html[data-opening="playing"] .name .g, html[data-opening="playing"] .name__pink 
 .wins li { position: relative; padding-left: 1.5rem; font-size: 1.0625rem; line-height: 1.45; }
 .wins li::before { content: ""; position: absolute; left: 0; top: 0.45em; width: 0.65rem; height: 0.65rem; border-radius: 50%; box-shadow: inset 0 0 0 2.5px var(--pink); }
 .wins b { color: var(--ink); }
+.opening__cv { margin: 0.5rem 0 0; }

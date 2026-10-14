@@ -6,7 +6,7 @@ export function initScenes({ motion }) {
   // opacity, not autoAlpha: visibility:hidden would drop the bug button inside
   // it out of the keyboard's tab order until scrolled to.
   gsap.from(work, {
-    yPercent: 22, rotation: -3, opacity: 0, ease: 'power2.out',
+    yPercent: 12, rotation: -2, opacity: 0, ease: 'power2.out',
     scrollTrigger: { trigger: work, start: 'top 95%', end: 'top 55%', scrub: true },
   });
   for (const list of document.querySelectorAll('.stickers')) {

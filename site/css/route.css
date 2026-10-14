@@ -13,6 +13,7 @@ html:not(.motion) .route__runner { display: none; }
 .sheet > .cp-anchor { top: calc(var(--feed) + 2.4rem); }
 .sheet:first-of-type > .cp-anchor { top: auto; bottom: 4rem; }
 .role > .cp-anchor, .marker > .cp-anchor { top: 0.7rem; }
+.finish-line > .cp-anchor { top: 5px; } /* the route ends in the tape */
 .role, .marker { position: relative; }
 
 /* Pre-reveal states exist only when animating. The final state is the default. */

@@ -21,7 +21,7 @@ test('marker checkpoints are solid pink on black paper', async ({ page }) => {
   await page.goto('/');
   await ready(page);
   const fills = await page.$$eval('.route__cp--marker', (cs) => cs.map((c) => getComputedStyle(c).fill));
-  expect(fills.length).toBe(3);
+  expect(fills.length).toBe(4); // three certificates and the end of the route, in the tape
   for (const f of fills) expect(f).toBe('rgb(255, 79, 154)');
 });
 

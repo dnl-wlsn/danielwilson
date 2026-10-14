@@ -79,7 +79,9 @@ export function initRoute() {
   // Geometry only, no layout reads, so the glitch can be redrawn every frame.
   function draw() {
     const glitched = gi >= 0 && amp !== 0;
-    const segs = glitched ? glitchSegments(base, pts[gi], pts[gi + 1], amp, { size: phone ? 11 : 16, step: phone ? 20 : 24 }) : base;
+    // Wider rails, bigger zigzag, so it reads as a fault on a big screen too.
+    const glitchSize = phone || gi < 0 ? 11 : Math.min(30, Math.max(16, pts[gi].x * 0.35));
+    const segs = glitched ? glitchSegments(base, pts[gi], pts[gi + 1], amp, { size: glitchSize, step: phone ? 20 : 24 }) : base;
     path.setAttribute('d', segmentsToD(segs));
     // Measured in JS, not with getPointAtLength (which froze v1's intro for
     // seconds). pathLength makes the browser's dash maths use our length.
@@ -134,10 +136,12 @@ export function initRoute() {
   } else {
     cps.forEach(reach);
   }
-  // Without motion nothing refreshes ScrollTrigger, so watch the size here.
+  // Re-measure as soon as the page changes size (a role opening, the prize
+  // appearing), not only after main.js's debounced refresh: the anchors are
+  // in the DOM, so the dots can follow them straight away.
   let lastW = main.clientWidth, lastH = main.offsetHeight;
   new ResizeObserver(() => {
-    if (animated() || (main.clientWidth === lastW && main.offsetHeight === lastH)) return;
+    if (main.clientWidth === lastW && main.offsetHeight === lastH) return;
     lastW = main.clientWidth;
     lastH = main.offsetHeight;
     schedule();

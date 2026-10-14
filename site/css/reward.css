@@ -1,5 +1,5 @@
 .reward { margin-top: 2rem; }
-.reward__title { color: var(--accent); margin-bottom: 1rem; }
+.reward__title { color: var(--accent); margin-bottom: 1rem; font: 400 clamp(1.5rem, 4vw, 2.75rem)/1 var(--font-poster); letter-spacing: 0.01em; }
 .reward__stage {
   position: relative; height: clamp(16rem, 50svh, 30rem); overflow: hidden;
   display: flex; flex-wrap: wrap; align-content: flex-end; justify-content: center;
@@ -8,6 +8,9 @@
   border-bottom: 3px solid var(--acid); cursor: grab;
 }
 .rl { display: inline-block; padding: 0 0.02em; }
+/* Nothing on the stage until the physics lays the letters out (no flash of the
+   finished name). A static prize, or a failed load, shows them as they are. */
+html.motion .reward:not(.is-static) .reward__stage:not(.is-laid) .rl { visibility: hidden; }
 .rl-break { flex-basis: 100%; height: 0; }
 .reward__stage.is-laid .rl { position: absolute; left: 0; top: 0; will-change: transform; }
 .rl.is-gone { visibility: hidden; }

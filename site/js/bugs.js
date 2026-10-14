@@ -184,7 +184,8 @@ export function initBugs(ctx, defs) {
     }
     if (!fixNote) return;
     live.textContent = announceText(found.size, bugs.size, fixNote);
-    flashNote(fixNote);
+    // Phones: the bar sits over the page, so it tucks away sooner.
+    flashNote(fixNote, touch ? 4000 : 7000);
     if (ctx.motion) gsap.fromTo(count, { yPercent: -70, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.35, ease: 'back.out(2)' });
   }
 }

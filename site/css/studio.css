@@ -50,3 +50,4 @@
 }
 .browser img { display: block; width: 100%; height: auto; }
 .browser__url:empty { min-height: 0.825rem; }
+.work .bug .stamp { top: 0.5rem; right: 0.5rem; }

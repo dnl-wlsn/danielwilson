@@ -130,7 +130,7 @@ test('the note under the counter tucks away after a few seconds', async ({ page 
 });
 
 test('a returning visitor with all 7 is told where the prize is', async ({ page }) => {
-  await seed(page, ['letters', 'date', 'route', 'upside-down', 'unit', 'beetle', 'dodge']);
+  await seed(page, ['letters', 'date', 'route', 'upside-down', 'unit', 'beetle', 'typo']);
   await page.goto('/');
   await ready(page);
   await expect(page.locator('[data-bug-note]')).toHaveText('All 7 found. Your prize is at the bottom of the page.');

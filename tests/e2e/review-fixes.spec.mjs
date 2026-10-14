@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { ready, trigger, seed } from './helpers.mjs';
 
-const ALL = ['letters', 'date', 'route', 'upside-down', 'unit', 'beetle', 'dodge'];
+const ALL = ['letters', 'date', 'route', 'upside-down', 'unit', 'beetle', 'typo'];
 
 test('Reset letters never stacks physics loops', async ({ page }) => {
   await seed(page, ALL);
@@ -38,30 +38,12 @@ test('the letters stay in the playground after a resize', async ({ page }, info)
   }), { timeout: 10_000 }).toBe(0);
 });
 
-test('Email me never dodges off screen', async ({ page }, info) => {
-  test.skip(info.project.name === 'mobile', 'mouse only');
+test('a click while the email typo is being fixed does not open email', async ({ page }) => {
   await page.goto('/');
   await ready(page);
-  const t = trigger(page, 'dodge');
+  const t = trigger(page, 'typo');
   await t.scrollIntoViewIfNeeded();
-  for (let i = 0; i < 3; i++) {
-    const b = await t.boundingBox();
-    await page.mouse.move(b.x + b.width + 40, b.y + b.height / 2);
-    await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2, { steps: 6 });
-    await page.waitForTimeout(450);
-  }
-  const b = await t.boundingBox();
-  const vw = page.viewportSize().width;
-  expect(b.x).toBeGreaterThanOrEqual(0);
-  expect(b.x + b.width).toBeLessThanOrEqual(vw);
-});
-
-test('a click while Email me is being fixed does not open email', async ({ page }) => {
-  await page.goto('/');
-  await ready(page);
-  const t = trigger(page, 'dodge');
-  await t.scrollIntoViewIfNeeded();
-  await page.evaluate(() => document.addEventListener('click', (e) => { if (e.target.closest('[data-for="dodge"]')) window.__dp = e.defaultPrevented; }));
+  await page.evaluate(() => document.addEventListener('click', (e) => { if (e.target.closest('[data-for="typo"]')) window.__dp = e.defaultPrevented; }));
   await t.focus();
   await page.keyboard.press('Enter');
   await t.dispatchEvent('click');

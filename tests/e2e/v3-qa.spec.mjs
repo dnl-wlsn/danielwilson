@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { ready, trigger, seed, activate } from './helpers.mjs';
 
-const ALL = ['letters', 'date', 'route', 'upside-down', 'unit', 'beetle', 'dodge'];
+const ALL = ['letters', 'date', 'route', 'upside-down', 'unit', 'beetle', 'typo'];
 const apart = (a, b) => a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top;
 
 test('the beetle wiggles in place: its button never rotates off its hit area', async ({ page }) => {
@@ -42,7 +42,7 @@ test('Email me lines up with the reading column on wide screens', async ({ page 
   await page.setViewportSize({ width: 1920, height: 1080 });
   await page.goto('/');
   await ready(page);
-  const [btn, h2] = await Promise.all([page.locator('[data-bug="dodge"]').boundingBox(), page.locator('#contact h2').boundingBox()]);
+  const [btn, h2] = await Promise.all([page.locator('.contact__cta a').boundingBox(), page.locator('#contact h2').boundingBox()]);
   expect(Math.abs(btn.x - h2.x)).toBeLessThan(2);
 });
 

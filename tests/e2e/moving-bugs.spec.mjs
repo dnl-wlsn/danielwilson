@@ -31,50 +31,21 @@ test('the beetle can be caught from the keyboard', async ({ page }) => {
   await expect(trigger(page, 'beetle')).toHaveAttribute('data-fixed', '1');
 });
 
-test('Email me dodges the mouse three times, then can be caught', async ({ page }, info) => {
-  test.skip(info.project.name === 'mobile', 'mouse only');
-  await page.goto('/');
-  await ready(page);
-  const t = trigger(page, 'dodge');
-  await t.scrollIntoViewIfNeeded();
-  const start = await t.boundingBox();
-  for (let i = 0; i < 3; i++) {
-    const b = await t.boundingBox();
-    await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2, { steps: 6 });
-    await page.waitForTimeout(450);
-  }
-  const moved = await t.boundingBox();
-  expect(Math.abs(moved.x - start.x) + Math.abs(moved.y - start.y)).toBeGreaterThan(40);
-  await t.click();
-  await expect(t).toHaveAttribute('data-fixed', '1');
-  await expect(t).toHaveAttribute('href', 'mailto:dvnielwilson@gmail.com');
-  await expect(page.locator('[data-bug-count]')).toHaveText('1');
-});
-
-test('on touch, the first tap makes it hop and the second fixes it', async ({ page }, info) => {
-  test.skip(info.project.name !== 'mobile', 'touch only');
-  await page.goto('/');
-  await ready(page);
-  const t = trigger(page, 'dodge');
-  await t.scrollIntoViewIfNeeded();
-  await t.tap();
-  await expect(t).not.toHaveAttribute('data-fixed', '1');
-  await t.tap();
-  await expect(t).toHaveAttribute('data-fixed', '1');
-});
-
-test('from the keyboard it never moves, and Enter fixes it', async ({ page }) => {
-  await page.goto('/');
-  await ready(page);
-  const t = trigger(page, 'dodge');
-  await expect(t).toHaveAccessibleDescription(/^Bug: /);
-  await t.focus();
-  await page.keyboard.press('Enter');
-  await expect(t).toHaveAttribute('data-fixed', '1');
-  await expect(t).not.toHaveAttribute('aria-describedby', /.+/);
-});
-
 test('the email address is always a plain link too', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('.contact__links a[href^="mailto:"]')).toHaveCount(1);
+});
+
+test('the email typo: Email me always works, the address is fixed by a click', async ({ page }) => {
+  await page.goto('/');
+  await ready(page);
+  await expect(page.locator('.contact__cta a')).not.toHaveAttribute('data-for', /.+/);
+  const t = trigger(page, 'typo');
+  await expect(t).toHaveText('dvnielwilson@gmial.com');
+  await expect(t).toHaveAccessibleDescription(/^Bug: /);
+  await t.scrollIntoViewIfNeeded();
+  await t.click();
+  await expect(t).toHaveAttribute('data-fixed', '1');
+  await expect(t).toHaveText('dvnielwilson@gmail.com');
+  await expect(t).toHaveAttribute('href', 'mailto:dvnielwilson@gmail.com');
 });

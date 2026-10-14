@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { ready, seed, activate } from './helpers.mjs';
 
-const ALL = ['letters', 'date', 'route', 'upside-down', 'unit', 'beetle', 'dodge'];
+const ALL = ['letters', 'date', 'route', 'upside-down', 'unit', 'beetle', 'typo'];
 const watchMatter = (page) => {
   const seen = { matter: false };
   page.on('request', (r) => { if (r.url().includes('matter')) seen.matter = true; });
@@ -19,7 +19,7 @@ test('no reward, and no physics download, before all 7 are found', async ({ page
   expect(seen.matter).toBe(false);
 });
 
-test('the last fix unlocks the playground, and the vowels drop out', async ({ page }) => {
+test('the last fix unlocks the playground, with the whole name', async ({ page }) => {
   test.setTimeout(30_000);
   const seen = watchMatter(page);
   await seed(page, ALL.filter((x) => x !== 'unit'));
@@ -31,8 +31,8 @@ test('the last fix unlocks the playground, and the vowels drop out', async ({ pa
   await expect(page.locator('.reward')).toBeVisible();
   await expect.poll(() => page.evaluate(() => document.documentElement.dataset.reward), { timeout: 10_000 }).toMatch(/running|settled/);
   expect(seen.matter).toBe(true);
-  await expect.poll(() => page.locator('.rl.v.is-gone').count(), { timeout: 10_000 }).toBe(5);
-  await expect(page.locator('.rl:not(.is-gone)')).toHaveText(['D', 'N', 'L', 'W', 'L', 'S', 'N']);
+  await expect(page.locator('.rl.is-gone')).toHaveCount(0);
+  await expect(page.locator('.rl')).toHaveText(['D', 'A', 'N', 'I', 'E', 'L', 'W', 'I', 'L', 'S', 'O', 'N']);
 });
 
 test('a returning visitor with all 7 gets the reward without fixing anything', async ({ page }) => {

@@ -1,32 +1,32 @@
 import { test, expect } from '@playwright/test';
 import { ready, trigger, seed, activate } from './helpers.mjs';
 
-const ALL = ['letters', 'date', 'route', 'upside-down', 'unit', 'beetle', 'dodge'];
+const ALL = ['letters', 'date', 'route', 'upside-down', 'unit', 'beetle', 'typo'];
 const reward = (page) => page.evaluate(() => document.documentElement.dataset.reward);
 
 test('fixing the 7th bug brings the prize into view and it plays', async ({ page }) => {
-  await seed(page, ALL.filter((x) => x !== 'dodge'));
+  await seed(page, ALL.filter((x) => x !== 'typo'));
   await page.goto('/');
   await ready(page);
-  await activate(page, 'dodge', 'keyboard');
+  await activate(page, 'typo', 'keyboard');
   await expect.poll(() => reward(page), { timeout: 10_000 }).toMatch(/running|settled/);
   await expect(page.locator('[data-bug-note]')).toContainText('prize');
 });
 
-test('after the vowels drop, the rest line up as DNL WLSN', async ({ page }) => {
+test('the letters line up as DANIEL WILSON', async ({ page }) => {
   test.setTimeout(30_000);
   await seed(page, ALL);
   await page.goto('/');
   await ready(page);
   await page.locator('.reward__stage').scrollIntoViewIfNeeded();
-  await expect.poll(() => page.locator('.rl.v.is-gone').count(), { timeout: 10_000 }).toBe(5);
   await expect.poll(() => page.evaluate(() => {
     const ls = [...document.querySelectorAll('.rl:not(.is-gone)')].map((l) => [l.textContent, l.getBoundingClientRect()]);
-    const bottoms = ls.map(([, r]) => Math.round(r.bottom));
-    const sameLine = Math.max(...bottoms) - Math.min(...bottoms) <= 3;
-    const order = [...ls].sort((a, b) => a[1].left - b[1].left).map(([t]) => t).join('');
-    return sameLine ? order : 'not in line';
-  }), { timeout: 10_000 }).toBe('DNLWLSN');
+    // One line on wide screens, DANIEL over WILSON on narrow ones: read row by row.
+    const rows = new Map();
+    for (const [t, r] of ls) { const k = Math.round(r.bottom / 10); rows.set(k, [...(rows.get(k) ?? []), [t, r]]); }
+    if (rows.size > 2) return 'not in line';
+    return [...rows.keys()].sort((a, b) => a - b).map((k) => rows.get(k).sort((a, b) => a[1].left - b[1].left).map(([t]) => t).join('')).join('');
+  }), { timeout: 10_000 }).toBe('DANIELWILSON');
 });
 
 test('a letter let go outside the stage does not stick to the pointer', async ({ page }, info) => {

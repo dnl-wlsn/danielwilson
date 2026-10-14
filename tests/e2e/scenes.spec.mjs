@@ -1,16 +1,14 @@
 import { test, expect } from '@playwright/test';
 import { ready } from './helpers.mjs';
 
-test('every sheet after the first has an edge that feeds in with scroll', async ({ page }) => {
+test('every sheet after the first has a flat, still edge (no gap while scrolling)', async ({ page }) => {
   await page.goto('/');
   await ready(page);
   await expect(page.locator('.sheet-edge')).toHaveCount(5);
   const edge = page.locator('#studio .sheet-edge');
-  const skew = () => edge.evaluate((e) => new DOMMatrix(getComputedStyle(e).transform).b);
-  await page.evaluate(() => window.scrollTo(0, document.querySelector('#studio').offsetTop - window.innerHeight));
-  await expect.poll(skew).not.toBe(0);
-  await page.evaluate(() => window.scrollTo(0, document.querySelector('#studio').offsetTop));
-  await expect.poll(skew).toBe(0);
+  await page.evaluate(() => window.scrollTo(0, document.querySelector('#studio').offsetTop - window.innerHeight / 2));
+  await page.waitForTimeout(300);
+  expect(await edge.evaluate((e) => getComputedStyle(e).transform)).toBe('none');
 });
 
 test('stickers end up visible', async ({ page }) => {

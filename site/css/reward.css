@@ -15,6 +15,5 @@ html.motion .reward:not(.is-static) .reward__stage:not(.is-laid) .rl { visibilit
 .reward__stage.is-laid .rl { position: absolute; left: 0; top: 0; will-change: transform; }
 .rl.is-gone { visibility: hidden; }
 .reward.is-static .reward__stage { cursor: default; touch-action: auto; }
-.reward.is-static .rl.v { opacity: 0.18; }
 .reward.is-static .reward__controls { display: none; }
 .reward__controls { margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap; }

@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test('the playground holds 55 fps on a throttled phone while the letters fall', async ({ page }) => {
   test.setTimeout(60_000);
-  await page.addInitScript(() => localStorage.setItem('dw-bugs-v1', JSON.stringify(['letters', 'date', 'route', 'upside-down', 'unit', 'beetle', 'dodge'])));
+  await page.addInitScript(() => localStorage.setItem('dw-bugs-v1', JSON.stringify(['letters', 'date', 'route', 'upside-down', 'unit', 'beetle', 'typo'])));
   await page.goto('/');
   await page.waitForFunction(() => document.documentElement.dataset.opening === 'done', null, { timeout: 15_000 });
   const cdp = await page.context().newCDPSession(page);

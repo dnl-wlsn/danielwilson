@@ -1,9 +1,8 @@
 // The prize for finding all 7 bugs: the letters of my name as physics bodies.
-// They rain in and pile up, can be grabbed and thrown, and after a beat the
-// vowels fall through the floor, leaving "DNL WLSN" (v1's name, as a nod).
+// They rain in and pile up, can be grabbed and thrown, and after a beat they
+// slide into a readable line: DANIEL WILSON.
 // Matter.js loads only now, never before.
 const root = document.documentElement;
-const VOWEL = /[AEIOU]/;
 
 const loadMatter = () => (window.Matter ? Promise.resolve() : new Promise((ok, no) => {
   const s = document.createElement('script');
@@ -99,21 +98,12 @@ function playground(box, stage) {
       const b = Bodies.rectangle(r.left - s.left + r.width / 2, r.top - s.top + r.height / 2 - H, r.width, r.height, {
         restitution: 0.3, friction: 0.5, angle: (Math.random() - 0.5) * 0.5,
       });
-      return { el, b, w: r.width, h: r.height, vowel: VOWEL.test(el.textContent), gone: false };
+      return { el, b, w: r.width, h: r.height, vowel: false, gone: false };
     });
     mc = MouseConstraint.create(engine, { mouse, constraint: { stiffness: 0.2, render: { visible: false } } });
     Composite.add(engine.world, [...walls, ...pairs.map((p) => p.b), mc]);
     Events.on(mc, 'startdrag', () => { release(); start(); });
-    vowelTimer = setTimeout(dropVowels, 2600);
-    start();
-  }
-
-  function dropVowels() {
-    for (const p of pairs) {
-      if (!p.vowel) continue;
-      p.b.collisionFilter.mask = 0; // collides with nothing, so it falls through the floor
-      Sleeping.set(p.b, false);
-    }
+    vowelTimer = setTimeout(lineUp, 2600);
     start();
   }
 
@@ -124,13 +114,6 @@ function playground(box, stage) {
     for (const p of pairs) {
       if (p.gone) continue;
       const { x, y } = p.b.position;
-      if (p.vowel && y > H + p.h) {
-        p.gone = true;
-        Composite.remove(engine.world, p.b);
-        p.el.classList.add('is-gone');
-        if (lineup === null && pairs.every((q) => !q.vowel || q.gone)) lineup = setTimeout(lineUp, 700);
-        continue;
-      }
       p.el.style.transform = `translate(${(x - p.w / 2).toFixed(1)}px, ${(y - p.h / 2).toFixed(1)}px) rotate(${p.b.angle.toFixed(3)}rad)`;
       if (!p.b.isSleeping) awake = true;
     }
@@ -150,25 +133,32 @@ function playground(box, stage) {
     requestAnimationFrame(() => step(mine));
   }
 
-  // Once the vowels have gone, the rest slide into a readable line so the
-  // joke lands, wherever the physics left them. Grab or shake to scatter again.
+  // After a beat the letters slide into a readable line, wherever the
+  // physics left them. Grab or shake to scatter again.
   function lineUp() {
     const rest = pairs.filter((p) => !p.gone);
     const gapL = rest[0].h * 0.03, gapW = rest[0].h * 0.35;
-    const total = rest.reduce((s, p) => s + p.w, 0) + gapL * (rest.length - 2) + gapW;
-    let x = (W - total) / 2;
-    rest.forEach((p, i) => {
-      if (i === 3) x += gapW - gapL; // between DNL and WLSN
-      const target = { x: x + p.w / 2, y: H - p.h / 2 };
-      x += p.w + gapL;
-      Body.setStatic(p.b, true);
-      const turn = Math.round(p.b.angle / (2 * Math.PI)) * 2 * Math.PI;
-      const pose = { x: p.b.position.x, y: p.b.position.y, a: p.b.angle };
-      tweens.push(gsap.to(pose, {
-        x: target.x, y: target.y, a: turn, duration: 0.9, delay: i * 0.06, ease: 'power3.inOut',
-        onUpdate: () => { Body.setPosition(p.b, { x: pose.x, y: pose.y }); Body.setAngle(p.b, pose.a); },
-        onComplete: () => { Body.setStatic(p.b, false); Sleeping.set(p.b, true); },
-      }));
+    const width = (ps) => ps.reduce((s, p) => s + p.w, 0) + gapL * (ps.length - 1);
+    // One line if it fits, otherwise DANIEL on top of WILSON (phones).
+    const rows = width(rest) + gapW <= W * 0.96 ? [rest] : [rest.slice(0, 6), rest.slice(6)];
+    let k = 0;
+    rows.forEach((row, r) => {
+      const oneLine = rows.length === 1;
+      let x = (W - width(row) - (oneLine ? gapW - gapL : 0)) / 2;
+      const y = H - (rows.length - r - 1) * row[0].h * 1.05;
+      row.forEach((p, i) => {
+        if (oneLine && i === 6) x += gapW - gapL; // between DANIEL and WILSON
+        const target = { x: x + p.w / 2, y: y - p.h / 2 };
+        x += p.w + gapL;
+        Body.setStatic(p.b, true);
+        const turn = Math.round(p.b.angle / (2 * Math.PI)) * 2 * Math.PI;
+        const pose = { x: p.b.position.x, y: p.b.position.y, a: p.b.angle };
+        tweens.push(gsap.to(pose, {
+          x: target.x, y: target.y, a: turn, duration: 0.9, delay: k++ * 0.06, ease: 'power3.inOut',
+          onUpdate: () => { Body.setPosition(p.b, { x: pose.x, y: pose.y }); Body.setAngle(p.b, pose.a); },
+          onComplete: () => { Body.setStatic(p.b, false); Sleeping.set(p.b, true); },
+        }));
+      });
     });
     start();
   }

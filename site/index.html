@@ -20,23 +20,7 @@
 <link rel="icon" href="/img/favicon-v3.svg" type="image/svg+xml">
 <link rel="preload" href="/fonts/archivo-var-v1.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/anton-400-v1.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/css/fonts.css">
-<link rel="stylesheet" href="/css/tokens.css">
-<link rel="stylesheet" href="/css/base.css">
-<link rel="stylesheet" href="/css/sheets.css">
-<link rel="stylesheet" href="/css/terrain.css">
-<link rel="stylesheet" href="/css/route.css">
-<link rel="stylesheet" href="/css/lenis.css">
-<link rel="stylesheet" href="/css/opening.css">
-<link rel="stylesheet" href="/css/bugs.css">
-<link rel="stylesheet" href="/css/testing.css">
-<link rel="stylesheet" href="/css/studio.css">
-<link rel="stylesheet" href="/css/running.css">
-<link rel="stylesheet" href="/css/likes.css">
-<link rel="stylesheet" href="/css/contact.css">
-<link rel="stylesheet" href="/css/reward.css">
-<link rel="stylesheet" href="/css/nav.css">
-<link rel="stylesheet" href="/css/print.css">
+<link rel="stylesheet" href="/css/site-v1.css">
 <script src="/js/motion-gate.js"></script>
 <script defer src="/js/vendor/gsap.min.js"></script>
 <script defer src="/js/vendor/ScrollTrigger.min.js"></script>
@@ -257,7 +241,8 @@
       <h3 class="mono">Recent sites</h3>
       <p class="work__btns" hidden><button class="work__btn" type="button" data-work="prev" aria-label="Previous site">←</button><button class="work__btn" type="button" data-work="next" aria-label="Next site">→</button></p>
     </div>
-    <ul class="work__rail" role="region" aria-label="Recent client sites, scroll sideways" tabindex="0">
+    <div class="work__rail" role="region" aria-label="Recent client sites, scroll sideways" tabindex="0">
+    <ul class="work__list">
       <li class="card">
         <figure class="studio-work">
           <p class="visually-hidden">Screenshot of the Rushton Electrical home page.</p>
@@ -290,6 +275,7 @@
         </figure>
       </li>
     </ul>
+    </div>
   </div>
   <p data-reveal>I also built and run <a href="https://getinsound.com">Insound</a>, a direct-to-fan music platform: Next.js, Supabase, Cloudflare Workers and Stripe Connect, from first commit to production incidents.</p>
   <p data-reveal>For a few clients I built lo-edit, a small in-page editor that lets them change their own wording without a CMS or a call to me. A Cloudflare Worker and D1 database, behind Cloudflare Access, with unit tests and Playwright checks.</p>

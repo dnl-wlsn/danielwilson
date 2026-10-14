@@ -1,0 +1,561 @@
+/* Built by tools/bundle-css.mjs - edit the source files, not this one. */
+/* fonts.css */
+@font-face {
+  font-family: "Archivo";
+  src: url("/fonts/archivo-var-v1.woff2") format("woff2");
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/fonts/plex-mono-400-v1.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/fonts/plex-mono-500-v1.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Anton";
+  src: url("/fonts/anton-400-v1.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* tokens.css */
+:root {
+  --cream: #F4EFE4;
+  --black: #121312;
+  --blue: #1B3BFF;
+  --pink: #FF4F9A;
+  --acid: #D4FF3A;
+  --paper: #F2F2EA;
+  --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-poster: "Anton", "Archivo", Impact, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+  --gutter: clamp(1rem, 5vw, 4rem);
+  --col: 72rem;
+  --focus: var(--blue); /* outside any section (the skip link) */
+  --rail: clamp(2.75rem, 9vw, 8rem); /* margin either side of the reading column; the route runs here */
+  --route: var(--pink);
+  --feed: 7rem; /* how far each sheet overlaps the one before (the printer feed) */
+  color-scheme: light;
+}
+/* Each section declares its paper; everything inside reads these. */
+[data-paper="cream"] {
+  --bg: var(--cream); --fg: var(--black); --ink: var(--blue); --over: var(--pink);
+  --blend: multiply; --accent: var(--blue); --on-accent: var(--cream); --focus: var(--blue);
+}
+[data-paper="black"] {
+  --bg: var(--black); --fg: var(--paper); --ink: var(--paper); --over: var(--pink);
+  --blend: screen; --accent: var(--acid); --on-accent: var(--black); --focus: var(--acid);
+  color-scheme: dark;
+}
+
+/* base.css */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--black);
+  color: var(--black);
+  font: 400 1.0625rem/1.6 var(--font-sans);
+  overflow-x: clip;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+a:hover { text-decoration-color: var(--accent); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; line-height: 0.95; }
+p { margin: 0; }
+cite { font-style: normal; }
+.mono { font-family: var(--font-mono); font-size: 0.8125rem; letter-spacing: 0.04em; text-transform: uppercase; }
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+.skip { position: absolute; left: 1rem; top: -4rem; background: var(--black); color: var(--paper); padding: 0.5rem 0.75rem; z-index: 40; }
+.skip:focus { top: 1rem; }
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.85rem 1.3rem; border-radius: 999px;
+  background: var(--fg); color: var(--bg);
+  font: 500 0.875rem/1 var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase;
+  text-decoration: none;
+}
+.btn:hover { background: var(--accent); color: var(--on-accent); }
+.lede { font-size: clamp(1.125rem, 2.2vw, 1.375rem); max-width: 40rem; }
+.kicker { color: var(--accent); margin-bottom: 1rem; }
+
+/* sheets.css */
+/* Sections are sheets of paper. Each one overlaps the last by --feed; the
+   overlap band is transparent, so the previous paper shows through until the
+   sheet edge (added by sheets.js) feeds up over it. */
+.sheet {
+  position: relative;
+  padding: calc(var(--feed) + 1.5rem) var(--rail) calc(var(--feed) + 3.5rem);
+  margin-top: calc(-1 * var(--feed));
+  background: linear-gradient(to bottom, transparent var(--feed), var(--bg) var(--feed));
+  color: var(--fg);
+  overflow-x: clip;
+}
+.sheet:first-of-type { margin-top: 0; padding-top: 5rem; background: var(--bg); }
+.sheet > :not(.sheet-edge, .cp-anchor) { position: relative; max-width: var(--col); margin-inline: auto; }
+/* Phones: the route keeps to the left rail, so only the left side needs room. */
+@media (max-width: 40rem) { .sheet { padding-right: 1rem; } }
+.sheet-edge {
+  position: absolute; left: 0; right: 0; top: 0; height: calc(var(--feed) + 2px); /* +2px: no hairline seam at fractional DPRs */
+  background: var(--bg); transform-origin: 0 100%; pointer-events: none;
+}
+.sheet h2 {
+  font-size: clamp(2.75rem, 8vw, 6.5rem); text-transform: uppercase; margin-bottom: 2rem; max-width: 18ch;
+  text-wrap: balance;
+}
+[data-paper="cream"] h2 { font: 900 clamp(2.75rem, 8vw, 6.5rem)/0.88 var(--font-sans); font-stretch: 62%; color: var(--ink); }
+[data-paper="black"] h2 { font-family: var(--font-poster); font-weight: 400; letter-spacing: 0.005em; color: var(--ink); }
+/* Overprint: a second ink copies the heading text (set by overprint.js) and
+   sits a hair out of register. --mis scales the offset; 1 is the resting state. */
+.ink { --mis: 1; }
+.ink::before {
+  content: attr(data-text) / "";
+  position: absolute; inset: 0; color: var(--over); mix-blend-mode: var(--blend);
+  transform: translate(calc(var(--mis) * 0.03em), calc(var(--mis) * 0.018em));
+  pointer-events: none;
+}
+.ink { position: relative; }
+
+/* terrain.css */
+/* Faint contour lines in the margins, coloured for each paper. Painted by a
+   pseudo-element above the sheet's paper and below its content. It starts
+   below the feed band, which shows the previous sheet. The reading column is
+   masked clear on wide screens; phones get a fainter wash all over. */
+[data-terrain]::before {
+  content: "";
+  position: absolute; left: 0; right: 0; top: var(--feed); bottom: 0; pointer-events: none;
+  background-size: 900px 900px;
+  /* The reading column's edges (see .sheet in sheets.css). */
+  --col-l: max(var(--rail), calc(50% - var(--col) / 2));
+  --col-r: min(calc(100% - var(--rail)), calc(50% + var(--col) / 2));
+  -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(var(--col-l) - 5rem), transparent var(--col-l), transparent var(--col-r), #000 calc(var(--col-r) + 5rem), #000 100%);
+          mask-image: linear-gradient(90deg, #000 0, #000 calc(var(--col-l) - 5rem), transparent var(--col-l), transparent var(--col-r), #000 calc(var(--col-r) + 5rem), #000 100%);
+}
+.sheet:first-of-type[data-terrain]::before { top: 0; }
+[data-paper="cream"][data-terrain="1"]::before { background-image: url("/img/contours-1-cream-v3.svg"); }
+[data-paper="cream"][data-terrain="2"]::before { background-image: url("/img/contours-2-cream-v3.svg"); }
+[data-paper="cream"][data-terrain="3"]::before { background-image: url("/img/contours-3-cream-v3.svg"); }
+[data-paper="black"][data-terrain="1"]::before { background-image: url("/img/contours-1-black-v3.svg"); }
+[data-paper="black"][data-terrain="2"]::before { background-image: url("/img/contours-2-black-v3.svg"); }
+[data-paper="black"][data-terrain="3"]::before { background-image: url("/img/contours-3-black-v3.svg"); }
+@media (max-width: 64rem) {
+  [data-terrain]::before { -webkit-mask-image: none; mask-image: none; opacity: 0.45; }
+}
+
+/* route.css */
+/* The route: one SVG over the whole page, above the papers and below
+   anything that needs to cover it (the pinned running scene, the bug bar). */
+.trail { position: relative; }
+.route { position: absolute; top: 0; left: 0; pointer-events: none; overflow: visible; z-index: 1; }
+.route__line { fill: none; stroke: var(--route); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.route__runner circle { fill: var(--route); stroke: var(--black); stroke-width: 2.5; }
+html:not(.motion) .route__runner { display: none; }
+.route__cp { fill: var(--cream); stroke: var(--route); stroke-width: 3; transform-box: fill-box; transform-origin: center; }
+.route__cp.on-black { fill: var(--black); }
+.route__cp--small { stroke-width: 2.5; }
+.route__cp--marker, .route__cp--marker.on-black, .route__cp--start { fill: var(--route); }
+.cp-anchor { position: absolute; top: 0; left: 0; width: 0; height: 0; }
+.sheet > .cp-anchor { top: calc(var(--feed) + 2.4rem); }
+/* Above the next sheet's feed, so the route visibly starts on the cream paper. */
+.sheet:first-of-type > .cp-anchor { top: auto; bottom: calc(var(--feed) + 1.5rem); }
+.role > .cp-anchor, .marker > .cp-anchor { top: 0.7rem; }
+.finish-line > .cp-anchor { top: 5px; } /* the route ends in the tape */
+.role, .marker { position: relative; }
+
+/* Pre-reveal states exist only when animating. The final state is the default. */
+.route__cp { transition: transform 0.3s cubic-bezier(0.3, 1.6, 0.5, 1); }
+html.motion .route__cp:not(.is-reached) { transform: scale(0); }
+html.motion [data-reveal] {
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: calc(var(--i, 0) * 70ms + 120ms);
+}
+html.motion [data-reach]:not(.is-reached) [data-reveal] { opacity: 0; transform: translateY(1rem); }
+/* Reached by keyboard: show it now, not after the stagger. */
+html.motion [data-reach]:focus-within [data-reveal] { transition-delay: 0s; }
+
+/* lenis.css */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+
+.lenis [data-lenis-prevent],
+.lenis [data-lenis-prevent-wheel],
+.lenis [data-lenis-prevent-touch],
+.lenis [data-lenis-prevent-vertical],
+.lenis [data-lenis-prevent-horizontal] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+.lenis.lenis-autoToggle {
+  transition-property: overflow;
+  transition-duration: 1ms;
+  transition-behavior: allow-discrete;
+}
+
+/* opening.css */
+.opening { min-height: 100svh; display: grid; align-content: center; gap: 1.5rem; }
+.opening > :not(.sheet-edge) { width: 100%; } /* one left edge for name, tag and intro */
+@media (max-width: 40rem) {
+  .opening { align-content: start; padding-top: 3rem; }
+  .name { font-size: 24vw !important; }
+}
+.name {
+  position: relative; font: 900 clamp(4.5rem, 21vw, 16rem)/0.8 var(--font-sans); font-stretch: 62%;
+  text-transform: uppercase; color: var(--ink); letter-spacing: -0.01em;
+}
+.name__row { display: block; position: relative; z-index: 1; mix-blend-mode: var(--blend); }
+.name .g { display: inline-block; }
+.name__pink { position: absolute; inset: 0; color: var(--over); mix-blend-mode: var(--blend); transform: translate(0.035em, 0.02em); pointer-events: none; }
+.name__pink > span { display: block; }
+.name__pair { display: inline-block; }
+/* Bug 1: the two letters lean out of line. Individual transform properties,
+   so GSAP's transform on the same letters never overrides them. */
+.name__pair.is-bugged .g:first-child { rotate: -9deg; translate: 0 -0.04em; }
+.name__pair.is-bugged .g:last-child { rotate: 7deg; translate: 0 0.03em; }
+.opening__tag { color: var(--ink); font-size: clamp(0.875rem, 1.6vw, 1.125rem); }
+/* Hidden only until the opening starts; motion-gate.js's watchdog clears it. */
+html.motion:not([data-opening]) .name { visibility: hidden; }
+/* While the letters fall, give each its own layer so frames don't repaint the name. */
+html[data-opening="playing"] .name .g, html[data-opening="playing"] .name__pink { will-change: transform; }
+
+/* The three headline wins, readable before any scrolling. */
+.wins { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; max-width: 46rem; }
+.wins li { position: relative; padding-left: 1.5rem; font-size: 1.0625rem; line-height: 1.45; }
+.wins li::before { content: ""; position: absolute; left: 0; top: 0.45em; width: 0.65rem; height: 0.65rem; border-radius: 50%; box-shadow: inset 0 0 0 2.5px var(--pink); }
+.wins b { color: var(--ink); }
+.opening__cv { margin: 0.5rem 0 0; }
+
+/* bugs.css */
+/* A bug is a real button that looks like the content it wraps. */
+.bug {
+  all: unset; position: relative; display: inline-block; cursor: pointer;
+  border-radius: 0.15em; -webkit-tap-highlight-color: transparent;
+}
+.bug:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+.bug[aria-disabled="true"] { cursor: default; }
+.bug.is-wiggle { animation: bug-wiggle 0.45s ease-in-out 3; }
+@keyframes bug-wiggle { 0%, 100% { rotate: 0deg; } 25% { rotate: -5deg; } 75% { rotate: 5deg; } }
+.bug.is-hinted { animation: bug-hint 1.2s ease-out 1; }
+@keyframes bug-hint { from { box-shadow: 0 0 0 0 var(--accent); } to { box-shadow: 0 0 0 1.25rem transparent; } }
+@media (prefers-reduced-motion: reduce) {
+  .bug.is-wiggle, .bug.is-hinted { animation: none; }
+  .bug.is-hinted { outline: 3px dashed var(--accent); outline-offset: 6px; }
+}
+.shot-wrap, .bug:has(.shot) { display: block; }
+.stamp {
+  position: absolute; top: -0.55rem; right: -0.9rem; z-index: 3;
+  font: 500 0.75rem/1 var(--font-mono); font-stretch: normal; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--accent); background: var(--bg); border: 2px solid currentColor; padding: 0.25rem 0.4rem;
+  rotate: -8deg; pointer-events: none; white-space: nowrap;
+}
+.contact__cta { position: relative; }
+
+.bugbar {
+  /* Bottom left while playing: at the top it would sit over the name. */
+  position: fixed; z-index: 30; bottom: 0.75rem; left: 0.75rem;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;
+  max-width: min(22rem, calc(100vw - 1.5rem));
+  padding: 0.5rem 0.6rem 0.55rem 0.9rem; border-radius: 1.25rem;
+  background: var(--black); color: var(--paper); box-shadow: 0 0 0 2px var(--cream);
+  transition: opacity 0.3s, translate 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.bugbar[hidden] { display: none; }
+html.motion .bugbar:not(.is-in) { opacity: 0; translate: 0 1.25rem; }
+.bugbar__count { margin-right: auto; color: var(--paper); }
+.bugbar__n { display: inline-block; color: var(--acid); font-weight: 500; }
+.bugbar__btn {
+  all: unset; cursor: pointer; padding: 0.4rem 0.7rem; border-radius: 999px;
+  background: var(--acid); color: var(--black); font: 500 0.75rem/1 var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase;
+}
+.bugbar__btn[hidden] { display: none; }
+.bugbar__btn:focus-visible { outline: 3px solid var(--acid); outline-offset: 2px; }
+.bugbar__note { flex-basis: 100%; font-size: 0.8125rem; line-height: 1.35; color: var(--paper); }
+.bugbar__note:empty, .bugbar__note[hidden] { display: none; }
+.bugbar__pips { display: inline-flex; gap: 0.3rem; }
+.bugbar__pips > span { width: 0.6rem; height: 0.6rem; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--paper); transition: background-color 0.3s, box-shadow 0.3s; }
+.bugbar__pips > span.is-on { background: var(--acid); box-shadow: inset 0 0 0 1.5px var(--acid); }
+/* It parks bottom right, so its stamp goes on its left, inside the screen. */
+.bug--beetle .stamp { top: -1.2rem; right: 60%; }
+/* A bigger target than the 44px drawing. */
+.bug--beetle::after { content: ""; position: absolute; inset: -0.6rem; }
+/* The wiggle rotates the drawing, never the button: the button is placed with
+   a transform, so rotating it would swing it in an arc off its own hit area.
+   The glitch button is invisible, so it doesn't wiggle at all. */
+.bug--beetle.is-wiggle, .bug--glitch.is-wiggle { animation: none; }
+.bug--beetle.is-wiggle svg { animation: bug-wiggle 0.45s ease-in-out 3; }
+/* Small values: the stamp goes beside them, so the fixed value stays readable. */
+.bug:has(.reel-host) .stamp, .bug:has(.unit) .stamp { top: 50%; right: auto; left: 100%; translate: 0.5rem -50%; }
+.bug--beetle.is-twitch svg { animation: twitch 0.12s linear 6; }
+@keyframes twitch { 0%, 100% { rotate: 0deg; } 50% { rotate: 6deg; } }
+@media (prefers-reduced-motion: reduce) { .bug--beetle.is-twitch svg { animation: none; } }
+/* Phones: the bar sits at the bottom (thumb reach), so it never covers the name. */
+@media (max-width: 40rem) {
+  .bugbar { top: auto; bottom: 0.75rem; left: 0.75rem; right: 0.75rem; max-width: none; }
+  html.motion .bugbar:not(.is-in) { translate: 0 1.25rem; }
+}
+
+/* The opt-in button for the hunt, where the bug bar sits once it's on. */
+.huntbtn {
+  all: unset; position: fixed; z-index: 30; top: 0.75rem; left: 0.75rem; cursor: pointer;
+  padding: 0.55rem 0.9rem; border-radius: 999px;
+  background: var(--black); color: var(--acid); box-shadow: 0 0 0 2px var(--cream);
+  font: 500 0.75rem/1 var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase;
+  transition: opacity 0.3s;
+}
+.huntbtn[hidden] { display: none; }
+.huntbtn:hover { background: var(--acid); color: var(--black); }
+.huntbtn:focus-visible { outline: 3px solid var(--acid); outline-offset: 2px; }
+html.motion:not([data-opening="done"]) .huntbtn { opacity: 0; pointer-events: none; }
+.bugbar__btn--quiet { background: transparent; color: var(--paper); box-shadow: inset 0 0 0 1.5px var(--paper); }
+
+/* testing.css */
+.roles { list-style: none; margin: 3rem 0 0; padding: 0; display: grid; gap: 2.75rem; }
+.role { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.4rem; max-width: 46rem; }
+.role__year { color: var(--accent); font-size: 1rem; }
+.role__org {
+  font: 800 clamp(2rem, 6vw, 4.25rem)/0.95 var(--font-sans); font-stretch: 75%;
+  text-transform: uppercase; overflow-wrap: anywhere;
+}
+.role details summary { cursor: pointer; font: 500 0.8125rem var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; color: var(--accent); }
+.role details ul { margin: 0.75rem 0 0; padding-left: 1.1rem; }
+.marker { color: var(--accent); }
+.role--book { grid-template-columns: 6rem 1fr; column-gap: 1.25rem; align-items: start; }
+.role--book img { grid-row: span 4; width: 6rem; }
+.role--book cite { font-weight: 800; font-size: 1.375rem; line-height: 1.15; }
+.cv-download { margin-top: 3rem; }
+/* Bug 2: the date reel. */
+.reel-host { display: inline-block; }
+.reel { display: inline-block; height: 1.6em; overflow: hidden; vertical-align: bottom; }
+.reel__strip { display: flex; flex-direction: column; }
+.reel__strip > span { height: 1.6em; }
+/* Bug 3: a glitch in the route. The zigzag is drawn by route.js in the route
+   SVG; this transparent button sits over it, and route.js places it there. */
+.glitch-slot { display: block; width: 100%; height: 100%; }
+.bug--glitch { position: absolute !important; left: 0; top: 0; width: 2.75rem; z-index: 3; }
+.bug--glitch:not([data-placed]) { visibility: hidden; }
+/* Set vertically, centred in the rail, so it never covers the role's copy. */
+.bug--glitch .stamp { top: 50%; left: 50%; right: auto; translate: -50% -50%; writing-mode: vertical-rl; rotate: 180deg; padding: 0.4rem 0.2rem; }
+
+/* "Quality is everyone's responsibility": the one line to remember. */
+.pull { margin: 0.5rem 0 1.5rem; padding-left: 1.25rem; border-left: 4px solid var(--pink); }
+.pull p { font: 400 clamp(1.75rem, 4.5vw, 3rem)/1.05 var(--font-poster); text-transform: uppercase; color: var(--acid); max-width: 20ch; }
+/* A reader's review under the book. */
+.review { margin: 1rem 0; padding: 0.9rem 1rem; border-radius: 0.75rem; box-shadow: inset 0 0 0 1.5px currentColor; max-width: 34rem; }
+.review__stars { color: var(--acid); letter-spacing: 0.15em; margin: 0 0 0.35rem; }
+.review blockquote { margin: 0; font-size: 1.125rem; }
+.review figcaption { margin-top: 0.5rem; font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.8; }
+
+/* studio.css */
+.studio-work { margin: 3rem 0 0; display: grid; gap: 1rem; }
+.shot { display: block; border-radius: 0.5rem; overflow: hidden; box-shadow: 0.6rem 0.6rem 0 var(--over); }
+/* Bug 3: the screenshot is upside down. */
+.shot.is-flipped { rotate: 180deg; }
+.studio-work figcaption { max-width: 40rem; }
+.studio__more { margin-top: 2rem; }
+
+/* The tech used across Little Oceans sites: small mono tags. */
+.studio__tech { margin-top: 2rem; }
+.studio__tech h3 { font: 500 0.75rem/1.3 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); margin: 0 0 0.75rem; }
+.tech { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.tech li { font: 500 0.8125rem/1 var(--font-mono); padding: 0.45rem 0.65rem; border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--ink); color: var(--ink); }
+
+/* Recent sites: a sideways-scrolling rail of cards. */
+.work { margin-top: 3rem; }
+.work__head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.work__head h3 { font: 500 0.75rem/1.3 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); margin: 0; }
+.work__btns { display: flex; gap: 0.4rem; margin: 0; }
+.work__btns[hidden] { display: none; }
+.work__btn { all: unset; cursor: pointer; width: 2.5rem; height: 2.5rem; display: grid; place-items: center; border-radius: 50%; background: var(--black); color: var(--paper); font-size: 1.1rem; }
+.work__btn:disabled { opacity: 0.3; cursor: default; }
+.work__btn:focus-visible { outline: 3px solid var(--pink); outline-offset: 2px; }
+.work__rail { padding: 0 0 1.25rem; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: thin; }
+.work__list { list-style: none; margin: 0; padding: 0; display: flex; gap: 1.5rem; }
+.work__rail:focus-visible { outline: 3px solid var(--pink); outline-offset: 4px; }
+.card { flex: 0 0 min(85%, 34rem); scroll-snap-align: start; }
+.card .studio-work { margin: 0; }
+.card .shot { box-shadow: 0.4rem 0.4rem 0 var(--over); }
+.card img { display: block; width: 100%; height: auto; }
+.card figcaption { margin-top: 1rem; }
+.card h4 { font: 800 1.25rem/1.2 var(--font-sans); margin: 0 0 0.35rem; color: var(--ink); }
+.card figcaption > p { margin: 0 0 0.75rem; }
+.tech--small li { font-size: 0.6875rem; padding: 0.35rem 0.55rem; }
+.work + p { margin-top: 2rem; }
+#studio > p + p { margin-top: 1rem; }
+
+/* Screenshots framed as a macOS-style browser window: traffic lights and an address bar. */
+.browser { background: #FBFAF7; border: 1.5px solid var(--black); border-radius: 0.6rem; overflow: hidden; }
+.browser__bar {
+  display: flex; align-items: center; gap: 0.4rem; height: 2rem; padding: 0 0.7rem;
+  background: #ECE8E0; border-bottom: 1.5px solid var(--black);
+}
+.browser__bar i { flex: none; width: 0.65rem; height: 0.65rem; border-radius: 50%; background: #FF5F57; box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.25); }
+.browser__bar i:nth-child(2) { background: #FEBC2E; }
+.browser__bar i:nth-child(3) { background: #28C840; }
+.browser__url {
+  flex: 1; min-width: 0; margin-left: 0.6rem; max-width: 22rem; margin-inline: auto; text-align: center;
+  padding: 0.2rem 0.6rem; border-radius: 0.35rem; background: #FBFAF7;
+  font: 500 0.6875rem/1.2 var(--font-mono); color: #4A4F47; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.browser img { display: block; width: 100%; height: auto; }
+.browser__url:empty { min-height: 0.825rem; }
+
+/* running.css */
+/* Above the route (z-index 1) and opaque, so while pinned the line passes behind it. */
+.run-stage { min-height: 100svh; display: grid; align-content: center; gap: 1rem; z-index: 2; background: var(--bg); }
+.run__name { font: 400 clamp(1.75rem, 4vw, 3rem)/1 var(--font-poster); text-transform: uppercase; }
+.run__big { font: 400 clamp(4rem, 14vw, 10rem)/0.9 var(--font-poster); color: var(--accent); }
+.unit { display: inline-block; }
+.run__plot { width: 100%; position: relative; }
+.run__svg { width: 100%; height: clamp(180px, 32vh, 320px); display: block; overflow: visible; }
+.run__ghost { fill: none; stroke: rgba(242, 242, 234, 0.25); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.run__area { fill: var(--acid); opacity: 0.15; }
+.run__line { fill: none; stroke: var(--acid); stroke-width: 3; vector-effect: non-scaling-stroke; }
+/* The plot SVG stretches (preserveAspectRatio="none"), which would squash a
+   circle, so the runner is an HTML dot moved with transforms in plot pixels. */
+.run__dot {
+  position: absolute; left: 0; top: 0; width: 14px; height: 14px; margin: -7px 0 0 -7px;
+  border-radius: 50%; background: var(--pink); box-shadow: 0 0 0 3px var(--black);
+  will-change: transform;
+}
+.run__stats { display: flex; flex-wrap: wrap; gap: 1rem 2.5rem; margin: 0; }
+.run__stats dd { margin: 0; font: 400 clamp(1.5rem, 3.5vw, 2.25rem)/1.1 var(--font-poster); }
+.run__time[hidden] { display: none; }
+/* The profile is drawn by JS; without it, show the numbers and no empty chart. */
+html.no-js .run__plot { display: none; }
+@media (max-width: 40rem) {
+  .run__stats { display: grid; grid-template-columns: 1fr 1fr; }
+  .run__svg { height: 22vh; } /* a tall plot on a narrow screen squashes the profile into spikes */
+}
+
+/* likes.css */
+.likes__cols { position: relative; display: grid; gap: 2.5rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); min-height: 22rem; }
+.likes__cols h3 { font: 900 2rem/1 var(--font-sans); font-stretch: 62%; text-transform: uppercase; color: var(--ink); margin-bottom: 1rem; }
+.stickers { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.stickers li {
+  display: inline-block; padding: 0.55rem 1rem; border-radius: 999px;
+  background: var(--black); color: var(--cream); font-weight: 600;
+}
+.stickers--dont li { background: var(--blue); color: var(--cream); }
+.stickers li:nth-child(3n + 1) { rotate: -3deg; }
+.stickers li:nth-child(3n + 2) { rotate: 2deg; }
+.stickers li:nth-child(3n) { rotate: -1deg; }
+.likes__dont { position: relative; }
+.spider {
+  position: absolute; top: -7.5rem; right: 0.5rem; color: var(--black); pointer-events: none;
+  transform: translateY(0); transition: transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s;
+}
+html.motion .likes:not(.is-reached) .spider { transform: translateY(-130%); }
+.beetle-slot:empty { display: none; } /* no JS, no beetle */
+.beetle-slot { display: block; width: 2.75rem; height: 2.75rem; color: var(--black); }
+.beetle-slot svg { width: 100%; height: 100%; display: block; }
+.bug--beetle { position: absolute !important; left: 0; top: 0; z-index: 2; }
+
+/* contact.css */
+/* margin-block only: the inline auto margins keep it in the reading column. */
+.contact__cta { margin-block: 1rem 2.5rem; }
+.contact__cta > .stamp { right: auto; left: 0; top: -1.5rem; }
+.btn--big { font-size: clamp(1rem, 2.4vw, 1.375rem); padding: 1.1rem 1.8rem; }
+.contact__links { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; font-size: clamp(1.25rem, 3vw, 2rem); }
+/* Bug 6, reduced motion: the button is simply in the wrong place. */
+.btn.is-askew { rotate: -4deg; translate: 1.5rem 0.4rem; }
+/* The finish tape stays up, with the lock under it, until every bug is fixed. */
+.finish-line { margin-top: 4.5rem; display: grid; justify-items: start; gap: 1rem; }
+.tape { display: flex; width: 100%; height: 10px; pointer-events: none; }
+.tape span {
+  flex: 1; height: 10px;
+  background: repeating-linear-gradient(90deg, var(--route) 0 22px, var(--paper) 22px 36px);
+}
+.tape__l { transform-origin: left center; }
+.tape__r { transform-origin: right center; }
+.tape.is-broken span { visibility: hidden; }
+html.motion .tape span { transition: transform 0.9s cubic-bezier(0.5, 0, 0.75, 0), opacity 0.6s ease 0.4s, visibility 0s 1s; }
+html.motion .tape.is-broken .tape__l { transform: translate(-6%, 140px) rotate(-24deg); opacity: 0; }
+html.motion .tape.is-broken .tape__r { transform: translate(6%, 140px) rotate(24deg); opacity: 0; }
+.reward-lock {
+  padding: 1rem 1.25rem; display: inline-block;
+  border: 2px dashed var(--acid); border-radius: 0.75rem; color: var(--acid);
+}
+.reward-lock[hidden] { display: none; }
+
+/* reward.css */
+.reward { margin-top: 2rem; }
+.reward__title { color: var(--accent); margin-bottom: 1rem; font: 400 clamp(1.5rem, 4vw, 2.75rem)/1 var(--font-poster); letter-spacing: 0.01em; }
+.reward__stage {
+  position: relative; height: clamp(16rem, 50svh, 30rem); overflow: hidden;
+  display: flex; flex-wrap: wrap; align-content: flex-end; justify-content: center;
+  font: 900 clamp(3.5rem, 13vw, 9rem)/0.85 var(--font-sans); font-stretch: 62%;
+  color: var(--acid); text-transform: uppercase; user-select: none; touch-action: pan-y;
+  border-bottom: 3px solid var(--acid); cursor: grab;
+}
+.rl { display: inline-block; padding: 0 0.02em; }
+/* Nothing on the stage until the physics lays the letters out (no flash of the
+   finished name). A static prize, or a failed load, shows them as they are. */
+html.motion .reward:not(.is-static) .reward__stage:not(.is-laid) .rl { visibility: hidden; }
+.rl-break { flex-basis: 100%; height: 0; }
+.reward__stage.is-laid .rl { position: absolute; left: 0; top: 0; will-change: transform; }
+.rl.is-gone { visibility: hidden; }
+.reward.is-static .reward__stage { cursor: default; touch-action: auto; }
+.reward.is-static .rl.v { opacity: 0.18; }
+.reward.is-static .reward__controls { display: none; }
+.reward__controls { margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+/* nav.css */
+/* Jump to a checkpoint. A <details>, so it works without JavaScript. */
+.cpnav { position: fixed; z-index: 31; top: 0.75rem; right: 0.75rem; font-size: 0.75rem; }
+.cpnav details { display: flex; flex-direction: column; align-items: flex-end; }
+.cpnav summary {
+  display: inline-block; list-style: none; cursor: pointer; padding: 0.55rem 0.9rem; border-radius: 999px;
+  background: var(--black); color: var(--paper); box-shadow: 0 0 0 2px var(--cream);
+  font: 500 0.75rem/1 var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase;
+}
+.cpnav summary::-webkit-details-marker { display: none; }
+.cpnav summary::before { content: ""; display: inline-block; width: 0.55rem; height: 0.55rem; margin-right: 0.5rem; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--pink); vertical-align: -0.05rem; }
+.cpnav details[open] summary { background: var(--pink); color: var(--black); }
+.cpnav summary:focus-visible, .cpnav a:focus-visible { outline: 3px solid var(--acid); outline-offset: 2px; }
+.cpnav ol {
+  list-style: none; margin: 0.5rem 0 0; padding: 0.4rem; border-radius: 1rem;
+  background: var(--black); box-shadow: 0 0 0 2px var(--cream);
+}
+.cpnav a {
+  display: block; padding: 0.55rem 0.7rem; border-radius: 0.6rem; color: var(--paper); text-decoration: none;
+  font: 500 0.75rem/1.2 var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap;
+}
+.cpnav a:hover { background: var(--pink); color: var(--black); }
+html.motion:not([data-opening="done"]) .cpnav { opacity: 0; pointer-events: none; }
+.cpnav { transition: opacity 0.3s; }
+@media print { .cpnav { display: none; } }
+.cpnav details[open] summary::before { box-shadow: inset 0 0 0 2px var(--black); }
+
+/* print.css */
+@media print {
+  .bugbar, .huntbtn, .skip, .sheet-edge, .route, .tape, .spider, .bug--glitch, .reward, .beetle-slot, .bug--beetle { display: none !important; }
+  .sheet { margin-top: 0 !important; padding-block: 1.5rem !important; background: #fff !important; color: #000 !important; break-inside: avoid-page; }
+  .ink::before, .name__pink { display: none; }
+  .pin-spacer { padding: 0 !important; height: auto !important; }
+  body { background: #fff; color: #000; }
+}

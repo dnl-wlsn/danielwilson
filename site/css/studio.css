@@ -20,10 +20,8 @@
 .work__btn { all: unset; cursor: pointer; width: 2.5rem; height: 2.5rem; display: grid; place-items: center; border-radius: 50%; background: var(--black); color: var(--paper); font-size: 1.1rem; }
 .work__btn:disabled { opacity: 0.3; cursor: default; }
 .work__btn:focus-visible { outline: 3px solid var(--pink); outline-offset: 2px; }
-.work__rail {
-  list-style: none; margin: 0; padding: 0 0 1.25rem; display: flex; gap: 1.5rem;
-  overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: thin;
-}
+.work__rail { padding: 0 0 1.25rem; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: thin; }
+.work__list { list-style: none; margin: 0; padding: 0; display: flex; gap: 1.5rem; }
 .work__rail:focus-visible { outline: 3px solid var(--pink); outline-offset: 4px; }
 .card { flex: 0 0 min(85%, 34rem); scroll-snap-align: start; }
 .card .studio-work { margin: 0; }

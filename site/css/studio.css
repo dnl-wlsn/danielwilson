@@ -35,3 +35,19 @@
 .tech--small li { font-size: 0.6875rem; padding: 0.35rem 0.55rem; }
 .work + p { margin-top: 2rem; }
 #studio > p + p { margin-top: 1rem; }
+
+/* Screenshots framed as a macOS-style browser window: traffic lights and an address bar. */
+.browser { background: #FBFAF7; border: 1.5px solid var(--black); border-radius: 0.6rem; overflow: hidden; }
+.browser__bar {
+  display: flex; align-items: center; gap: 0.4rem; height: 2rem; padding: 0 0.7rem;
+  background: #ECE8E0; border-bottom: 1.5px solid var(--black);
+}
+.browser__bar i { flex: none; width: 0.65rem; height: 0.65rem; border-radius: 50%; background: #FF5F57; box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.25); }
+.browser__bar i:nth-child(2) { background: #FEBC2E; }
+.browser__bar i:nth-child(3) { background: #28C840; }
+.browser__url {
+  flex: 1; min-width: 0; margin-left: 0.6rem; max-width: 22rem; margin-inline: auto; text-align: center;
+  padding: 0.2rem 0.6rem; border-radius: 0.35rem; background: #FBFAF7;
+  font: 500 0.6875rem/1.2 var(--font-mono); color: #4A4F47; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.browser img { display: block; width: 100%; height: auto; }
